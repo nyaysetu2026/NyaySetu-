@@ -1,32 +1,48 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import NotFound from '@/pages/not-found';
 import { Route, Switch, Router as WouterRouter } from 'wouter';
+import { AppLayout } from './components/layout/AppLayout';
 
-const queryClient = new QueryClient();
+import Home from './pages/Home';
+import Dashboard from './pages/Dashboard';
+import AIChat from './pages/AIChat';
+import Lawyers from './pages/Lawyers';
+import LawyerDetail from './pages/LawyerDetail';
+import Documents from './pages/Documents';
+import DocumentDetail from './pages/DocumentDetail';
+import Rights from './pages/Rights';
+import ArticleDetail from './pages/ArticleDetail';
+import Cases from './pages/Cases';
+import Emergency from './pages/Emergency';
+import NotFound from './pages/not-found';
 
-function Home() {
-  return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold text-gray-900">
-          Replit Agent is building...
-        </h1>
-        <p className="mt-2 text-sm text-gray-600">
-          Your app will appear here once it's ready.
-        </p>
-      </div>
-    </div>
-  );
-}
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    }
+  }
+});
 
 function Router() {
   return (
-    <Switch>
-      <Route path="/" component={Home} />
-      <Route component={NotFound} />
-    </Switch>
+    <AppLayout>
+      <Switch>
+        <Route path="/" component={Home} />
+        <Route path="/dashboard" component={Dashboard} />
+        <Route path="/ai-chat" component={AIChat} />
+        <Route path="/lawyers" component={Lawyers} />
+        <Route path="/lawyers/:id" component={LawyerDetail} />
+        <Route path="/documents" component={Documents} />
+        <Route path="/documents/:id" component={DocumentDetail} />
+        <Route path="/rights" component={Rights} />
+        <Route path="/rights/:id" component={ArticleDetail} />
+        <Route path="/cases" component={Cases} />
+        <Route path="/emergency" component={Emergency} />
+        <Route component={NotFound} />
+      </Switch>
+    </AppLayout>
   );
 }
 
