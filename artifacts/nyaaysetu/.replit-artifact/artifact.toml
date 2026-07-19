@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "NyaySetu"
+version = "1.0.0"
+id = "artifacts/nyaaysetu"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23715
+
+[services.development]
+run = "pnpm --filter @workspace/nyaaysetu run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/nyaaysetu", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/nyaaysetu/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23715"
+BASE_PATH = "/"
