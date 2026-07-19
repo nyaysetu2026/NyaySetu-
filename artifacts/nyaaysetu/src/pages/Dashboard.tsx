@@ -1,12 +1,11 @@
 import { useGetDashboardStats } from "@workspace/api-client-react";
 import { Link } from "wouter";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Bot, Users, Landmark, FileText, ArrowRight, Activity, Globe, MessageSquare } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { motion } from "framer-motion";
 
 export default function Dashboard() {
-  const { data: stats, isLoading, isError } = useGetDashboardStats();
+  const { data: stats, isLoading } = useGetDashboardStats();
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -16,166 +15,129 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="container mx-auto px-4 py-8 sm:px-6 lg:px-8 max-w-7xl pt-safe-top">
       {/* Header */}
-      <div className="mb-10">
-        <h1 className="text-3xl font-bold text-primary tracking-tight mb-2">{getGreeting()}, Citizen.</h1>
-        <p className="text-muted-foreground text-lg">Welcome to your central legal command center.</p>
+      <div className="mb-8 pt-4 lg:pt-0">
+        <h1 className="text-3xl lg:text-4xl font-bold text-foreground font-serif tracking-tight mb-2">
+          {getGreeting()}, Citizen
+        </h1>
+        <p className="text-muted-foreground text-base">Your legal command center.</p>
+        <div className="text-xs text-foreground/40 mt-1 font-mono">{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
       </div>
 
-      {/* Overview Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-        <StatCard 
-          title="Active Cases" 
-          value={stats?.activeCases} 
-          icon={<Activity className="h-5 w-5 text-secondary" />} 
-          loading={isLoading} 
-        />
-        <StatCard 
-          title="Total Cases Tracked" 
-          value={stats?.totalCases} 
-          icon={<Landmark className="h-5 w-5 text-primary" />} 
-          loading={isLoading} 
-        />
-        <StatCard 
-          title="Lawyers Available" 
-          value={stats?.totalLawyers} 
-          icon={<Users className="h-5 w-5 text-accent" />} 
-          loading={isLoading} 
-        />
-        <StatCard 
-          title="AI Consultations" 
-          value={stats?.aiConversations} 
-          icon={<MessageSquare className="h-5 w-5 text-purple-500" />} 
-          loading={isLoading} 
-        />
+      {/* Horizontal Stats Scroll (App Style) */}
+      <div className="flex overflow-x-auto pb-6 -mx-4 px-4 sm:mx-0 sm:px-0 gap-4 no-scrollbar snap-x mb-6">
+        <StatChip title="Active Cases" value={stats?.activeCases} icon={<Activity className="h-4 w-4 text-secondary" />} loading={isLoading} />
+        <StatChip title="Cases Tracked" value={stats?.totalCases} icon={<Landmark className="h-4 w-4 text-accent" />} loading={isLoading} />
+        <StatChip title="Lawyers" value={stats?.totalLawyers} icon={<Users className="h-4 w-4 text-emerald-400" />} loading={isLoading} />
+        <StatChip title="AI Chats" value={stats?.aiConversations} icon={<MessageSquare className="h-4 w-4 text-purple-400" />} loading={isLoading} />
       </div>
 
-      {/* Quick Access */}
-      <h2 className="text-2xl font-bold text-foreground mb-6 font-serif border-b pb-4">Quick Access</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-12">
-        <QuickAccessCard
-          title="AI Legal Assistant"
-          description="Ask questions about your rights and IPC."
-          icon={<Bot className="h-8 w-8" />}
-          href="/ai-chat"
-          color="bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400"
-        />
-        <QuickAccessCard
-          title="Find a Lawyer"
-          description="Search verified advocates by city & specialization."
-          icon={<Users className="h-8 w-8" />}
-          href="/lawyers"
-          color="bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400"
-        />
-        <QuickAccessCard
-          title="Case Tracker"
-          description="Manage your ongoing legal proceedings."
-          icon={<Landmark className="h-8 w-8" />}
-          href="/cases"
-          color="bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400"
-        />
-        <QuickAccessCard
-          title="Document Templates"
-          description="Download standard legal formats & affidavits."
-          icon={<FileText className="h-8 w-8" />}
-          href="/documents"
-          color="bg-purple-50 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400"
-        />
-      </div>
-
-      {/* Platform Scale (Optional lower section) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="md:col-span-2 bg-primary text-primary-foreground border-none">
-          <CardHeader>
-            <CardTitle className="text-2xl font-serif">A Bridge to Justice</CardTitle>
-            <CardDescription className="text-primary-foreground/80 text-base">
-              NyaySetu is continuously expanding to serve every corner of India.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-wrap gap-8 mt-4">
-              <div className="flex items-center gap-3">
-                <Globe className="h-8 w-8 text-accent" />
-                <div>
-                  <div className="text-2xl font-bold">{isLoading ? <Skeleton className="h-8 w-16 bg-white/20" /> : stats?.citiesServed}</div>
-                  <div className="text-sm text-primary-foreground/70 uppercase tracking-wider">Cities Served</div>
-                </div>
+      {/* Featured AI Card */}
+      <Link href="/ai-chat">
+        <div className="mb-8 glass-card overflow-hidden relative group cursor-pointer border border-secondary/30">
+          <div className="absolute inset-0 bg-gradient-to-br from-secondary/20 to-transparent opacity-50" />
+          <div className="p-6 sm:p-8 flex items-center justify-between relative z-10">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <Bot className="w-5 h-5 text-secondary" />
+                <span className="text-sm font-semibold tracking-wider uppercase text-secondary">AI Legal Assistant</span>
               </div>
-              <div className="flex items-center gap-3">
-                <MessageSquare className="h-8 w-8 text-accent" />
-                <div>
-                  <div className="text-2xl font-bold">{isLoading ? <Skeleton className="h-8 w-16 bg-white/20" /> : stats?.languagesSupported}</div>
-                  <div className="text-sm text-primary-foreground/70 uppercase tracking-wider">Languages</div>
-                </div>
-              </div>
+              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white mb-2">Ask a legal question</h2>
+              <p className="text-sm text-foreground/70 max-w-md">Get instant clarity on constitutional rights, IPC codes, and procedures.</p>
             </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Updates</CardTitle>
-            <CardDescription>Stay informed on your journey</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col gap-4 text-sm">
-              <div className="flex gap-3">
-                <div className="w-2 h-2 rounded-full bg-secondary mt-1.5" />
-                <p><span className="font-semibold text-foreground">New Document Added:</span> Rental Agreement Template now available in Marathi.</p>
-              </div>
-              <div className="flex gap-3">
-                <div className="w-2 h-2 rounded-full bg-secondary mt-1.5" />
-                <p><span className="font-semibold text-foreground">System Update:</span> eCourts integration synced successfully for Maharashtra.</p>
-              </div>
+            <div className="w-12 h-12 rounded-full bg-secondary text-white flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(43,108,235,0.4)] group-hover:scale-110 transition-transform">
+              <ArrowRight className="w-6 h-6" />
             </div>
-            <Link href="/documents">
-              <Button variant="link" className="px-0 mt-4 h-auto text-secondary">View Documents <ArrowRight className="w-4 h-4 ml-1" /></Button>
-            </Link>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
+      </Link>
+
+      {/* Quick Action Grid */}
+      <div className="mb-8">
+        <h3 className="text-lg font-bold text-foreground mb-4 px-1">Quick Actions</h3>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <QuickActionCard
+            title="Find Lawyers"
+            icon={<Users className="h-6 w-6 text-emerald-400" />}
+            href="/lawyers"
+            bg="bg-emerald-500/10"
+          />
+          <QuickActionCard
+            title="Case Tracker"
+            icon={<Landmark className="h-6 w-6 text-amber-400" />}
+            href="/cases"
+            bg="bg-amber-500/10"
+          />
+          <QuickActionCard
+            title="Documents"
+            icon={<FileText className="h-6 w-6 text-purple-400" />}
+            href="/documents"
+            bg="bg-purple-500/10"
+          />
+          <QuickActionCard
+            title="Your Rights"
+            icon={<Globe className="h-6 w-6 text-blue-400" />}
+            href="/rights"
+            bg="bg-blue-500/10"
+          />
+        </div>
+      </div>
+
+      {/* Recent Activity (Minimalist) */}
+      <div className="glass-card p-6 mb-8">
+        <h3 className="text-lg font-bold text-foreground mb-4 font-serif">Recent System Updates</h3>
+        <div className="space-y-4">
+          <div className="flex gap-4">
+            <div className="w-2 h-2 rounded-full bg-secondary mt-2 shrink-0 shadow-[0_0_8px_rgba(43,108,235,0.8)]" />
+            <div>
+              <p className="text-sm text-foreground">New Document Added: Rental Agreement Template now available in Marathi.</p>
+              <span className="text-xs text-muted-foreground mt-1 block">2 hours ago</span>
+            </div>
+          </div>
+          <div className="flex gap-4">
+            <div className="w-2 h-2 rounded-full bg-accent mt-2 shrink-0 shadow-[0_0_8px_rgba(212,175,55,0.8)]" />
+            <div>
+              <p className="text-sm text-foreground">System Update: eCourts integration synced successfully for Maharashtra.</p>
+              <span className="text-xs text-muted-foreground mt-1 block">1 day ago</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
-function StatCard({ title, value, icon, loading }: { title: string, value?: number, icon: React.ReactNode, loading: boolean }) {
+function StatChip({ title, value, icon, loading }: { title: string, value?: number, icon: React.ReactNode, loading: boolean }) {
   return (
-    <Card className="shadow-sm border-border/50">
-      <CardContent className="p-6">
-        <div className="flex justify-between items-start">
-          <div className="space-y-2">
-            <p className="text-sm font-medium text-muted-foreground">{title}</p>
-            {loading ? (
-              <Skeleton className="h-8 w-24" />
-            ) : (
-              <p className="text-3xl font-bold text-foreground">{value?.toLocaleString()}</p>
-            )}
-          </div>
-          <div className="p-3 bg-muted rounded-xl">
-            {icon}
-          </div>
+    <div className="glass-card min-w-[160px] p-4 flex flex-col justify-between shrink-0 snap-start">
+      <div className="flex items-center gap-2 mb-3">
+        <div className="p-1.5 bg-white/5 rounded-md">
+          {icon}
         </div>
-      </CardContent>
-    </Card>
+        <span className="text-xs font-medium text-muted-foreground truncate">{title}</span>
+      </div>
+      {loading ? (
+        <Skeleton className="h-7 w-16 bg-white/10" />
+      ) : (
+        <span className="text-2xl font-bold font-serif">{value?.toLocaleString() || 0}</span>
+      )}
+    </div>
   );
 }
 
-function QuickAccessCard({ title, description, icon, href, color }: { title: string, description: string, icon: React.ReactNode, href: string, color: string }) {
+function QuickActionCard({ title, icon, href, bg }: { title: string, icon: React.ReactNode, href: string, bg: string }) {
   return (
     <Link href={href}>
-      <Card className="h-full hover:shadow-md transition-shadow cursor-pointer border-border/50 hover:border-secondary/30 group">
-        <CardContent className="p-6 flex flex-col h-full">
-          <div className={`p-4 rounded-xl w-fit mb-4 ${color}`}>
-            {icon}
-          </div>
-          <h3 className="text-lg font-bold text-foreground mb-2 group-hover:text-secondary transition-colors">{title}</h3>
-          <p className="text-sm text-muted-foreground flex-1">{description}</p>
-          <div className="mt-4 flex items-center text-sm font-semibold text-secondary opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0">
-            Access <ArrowRight className="w-4 h-4 ml-1" />
-          </div>
-        </CardContent>
-      </Card>
+      <motion.div 
+        whileTap={{ scale: 0.96 }}
+        className="glass-card p-5 flex flex-col items-center justify-center gap-3 h-full cursor-pointer hover:bg-white/5 transition-colors"
+      >
+        <div className={`w-12 h-12 rounded-full ${bg} flex items-center justify-center mb-1`}>
+          {icon}
+        </div>
+        <span className="text-sm font-semibold text-center leading-tight">{title}</span>
+      </motion.div>
     </Link>
   );
 }

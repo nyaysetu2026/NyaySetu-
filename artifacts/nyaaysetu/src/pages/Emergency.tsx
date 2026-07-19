@@ -1,63 +1,62 @@
 import { useListEmergencyContacts } from "@workspace/api-client-react";
-import { Phone, AlertTriangle, Info, Clock } from "lucide-react";
+import { Phone, AlertTriangle, Clock } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function Emergency() {
   const { data: contacts, isLoading } = useListEmergencyContacts();
-
   const categories = Array.from(new Set(contacts?.map(c => c.category) || []));
 
   return (
-    <div className="min-h-screen bg-rose-50/30 dark:bg-rose-950/10">
-      <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8 max-w-4xl">
-        
-        <Alert variant="destructive" className="mb-10 border-2 bg-destructive/10 text-destructive-foreground">
-          <AlertTriangle className="h-6 w-6" />
-          <AlertTitle className="text-lg font-bold">EMERGENCY RESPONSE</AlertTitle>
-          <AlertDescription className="text-base mt-1 font-medium">
-            If you are in immediate physical danger, dial 112 (National Emergency Number) immediately.
-            These numbers connect directly to official government dispatch centers.
-          </AlertDescription>
-        </Alert>
+    <div className="min-h-screen bg-background relative overflow-hidden pt-safe-top pb-24">
+      {/* Red ambient glow */}
+      <div className="absolute top-[-20%] left-[10%] w-[80%] h-[40%] bg-destructive/10 rounded-full blur-[120px] pointer-events-none" />
 
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold font-serif text-foreground mb-4">National Helplines</h1>
-          <p className="text-muted-foreground text-lg">24/7 verified contact numbers for citizens in distress.</p>
+      <div className="container mx-auto px-4 py-8 max-w-4xl relative z-10 pt-4 lg:pt-8">
+        
+        {/* Urgent Header Card */}
+        <div className="bg-destructive/20 border border-destructive/50 rounded-3xl p-6 md:p-8 mb-10 shadow-[0_0_30px_rgba(220,38,38,0.15)] flex flex-col items-center text-center animate-in slide-in-from-top-4 duration-500">
+          <div className="w-16 h-16 bg-destructive rounded-full flex items-center justify-center text-white mb-4 shadow-[0_0_20px_rgba(220,38,38,0.5)] animate-pulse">
+            <AlertTriangle className="w-8 h-8" />
+          </div>
+          <h1 className="text-2xl md:text-3xl font-bold font-serif text-white mb-2">URGENT RESPONSE</h1>
+          <p className="text-destructive-foreground/80 text-sm md:text-base max-w-md">
+            If you are in immediate physical danger, tap below to dial the National Emergency Dispatch.
+          </p>
+          <a href="tel:112" className="mt-6 w-full max-w-xs bg-destructive text-white font-mono text-3xl font-bold py-4 rounded-2xl flex items-center justify-center gap-3 active:scale-95 transition-transform shadow-lg">
+            <Phone className="w-6 h-6 fill-current" /> 112
+          </a>
         </div>
 
         {isLoading ? (
-          <div className="space-y-6">
-            <Skeleton className="h-24 w-full rounded-2xl" />
-            <Skeleton className="h-24 w-full rounded-2xl" />
+          <div className="space-y-4">
+            <Skeleton className="h-24 w-full rounded-2xl bg-white/5" />
+            <Skeleton className="h-24 w-full rounded-2xl bg-white/5" />
           </div>
         ) : (
-          <div className="space-y-12">
+          <div className="space-y-10">
             {categories.map(category => (
               <div key={category}>
-                <h2 className="text-2xl font-bold font-serif text-primary mb-6 flex items-center gap-2 border-b pb-2">
+                <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground mb-4 pl-2">
                   {category}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {contacts?.filter(c => c.category === category).map(contact => (
-                    <div key={contact.id} className="bg-card border-2 border-border hover:border-destructive/50 rounded-xl p-6 shadow-sm flex flex-col transition-colors">
-                      <div className="flex justify-between items-start mb-4">
-                        <div>
-                          <h3 className="text-xl font-bold text-foreground mb-1">{contact.name}</h3>
-                          <p className="text-sm text-muted-foreground">{contact.description}</p>
+                    <div key={contact.id} className="glass-card p-5 flex items-center justify-between border-white/5">
+                      <div className="flex-1 pr-4">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="text-base font-bold text-white">{contact.name}</h3>
+                          {contact.available247 && (
+                            <Clock className="w-3 h-3 text-secondary" />
+                          )}
                         </div>
-                        {contact.available247 && (
-                          <span className="flex items-center text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-md uppercase">
-                            <Clock className="w-3 h-3 mr-1" /> 24/7
-                          </span>
-                        )}
+                        <p className="text-xs text-muted-foreground line-clamp-1">{contact.description}</p>
                       </div>
                       
                       <a 
                         href={`tel:${contact.phone}`} 
-                        className="mt-auto bg-destructive hover:bg-destructive/90 text-white flex items-center justify-center gap-3 py-4 rounded-lg text-2xl font-bold font-mono tracking-wider transition-transform active:scale-95"
+                        className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors shrink-0"
                       >
-                        <Phone className="w-6 h-6" /> {contact.phone}
+                        <Phone className="w-5 h-5" />
                       </a>
                     </div>
                   ))}

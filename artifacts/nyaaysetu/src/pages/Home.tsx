@@ -1,7 +1,7 @@
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Scale, Shield, FileText, Bot, Users, Landmark, ChevronRight, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Scale, Shield, FileText, Bot, Users, Landmark, ChevronRight, AlertTriangle } from "lucide-react";
 
 export default function Home() {
   const containerVariants = {
@@ -20,83 +20,110 @@ export default function Home() {
   };
 
   return (
-    <div className="w-full">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-primary pt-24 pb-32 md:pt-32 md:pb-40 text-primary-foreground">
-        <div className="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center" />
-        <div className="absolute inset-0 bg-gradient-to-t from-primary to-transparent" />
+    <div className="w-full min-h-screen flex flex-col">
+      {/* Hero Section with Gradient Mesh */}
+      <section className="relative flex-1 flex flex-col justify-center min-h-[90vh] lg:min-h-screen pt-12 pb-24 overflow-hidden bg-background px-4 sm:px-6">
+        {/* Gradient Mesh Background */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-secondary/10 blur-[100px]" />
+          <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-accent/10 blur-[120px]" />
+          <div className="absolute top-[40%] right-[20%] w-[30%] h-[30%] rounded-full bg-primary/20 blur-[80px]" />
+        </div>
         
-        <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center text-center">
           <motion.div 
-            className="max-w-4xl mx-auto text-center"
             initial="hidden"
             animate="visible"
             variants={containerVariants}
+            className="w-full"
           >
-            <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/20 text-accent mb-8 border border-accent/30 font-medium text-sm">
-              <Shield className="w-4 h-4" />
-              <span>The Official Digital Legal Bridge</span>
+            <motion.div variants={itemVariants} className="inline-flex items-center justify-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-sm text-foreground/80 mb-8">
+              <Scale className="w-4 h-4 text-accent" />
+              <span>Premium Legal Services</span>
             </motion.div>
             
-            <motion.h1 variants={itemVariants} className="font-serif text-5xl md:text-7xl font-bold tracking-tight leading-[1.1] mb-8">
-              Justice is no longer <br className="hidden md:block" />
-              <span className="text-accent italic">out of reach.</span>
+            <motion.h1 variants={itemVariants} className="font-serif text-5xl sm:text-6xl md:text-8xl font-extrabold tracking-tight leading-[1.1] mb-6 text-foreground drop-shadow-sm">
+              NyaySetu
             </motion.h1>
             
-            <motion.p variants={itemVariants} className="text-lg md:text-xl text-primary-foreground/80 mb-10 max-w-2xl mx-auto leading-relaxed">
-              NyaySetu connects every Indian citizen to world-class legal technology. From AI-assisted guidance to expert lawyers, file and track your legal journey with unwavering confidence.
+            <motion.p variants={itemVariants} className="text-xl md:text-2xl text-foreground/70 mb-10 max-w-2xl mx-auto font-medium leading-relaxed font-sans">
+              Justice is no longer <span className="font-serif italic text-accent font-normal">out of reach.</span> Your world-class legal companion.
             </motion.p>
-            
-            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/dashboard">
-                <Button size="lg" className="w-full sm:w-auto text-lg h-14 px-8 bg-secondary hover:bg-secondary/90 text-white border-0">
-                  Enter Dashboard <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
-              </Link>
-              <Link href="/ai-chat">
-                <Button size="lg" variant="outline" className="w-full sm:w-auto text-lg h-14 px-8 bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground hover:text-primary border-primary-foreground/20">
-                  Ask AI Assistant
+
+            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto px-4 sm:px-0">
+              <Link href="/dashboard" className="w-full sm:w-auto">
+                <Button size="lg" className="w-full text-lg h-14 px-8 bg-secondary hover:bg-secondary/90 text-white rounded-2xl relative overflow-hidden group shadow-[0_0_20px_rgba(43,108,235,0.3)]">
+                  <div className="absolute inset-0 w-full h-full shimmer-bg animate-shimmer opacity-30 group-hover:opacity-100 transition-opacity" />
+                  <span className="relative z-10 flex items-center font-semibold">
+                    Enter Dashboard <ArrowRight className="ml-2 w-5 h-5" />
+                  </span>
                 </Button>
               </Link>
             </motion.div>
           </motion.div>
         </div>
+
+        {/* Developer Credit for Mobile Hero */}
+        <div className="absolute bottom-8 left-0 right-0 flex justify-center lg:hidden">
+          <div className="text-center">
+            <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1">Developed by</p>
+            <p className="text-xs font-bold tracking-[0.2em] text-accent">MD DANISH HUSSAIN</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Hero Stat Row */}
+      <section className="py-8 bg-black/20 border-y border-white/5 backdrop-blur-sm z-10">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 text-center text-sm md:text-base font-medium text-foreground/80">
+            <span className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-accent"></span> 50,000+ Citizens Served</span>
+            <span className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-accent"></span> 6 Cities</span>
+            <span className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-accent"></span> 4 Languages</span>
+            <span className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-secondary"></span> AI-Powered</span>
+          </div>
+        </div>
       </section>
 
       {/* Services Grid Section */}
-      <section className="py-24 bg-background">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-20 lg:py-32 relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="font-serif text-4xl font-bold text-primary mb-4">Comprehensive Legal Infrastructure</h2>
-            <p className="text-muted-foreground text-lg">A unified platform offering end-to-end solutions for citizens, advocates, and legal researchers.</p>
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-4">A unified legal infrastructure</h2>
+            <p className="text-muted-foreground text-lg">Everything you need to navigate the legal system with confidence.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { title: "AI Legal Assistant", icon: <Bot className="w-8 h-8"/>, desc: "24/7 intelligent guidance on constitutional rights, IPC codes, and general legal advice.", link: "/ai-chat" },
-              { title: "Expert Directory", icon: <Users className="w-8 h-8"/>, desc: "Find and consult with verified Supreme Court and High Court advocates across India.", link: "/lawyers" },
-              { title: "Case Tracker", icon: <Landmark className="w-8 h-8"/>, desc: "Monitor your active cases, next hearing dates, and court orders in real-time.", link: "/cases" },
-              { title: "Document Vault", icon: <FileText className="w-8 h-8"/>, desc: "Access standard templates for affidavits, agreements, and official petitions.", link: "/documents" },
-              { title: "Know Your Rights", icon: <Scale className="w-8 h-8"/>, desc: "Plain-language articles explaining fundamental rights and civic duties.", link: "/rights" },
-              { title: "Emergency Help", icon: <Shield className="w-8 h-8"/>, desc: "Immediate access to national helplines, domestic abuse support, and urgent legal aid.", link: "/emergency" }
+              { title: "AI Legal Assistant", icon: <Bot className="w-8 h-8"/>, desc: "Intelligent guidance on rights and IPC.", link: "/ai-chat" },
+              { title: "Expert Directory", icon: <Users className="w-8 h-8"/>, desc: "Consult verified advocates.", link: "/lawyers" },
+              { title: "Case Tracker", icon: <Landmark className="w-8 h-8"/>, desc: "Monitor hearings and court orders.", link: "/cases" },
+              { title: "Document Vault", icon: <FileText className="w-8 h-8"/>, desc: "Access standard legal templates.", link: "/documents" },
+              { title: "Know Your Rights", icon: <Scale className="w-8 h-8"/>, desc: "Plain-language constitutional guides.", link: "/rights" },
+              { title: "Emergency Help", icon: <Shield className="w-8 h-8"/>, desc: "Immediate access to national helplines.", link: "/emergency" }
             ].map((service, i) => (
               <motion.div 
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, margin: "-50px" }}
                 transition={{ delay: i * 0.1, duration: 0.5 }}
-                className="group relative bg-card p-8 rounded-2xl border border-card-border shadow-sm hover:shadow-md transition-all hover:border-secondary/50"
+                className="group relative block"
               >
-                <div className="w-16 h-16 bg-primary/5 text-primary rounded-xl flex items-center justify-center mb-6 group-hover:bg-secondary group-hover:text-white transition-colors">
-                  {service.icon}
-                </div>
-                <h3 className="text-2xl font-bold text-foreground mb-3">{service.title}</h3>
-                <p className="text-muted-foreground mb-6 leading-relaxed">
-                  {service.desc}
-                </p>
-                <Link href={service.link} className="inline-flex items-center text-secondary font-semibold hover:text-primary transition-colors">
-                  Explore Module <ChevronRight className="ml-1 w-4 h-4" />
+                <Link href={service.link}>
+                  <div className="glass-card p-8 h-full cursor-pointer flex flex-col justify-between">
+                    <div>
+                      <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-6 text-accent group-hover:scale-110 group-hover:bg-accent/10 transition-all duration-300">
+                        {service.icon}
+                      </div>
+                      <h3 className="text-xl font-bold text-foreground mb-3 font-serif tracking-wide">{service.title}</h3>
+                      <p className="text-muted-foreground mb-6 leading-relaxed text-sm">
+                        {service.desc}
+                      </p>
+                    </div>
+                    <div className="flex items-center text-sm font-semibold text-foreground/50 group-hover:text-secondary transition-colors mt-auto">
+                      Explore <ChevronRight className="ml-1 w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
                 </Link>
               </motion.div>
             ))}
@@ -104,72 +131,37 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Trust & Stats Section */}
-      <section className="py-20 bg-muted border-y border-border">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-10 text-center">
+      {/* Why NyaySetu Section */}
+      <section className="py-24 bg-black/20 border-t border-white/5 relative z-10">
+        <div className="container mx-auto px-4 max-w-5xl">
+          <div className="text-center mb-16">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold mb-4">Why NyaySetu?</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {[
-              { label: "Registered Lawyers", value: "15,000+" },
-              { label: "Cases Tracked", value: "2.4M+" },
-              { label: "Cities Served", value: "450+" },
-              { label: "AI Consultations", value: "1M+" }
-            ].map((stat, i) => (
-              <div key={i} className="flex flex-col items-center justify-center space-y-2">
-                <span className="font-serif text-5xl font-extrabold text-primary">{stat.value}</span>
-                <span className="text-sm font-medium uppercase tracking-wider text-muted-foreground">{stat.label}</span>
+              { title: "Unwavering Trust", desc: "Bar Council verified advocates and end-to-end encrypted data sovereignty.", icon: <Shield className="w-10 h-10 text-accent mb-4" /> },
+              { title: "Unmatched Speed", desc: "AI-driven responses and real-time eCourts integration for immediate clarity.", icon: <Bot className="w-10 h-10 text-secondary mb-4" /> },
+              { title: "Unequaled Expertise", desc: "Access the highest tier of legal professionals across India.", icon: <Scale className="w-10 h-10 text-primary-foreground mb-4" /> }
+            ].map((f, i) => (
+              <div key={i} className="flex flex-col items-center text-center">
+                {f.icon}
+                <h3 className="text-xl font-bold mb-2 font-serif">{f.title}</h3>
+                <p className="text-muted-foreground text-sm">{f.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* How it Works / Trust Section */}
-      <section className="py-24 bg-background">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row items-center gap-16">
-            <div className="lg:w-1/2">
-              <h2 className="font-serif text-4xl font-bold text-primary mb-6">Government-Grade Security. Citizen-First Design.</h2>
-              <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-                We believe that interacting with the law shouldn't require a law degree. NyaySetu translates complex bureaucratic processes into clear, actionable steps while maintaining absolute data sovereignty and attorney-client privilege.
-              </p>
-              <ul className="space-y-4">
-                {[
-                  "End-to-end encrypted document vault",
-                  "Bar Council verified advocate network",
-                  "Multi-lingual interface for all states",
-                  "Direct integration with eCourts data"
-                ].map((feature, i) => (
-                  <li key={i} className="flex items-center gap-3">
-                    <CheckCircle2 className="w-6 h-6 text-secondary" />
-                    <span className="text-foreground font-medium text-lg">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="lg:w-1/2 w-full">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-border">
-                <div className="absolute inset-0 bg-primary/10 mix-blend-multiply" />
-                <img 
-                  src="https://images.unsplash.com/photo-1505664173691-a28156db1524?q=80&w=1000&auto=format&fit=crop" 
-                  alt="Indian Supreme Court Architecture" 
-                  className="w-full object-cover aspect-[4/3]"
-                />
-              </div>
-            </div>
+      {/* Emergency CTA Strip */}
+      <section className="py-12 bg-destructive/10 border-t border-destructive/20 relative z-10">
+        <div className="container mx-auto px-4 text-center flex flex-col md:flex-row items-center justify-center gap-6">
+          <div className="flex items-center gap-3 text-destructive font-bold text-xl font-serif">
+            <AlertTriangle className="w-6 h-6" /> Need immediate help?
           </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-24 bg-primary text-primary-foreground text-center px-4">
-        <div className="max-w-3xl mx-auto space-y-8">
-          <h2 className="font-serif text-4xl md:text-5xl font-bold">Ready to take control of your legal journey?</h2>
-          <p className="text-xl text-primary-foreground/80 pb-4">
-            Join thousands of citizens who have found clarity and justice through NyaySetu.
-          </p>
-          <Link href="/dashboard">
-            <Button size="lg" className="h-16 px-10 text-lg bg-accent hover:bg-accent/90 text-primary font-bold">
-              Access Dashboard Now
+          <Link href="/emergency">
+            <Button variant="destructive" size="lg" className="rounded-full px-8 shadow-lg shadow-destructive/20">
+              Access Emergency Services
             </Button>
           </Link>
         </div>
