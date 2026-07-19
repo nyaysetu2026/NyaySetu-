@@ -20,7 +20,7 @@ export default function ArticleDetail() {
         <ArrowLeft className="mr-2 h-4 w-4" /> Back to Knowledge Base
       </Link>
 
-      <article>
+      <article className="glass-card p-8 md:p-12 mb-8">
         <header className="mb-10 text-center">
           <div className="inline-block px-3 py-1 bg-secondary/10 text-secondary text-sm font-bold uppercase tracking-widest rounded-full mb-6">
             {article.category}

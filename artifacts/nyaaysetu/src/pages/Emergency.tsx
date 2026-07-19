@@ -1,6 +1,7 @@
 import { useListEmergencyContacts } from "@workspace/api-client-react";
 import { Phone, AlertTriangle, Clock } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { motion } from "framer-motion";
 
 export default function Emergency() {
   const { data: contacts, isLoading } = useListEmergencyContacts();
@@ -14,10 +15,20 @@ export default function Emergency() {
       <div className="container mx-auto px-4 py-8 max-w-4xl relative z-10 pt-4 lg:pt-8">
         
         {/* Urgent Header Card */}
-        <div className="bg-destructive/20 border border-destructive/50 rounded-3xl p-6 md:p-8 mb-10 shadow-[0_0_30px_rgba(220,38,38,0.15)] flex flex-col items-center text-center animate-in slide-in-from-top-4 duration-500">
-          <div className="w-16 h-16 bg-destructive rounded-full flex items-center justify-center text-white mb-4 shadow-[0_0_20px_rgba(220,38,38,0.5)] animate-pulse">
+        <motion.div
+          initial={{ opacity: 0, y: 30, scale: 0.9 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ type: "spring", stiffness: 400, damping: 20 }}
+          className="bg-destructive/20 border border-destructive/50 rounded-3xl p-6 md:p-8 mb-10 shadow-[0_0_30px_rgba(220,38,38,0.15)] flex flex-col items-center text-center"
+        >
+          <motion.div 
+            animate={{ scale: [1, 1.02, 1] }} 
+            transition={{ repeat: Infinity, duration: 2 }}
+            className="w-16 h-16 bg-destructive rounded-full flex items-center justify-center text-white mb-4 shadow-[0_0_20px_rgba(220,38,38,0.5)]"
+          >
             <AlertTriangle className="w-8 h-8" />
-          </div>
+          </motion.div>
           <h1 className="text-2xl md:text-3xl font-bold font-serif text-white mb-2">URGENT RESPONSE</h1>
           <p className="text-destructive-foreground/80 text-sm md:text-base max-w-md">
             If you are in immediate physical danger, tap below to dial the National Emergency Dispatch.
@@ -25,7 +36,7 @@ export default function Emergency() {
           <a href="tel:112" className="mt-6 w-full max-w-xs bg-destructive text-white font-mono text-3xl font-bold py-4 rounded-2xl flex items-center justify-center gap-3 active:scale-95 transition-transform shadow-lg">
             <Phone className="w-6 h-6 fill-current" /> 112
           </a>
-        </div>
+        </motion.div>
 
         {isLoading ? (
           <div className="space-y-4">
@@ -34,14 +45,21 @@ export default function Emergency() {
           </div>
         ) : (
           <div className="space-y-10">
-            {categories.map(category => (
+            {categories.map((category, catIdx) => (
               <div key={category}>
                 <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground mb-4 pl-2">
                   {category}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {contacts?.filter(c => c.category === category).map(contact => (
-                    <div key={contact.id} className="glass-card p-5 flex items-center justify-between border-white/5">
+                  {contacts?.filter(c => c.category === category).map((contact, idx) => (
+                    <motion.div
+                      key={contact.id}
+                      initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                      viewport={{ once: true, margin: "-50px" }}
+                      transition={{ type: "spring", stiffness: 400, damping: 20, delay: idx * 0.05 + catIdx * 0.1 }}
+                      className="glass-card p-5 flex items-center justify-between border-white/5"
+                    >
                       <div className="flex-1 pr-4">
                         <div className="flex items-center gap-2 mb-1">
                           <h3 className="text-base font-bold text-white">{contact.name}</h3>
@@ -58,7 +76,7 @@ export default function Emergency() {
                       >
                         <Phone className="w-5 h-5" />
                       </a>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </div>

@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Star, MapPin, Scale, Search, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { motion } from "framer-motion";
 
 export default function Lawyers() {
   const [search, setSearch] = useState("");
@@ -95,9 +96,18 @@ export default function Lawyers() {
             <p className="text-muted-foreground text-sm mt-1">Try adjusting your search criteria.</p>
           </div>
         ) : (
-          lawyers?.map((lawyer) => (
-            <Link key={lawyer.id} href={`/lawyers/${lawyer.id}`}>
-              <div className="glass-card p-5 group cursor-pointer hover:border-secondary/50 flex flex-col h-full">
+          lawyers?.map((lawyer, index) => (
+            <motion.div
+              key={lawyer.id}
+              initial={{ opacity: 0, x: index % 2 === 0 ? -60 : 60 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, ease: "easeOut" as const }}
+              whileHover={{ scale: 1.01, borderColor: "rgba(212,175,55,0.5)" }}
+              className="rounded-2xl block"
+            >
+              <Link href={`/lawyers/${lawyer.id}`}>
+                <div className="glass-card p-5 group cursor-pointer hover:border-secondary/50 flex flex-col h-full">
                 <div className="flex gap-4 mb-4">
                   <div className="w-20 h-20 rounded-xl overflow-hidden shrink-0 bg-white/5 border border-white/10">
                     {lawyer.imageUrl ? (
@@ -135,6 +145,7 @@ export default function Lawyers() {
                 </div>
               </div>
             </Link>
+          </motion.div>
           ))
         )}
       </div>

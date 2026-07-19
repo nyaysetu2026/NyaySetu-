@@ -1,9 +1,9 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { Link, useLocation } from "wouter";
-import { Scale, Home, Bot, Landmark, Menu, Users, FileText, BookOpen, AlertTriangle, X } from "lucide-react";
-import { useState } from "react";
+import { Home, Bot, Landmark, Menu, Users, FileText, BookOpen, AlertTriangle, X } from "lucide-react";
 import { Drawer, DrawerContent, DrawerTrigger, DrawerClose } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
+import logoSrc from "@assets/logo_1784444903511.png";
 
 export function AppLayout({ children }: { children: ReactNode }) {
   const [location] = useLocation();
@@ -26,10 +26,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
       {/* Desktop Sidebar (>= 1024px) */}
       <aside className="hidden lg:flex w-[260px] flex-col bg-sidebar border-r border-sidebar-border fixed top-0 bottom-0 left-0">
         <div className="p-6 flex items-center gap-3">
-          <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center text-primary shadow-sm">
-            <Scale className="w-6 h-6" />
-          </div>
-          <span className="font-serif font-bold text-2xl tracking-tight text-white">NyaySetu</span>
+          <img src={logoSrc} alt="NyaySetu" className="h-10 w-auto" />
         </div>
 
         <nav className="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
@@ -107,7 +104,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
           <DrawerContent className="bg-sidebar border-sidebar-border">
             <div className="mx-auto w-full max-w-sm px-4 pt-6 pb-12 space-y-4">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="font-serif text-xl font-bold text-white">Resources</h3>
+                <img src={logoSrc} alt="NyaySetu" className="h-10 w-auto" />
                 <DrawerClose asChild>
                   <Button variant="ghost" size="icon" className="text-muted-foreground">
                     <X className="w-5 h-5" />

@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { BookOpen, Clock, ChevronRight, Scale } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 export default function Rights() {
   const { data: articles, isLoading } = useListArticles();
@@ -48,9 +49,18 @@ export default function Rights() {
             <h3 className="text-lg font-bold text-foreground">No articles found</h3>
           </div>
         ) : (
-          filteredArticles?.map((art) => (
-            <Link key={art.id} href={`/rights/${art.id}`}>
-              <div className="glass-card p-6 group cursor-pointer hover:border-white/20 transition-all flex flex-col h-full relative overflow-hidden">
+          filteredArticles?.map((art, index) => (
+            <motion.div
+              key={art.id}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.4, delay: index * 0.05 }}
+              whileHover={{ scale: 1.02, y: -3 }}
+              className="rounded-2xl"
+            >
+              <Link href={`/rights/${art.id}`}>
+                <div className="glass-card p-6 group cursor-pointer hover:border-white/20 transition-all flex flex-col h-full relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-secondary to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-secondary mb-3">
                   <BookOpen className="w-3 h-3" /> {art.category}
@@ -71,6 +81,7 @@ export default function Rights() {
                 </div>
               </div>
             </Link>
+          </motion.div>
           ))
         )}
       </div>

@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { FileText, Download, Globe } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 export default function Documents() {
   const { data: documents, isLoading } = useListDocuments();
@@ -49,9 +50,19 @@ export default function Documents() {
             <h3 className="text-lg font-bold text-foreground">No documents found</h3>
           </div>
         ) : (
-          filteredDocs?.map((doc) => (
-            <Link key={doc.id} href={`/documents/${doc.id}`}>
-              <div className="glass-card p-5 flex items-center gap-4 group cursor-pointer hover:border-secondary/50 transition-colors">
+          filteredDocs?.map((doc, index) => (
+            <motion.div
+              key={doc.id}
+              initial={{ opacity: 0, y: 50, rotateX: -15 }}
+              whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.45, ease: "easeOut" as const, delay: index * 0.05 }}
+              whileHover={{ y: -4, rotateX: 2 }}
+              style={{ transformPerspective: 1000 }}
+              className="rounded-2xl"
+            >
+              <Link href={`/documents/${doc.id}`}>
+                <div className="glass-card p-5 flex items-center gap-4 group cursor-pointer hover:border-secondary/50 transition-colors h-full">
                 <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-secondary/20 group-hover:border-secondary/30 transition-colors text-primary-foreground/50 group-hover:text-secondary">
                   <FileText className="w-6 h-6" />
                 </div>
@@ -64,6 +75,7 @@ export default function Documents() {
                 </div>
               </div>
             </Link>
+          </motion.div>
           ))
         )}
       </div>

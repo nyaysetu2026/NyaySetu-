@@ -35,8 +35,8 @@ export default function LawyerDetail() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Left Column: Image and Actions */}
         <div className="md:col-span-1 space-y-6">
-          <Card className="overflow-hidden border-none shadow-lg">
-            <div className="aspect-[3/4] bg-muted w-full relative">
+          <div className="glass-card overflow-hidden border-none shadow-lg">
+            <div className="aspect-[3/4] bg-muted w-full relative rounded-t-2xl">
               {lawyer.imageUrl ? (
                 <img src={lawyer.imageUrl} alt={lawyer.name} className="w-full h-full object-cover" />
               ) : (
@@ -49,11 +49,11 @@ export default function LawyerDetail() {
                 <Star className="h-4 w-4 fill-current" /> {lawyer.rating} ({lawyer.reviewCount})
               </div>
             </div>
-          </Card>
+          </div>
 
-          <Card className="border-border/50">
-            <CardContent className="p-6 space-y-4">
-              <div className="text-center pb-4 border-b">
+          <div className="glass-card">
+            <div className="p-6 space-y-4">
+              <div className="text-center pb-4 border-b border-white/10">
                 <div className="text-sm text-muted-foreground mb-1">Consultation Fee</div>
                 <div className="text-3xl font-bold text-primary">₹{lawyer.fee}</div>
               </div>
@@ -61,11 +61,11 @@ export default function LawyerDetail() {
                 <Calendar className="mr-2 h-5 w-5" /> Book Appointment
               </Button>
               <div className="flex gap-2">
-                <Button variant="outline" className="w-full"><Phone className="mr-2 h-4 w-4" /> Call</Button>
-                <Button variant="outline" className="w-full"><Mail className="mr-2 h-4 w-4" /> Message</Button>
+                <Button variant="outline" className="w-full bg-white/5 border-white/10 hover:bg-white/10"><Phone className="mr-2 h-4 w-4" /> Call</Button>
+                <Button variant="outline" className="w-full bg-white/5 border-white/10 hover:bg-white/10"><Mail className="mr-2 h-4 w-4" /> Message</Button>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
 
         {/* Right Column: Details */}

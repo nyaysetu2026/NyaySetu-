@@ -60,14 +60,14 @@ export default function DocumentDetail() {
         <p className="text-lg text-muted-foreground">{doc.description}</p>
       </div>
 
-      <Card className="border-border/60 shadow-lg relative overflow-hidden">
+      <div className="glass-card shadow-lg relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-1 bg-secondary"></div>
-        <div className="bg-muted/30 border-b p-4 flex justify-between items-center">
+        <div className="bg-white/5 border-b border-white/10 p-4 flex justify-between items-center">
           <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
             <FileText className="w-4 h-4" /> Template Preview
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={copyToClipboard} className="bg-background">
+            <Button variant="outline" size="sm" onClick={copyToClipboard} className="bg-white/5 border-white/10 hover:bg-white/10">
               {copied ? <Check className="w-4 h-4 mr-2 text-green-600" /> : <Copy className="w-4 h-4 mr-2" />}
               {copied ? "Copied" : "Copy text"}
             </Button>
@@ -76,12 +76,12 @@ export default function DocumentDetail() {
             </Button>
           </div>
         </div>
-        <CardContent className="p-8 md:p-12">
+        <div className="p-8 md:p-12">
           <div className="prose prose-slate max-w-none font-serif text-foreground/90 whitespace-pre-wrap">
             {doc.content}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

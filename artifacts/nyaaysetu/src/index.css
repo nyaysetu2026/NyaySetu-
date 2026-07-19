@@ -163,14 +163,15 @@
 @layer utilities {
   .glass-card {
     background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 16px;
     transition: all 0.3s ease;
   }
   
   .glass-card:hover {
-    border-color: rgba(212, 175, 55, 0.4);
+    border-color: rgba(212, 175, 55, 0.35);
+    box-shadow: 0 8px 40px rgba(212, 175, 55, 0.12);
   }
 
   .shimmer-bg {

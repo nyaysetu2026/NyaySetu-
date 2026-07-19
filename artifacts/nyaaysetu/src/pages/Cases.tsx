@@ -11,6 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/
 import { useQueryClient } from "@tanstack/react-query";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Landmark, Calendar, FileText, Trash2, Plus, Scale } from "lucide-react";
+import { motion } from "framer-motion";
 
 const caseSchema = z.object({
   title: z.string().min(3),
@@ -91,8 +92,16 @@ export default function Cases() {
             <p className="text-muted-foreground text-sm mt-1">Tap + to track a new case.</p>
           </div>
         ) : (
-          filteredCases?.map((c) => (
-            <div key={c.id} className="glass-card p-5 relative overflow-hidden group">
+          filteredCases?.map((c, index) => (
+            <motion.div
+              key={c.id}
+              initial={{ opacity: 0, x: 80 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              whileHover={{ boxShadow: "-4px 0 20px rgba(212,175,55,0.4)" }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ type: "spring", delay: index * 0.05 }}
+              className="glass-card p-5 relative overflow-hidden group"
+            >
               <div className="flex justify-between items-start mb-3">
                 <div className="pr-4">
                   <h3 className="text-lg font-bold text-white mb-0.5">{c.title}</h3>
@@ -130,7 +139,7 @@ export default function Cases() {
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
-            </div>
+            </motion.div>
           ))
         )}
       </div>

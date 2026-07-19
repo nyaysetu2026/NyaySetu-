@@ -103,11 +103,12 @@ export default function Home() {
             ].map((service, i) => (
               <motion.div 
                 key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                whileHover={{ y: -6, scale: 1.02, boxShadow: "0 20px 60px rgba(212,175,55,0.15)" }}
                 viewport={{ once: true, margin: "-50px" }}
-                transition={{ delay: i * 0.1, duration: 0.5 }}
-                className="group relative block"
+                transition={{ delay: i * 0.08, type: "spring", stiffness: 300, damping: 25 }}
+                className="group relative block rounded-2xl"
               >
                 <Link href={service.link}>
                   <div className="glass-card p-8 h-full cursor-pointer flex flex-col justify-between">
