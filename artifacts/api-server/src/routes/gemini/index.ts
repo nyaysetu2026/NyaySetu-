@@ -63,6 +63,22 @@ router.delete("/gemini/conversations/:id", async (req, res) => {
   res.status(204).send();
 });
 
+// Clear messages (keep conversation)
+router.delete("/gemini/conversations/:id/messages", async (req, res) => {
+  const params = DeleteGeminiConversationParams.safeParse({ id: Number(req.params.id) });
+  if (!params.success) {
+    res.status(400).json({ error: "Invalid id" });
+    return;
+  }
+  const [conv] = await db.select().from(conversationsTable).where(eq(conversationsTable.id, params.data.id));
+  if (!conv) {
+    res.status(404).json({ error: "Conversation not found" });
+    return;
+  }
+  await db.delete(messagesTable).where(eq(messagesTable.conversationId, conv.id));
+  res.status(204).send();
+});
+
 // List messages
 router.get("/gemini/conversations/:id/messages", async (req, res) => {
   const params = ListGeminiMessagesParams.safeParse({ id: Number(req.params.id) });
@@ -133,7 +149,7 @@ RESPONSE FORMAT: Use clear sections, bullet points, and numbered steps when expl
     }));
 
     const stream = await ai.models.generateContentStream({
-      model: "gemini-2.5-flash",
+      model: "gemini-2.0-flash",
       contents: chatMessages,
       config: {
         maxOutputTokens: 8192,

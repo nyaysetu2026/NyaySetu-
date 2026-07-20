@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   useListGeminiConversations,
   useCreateGeminiConversation,
@@ -7,11 +7,18 @@ import {
 } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Bot, Send, Trash2, Plus, MessageSquare, Menu, Sparkles } from "lucide-react";
+import { Bot, Send, Trash2, Plus, MessageSquare, Menu, Sparkles, Download, Eraser, MoreVertical } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQueryClient } from "@tanstack/react-query";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface Message {
   id?: number;
@@ -38,6 +45,13 @@ function TypingIndicator() {
   );
 }
 
+const suggestedQuestions = [
+  "What are my fundamental rights under the Indian Constitution?",
+  "How do I file an FIR at a police station?",
+  "What is the process for consumer court complaints?",
+  "Explain IPC Section 498A in simple terms.",
+];
+
 export default function AIChat() {
   const queryClient = useQueryClient();
   const { data: conversations, isLoading: loadingConvos } = useListGeminiConversations();
@@ -46,6 +60,7 @@ export default function AIChat() {
 
   const [activeConvoId, setActiveConvoId] = useState<number | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [pendingQuestion, setPendingQuestion] = useState<string | null>(null);
 
   useEffect(() => {
     if (!activeConvoId && conversations && conversations.length > 0) {
@@ -61,6 +76,7 @@ export default function AIChat() {
   const [localMessages, setLocalMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
+  const [isClearing, setIsClearing] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -73,14 +89,84 @@ export default function AIChat() {
     }
   }, [localMessages, isStreaming]);
 
-  const handleCreateNew = () => {
-    createConvo.mutate({ data: { title: "New Legal Inquiry" } }, {
+  const sendMessage = useCallback(async (convId: number, text: string) => {
+    setLocalMessages(prev => [...prev, { role: "user", content: text }]);
+    setIsStreaming(true);
+    setLocalMessages(prev => [...prev, { role: "assistant", content: "" }]);
+
+    try {
+      const response = await fetch(`${import.meta.env.BASE_URL}api/gemini/conversations/${convId}/messages`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: text })
+      });
+
+      const reader = response.body!.getReader();
+      const decoder = new TextDecoder();
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value);
+        const lines = chunk.split("\n").filter(l => l.startsWith("data: "));
+        for (const line of lines) {
+          try {
+            const data = JSON.parse(line.slice(6));
+            if (data.done) break;
+            setLocalMessages(prev => {
+              const newMsgs = [...prev];
+              const last = newMsgs[newMsgs.length - 1];
+              if (last.role === "assistant") last.content += data.content;
+              return newMsgs;
+            });
+          } catch {
+            // partial JSON chunk, ignore
+          }
+        }
+      }
+    } catch {
+      setLocalMessages(prev => {
+        const newMsgs = [...prev];
+        const last = newMsgs[newMsgs.length - 1];
+        last.content = "Connection error. Please try again.";
+        return newMsgs;
+      });
+    } finally {
+      setIsStreaming(false);
+      queryClient.invalidateQueries({ queryKey: ["/api/gemini/conversations", convId, "messages"] });
+    }
+  }, [queryClient]);
+
+  // After creating a conversation with a pending question, send it
+  useEffect(() => {
+    if (pendingQuestion && activeConvoId && !isStreaming) {
+      const q = pendingQuestion;
+      setPendingQuestion(null);
+      sendMessage(activeConvoId, q);
+    }
+  }, [pendingQuestion, activeConvoId, isStreaming, sendMessage]);
+
+  const handleCreateNew = (prefillQuestion?: string) => {
+    const title = prefillQuestion
+      ? prefillQuestion.slice(0, 50) + (prefillQuestion.length > 50 ? "…" : "")
+      : "New Legal Inquiry";
+
+    createConvo.mutate({ data: { title } }, {
       onSuccess: (data) => {
         queryClient.invalidateQueries({ queryKey: ["/api/gemini/conversations"] });
+        setLocalMessages([]);
         setActiveConvoId(data.id);
         setDrawerOpen(false);
+        if (prefillQuestion) {
+          setPendingQuestion(prefillQuestion);
+        }
       }
     });
+  };
+
+  const handleSuggestedQuestion = (q: string) => {
+    setInputValue("");
+    handleCreateNew(q);
   };
 
   const handleDelete = (id: number, e: React.MouseEvent) => {
@@ -96,53 +182,59 @@ export default function AIChat() {
     });
   };
 
+  const handleClearMessages = async () => {
+    if (!activeConvoId || isStreaming || isClearing) return;
+    setIsClearing(true);
+    try {
+      await fetch(`${import.meta.env.BASE_URL}api/gemini/conversations/${activeConvoId}/messages`, {
+        method: "DELETE",
+      });
+      setLocalMessages([]);
+      queryClient.invalidateQueries({ queryKey: ["/api/gemini/conversations", activeConvoId, "messages"] });
+    } finally {
+      setIsClearing(false);
+    }
+  };
+
+  const handleSaveChat = () => {
+    if (!localMessages.length) return;
+    const conv = conversations?.find(c => c.id === activeConvoId);
+    const title = conv?.title || "NyaySetu Chat";
+    const date = new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+
+    const text = [
+      `NyaySetu AI — ${title}`,
+      `Exported on: ${date}`,
+      `${"─".repeat(50)}`,
+      "",
+      ...localMessages.map(m =>
+        `${m.role === "user" ? "YOU" : "NYAAYSETU AI"}\n${m.content}\n`
+      ),
+      `${"─".repeat(50)}`,
+      "This conversation is for general legal information only.",
+      "Please consult a licensed advocate for specific legal advice.",
+    ].join("\n");
+
+    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `nyaaysetu-chat-${Date.now()}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputValue.trim() || !activeConvoId || isStreaming) return;
-
+    if (!inputValue.trim() || isStreaming) return;
     const userMsg = inputValue.trim();
     setInputValue("");
-    setLocalMessages(prev => [...prev, { role: "user", content: userMsg }]);
-    setIsStreaming(true);
-    setLocalMessages(prev => [...prev, { role: "assistant", content: "" }]);
 
-    try {
-      const response = await fetch(`${import.meta.env.BASE_URL}api/gemini/conversations/${activeConvoId}/messages`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: userMsg })
-      });
-
-      const reader = response.body!.getReader();
-      const decoder = new TextDecoder();
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        const text = decoder.decode(value);
-        const lines = text.split("\n").filter(l => l.startsWith("data: "));
-        for (const line of lines) {
-          const data = JSON.parse(line.slice(6));
-          if (data.done) break;
-          setLocalMessages(prev => {
-            const newMsgs = [...prev];
-            const last = newMsgs[newMsgs.length - 1];
-            if (last.role === "assistant") last.content += data.content;
-            return newMsgs;
-          });
-        }
-      }
-    } catch {
-      setLocalMessages(prev => {
-        const newMsgs = [...prev];
-        const last = newMsgs[newMsgs.length - 1];
-        last.content = "Connection error. Please try again.";
-        return newMsgs;
-      });
-    } finally {
-      setIsStreaming(false);
-      queryClient.invalidateQueries({ queryKey: ["/api/gemini/conversations", activeConvoId, "messages"] });
+    if (!activeConvoId) {
+      handleCreateNew(userMsg);
+      return;
     }
+    sendMessage(activeConvoId, userMsg);
   };
 
   const ConversationList = () => (
@@ -150,7 +242,7 @@ export default function AIChat() {
       <div className="p-4 border-b border-white/5">
         <motion.div whileTap={{ scale: 0.97 }}>
           <Button
-            onClick={handleCreateNew}
+            onClick={() => handleCreateNew()}
             className="w-full gap-2 bg-secondary hover:bg-secondary/90 text-white rounded-2xl h-12 font-semibold border-0"
             style={{ boxShadow: "0 4px 16px rgba(43,108,235,0.3)" }}
             disabled={createConvo.isPending}
@@ -172,7 +264,7 @@ export default function AIChat() {
             <motion.div
               key={conv.id}
               whileTap={{ scale: 0.97 }}
-              className={`flex items-center justify-between p-3.5 rounded-2xl cursor-pointer transition-all ${
+              className={`group flex items-center justify-between p-3.5 rounded-2xl cursor-pointer transition-all ${
                 activeConvoId === conv.id
                   ? "bg-secondary/15 border border-secondary/25"
                   : "hover:bg-white/5 border border-transparent"
@@ -188,7 +280,7 @@ export default function AIChat() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7 text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 shrink-0 ml-1 rounded-lg opacity-0 group-hover:opacity-100"
+                className="h-7 w-7 text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 shrink-0 ml-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
                 onClick={(e) => handleDelete(conv.id, e)}
               >
                 <Trash2 className="h-3.5 w-3.5" />
@@ -200,12 +292,7 @@ export default function AIChat() {
     </div>
   );
 
-  const suggestedQuestions = [
-    "What are my fundamental rights under the Indian Constitution?",
-    "How do I file an FIR at a police station?",
-    "What is the process for consumer court complaints?",
-    "Explain IPC Section 498A in simple terms.",
-  ];
+  const hasMessages = localMessages.length > 0;
 
   return (
     <div className="flex h-full min-h-[100dvh] lg:min-h-0 relative">
@@ -238,10 +325,53 @@ export default function AIChat() {
               </div>
             </div>
           </div>
-          <div className="w-8 h-8 rounded-full bg-secondary/15 border border-secondary/25 flex items-center justify-center">
-            <Bot className="h-4 w-4 text-secondary" />
-          </div>
+          {/* Mobile actions */}
+          {activeConvoId && hasMessages && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="rounded-xl text-muted-foreground">
+                  <MoreVertical className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="bg-card border-white/10 text-foreground">
+                <DropdownMenuItem onClick={handleSaveChat} className="gap-2 cursor-pointer hover:bg-white/5">
+                  <Download className="h-4 w-4 text-emerald-400" /> Save Chat
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className="bg-white/10" />
+                <DropdownMenuItem
+                  onClick={handleClearMessages}
+                  disabled={isClearing}
+                  className="gap-2 cursor-pointer text-destructive hover:bg-destructive/10 focus:text-destructive"
+                >
+                  <Eraser className="h-4 w-4" /> Clear Messages
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
+
+        {/* Desktop action bar (shown when chat is active & has messages) */}
+        {activeConvoId && hasMessages && (
+          <div className="hidden md:flex items-center justify-end gap-2 px-6 pt-4 pb-0">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleSaveChat}
+              className="gap-1.5 text-xs text-muted-foreground hover:text-emerald-400 hover:bg-emerald-400/10 rounded-xl h-8"
+            >
+              <Download className="h-3.5 w-3.5" /> Save Chat
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleClearMessages}
+              disabled={isClearing}
+              className="gap-1.5 text-xs text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-xl h-8"
+            >
+              <Eraser className="h-3.5 w-3.5" /> Clear
+            </Button>
+          </div>
+        )}
 
         {/* Empty state */}
         {!activeConvoId ? (
@@ -270,8 +400,9 @@ export default function AIChat() {
                   transition={{ delay: i * 0.08 }}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={handleCreateNew}
-                  className="w-full text-left px-4 py-3 rounded-2xl glass-card text-sm text-foreground/70 hover:text-white transition-colors"
+                  onClick={() => handleSuggestedQuestion(q)}
+                  disabled={createConvo.isPending}
+                  className="w-full text-left px-4 py-3 rounded-2xl glass-card text-sm text-foreground/70 hover:text-white transition-colors disabled:opacity-50"
                 >
                   {q}
                 </motion.button>
@@ -288,6 +419,13 @@ export default function AIChat() {
                     <Skeleton className="h-14 w-2/3 ml-auto rounded-2xl bg-white/5" />
                     <Skeleton className="h-20 w-3/4 mr-auto rounded-2xl bg-white/5" />
                     <Skeleton className="h-14 w-1/2 ml-auto rounded-2xl bg-white/5" />
+                  </div>
+                ) : localMessages.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-16 text-center">
+                    <div className="w-16 h-16 rounded-2xl bg-secondary/10 border border-secondary/20 flex items-center justify-center mb-4">
+                      <Bot className="h-8 w-8 text-secondary/50" />
+                    </div>
+                    <p className="text-sm text-muted-foreground">Chat cleared. Start a new conversation below.</p>
                   </div>
                 ) : (
                   <AnimatePresence initial={false}>
