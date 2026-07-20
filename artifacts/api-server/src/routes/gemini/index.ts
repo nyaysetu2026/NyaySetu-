@@ -149,7 +149,7 @@ RESPONSE FORMAT: Use clear sections, bullet points, and numbered steps when expl
     }));
 
     const stream = await ai.models.generateContentStream({
-      model: "gemini-2.0-flash",
+      model: "gemini-flash-latest",
       contents: chatMessages,
       config: {
         maxOutputTokens: 8192,
