@@ -7,6 +7,7 @@ import { Star, MapPin, Scale, Search, ShieldCheck, ChevronRight } from "lucide-r
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
+import { TricolorBar } from "@/components/ui/india-flag-bg";
 
 export default function Lawyers() {
   const [search, setSearch] = useState("");

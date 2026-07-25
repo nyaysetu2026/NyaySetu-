@@ -74,6 +74,13 @@
   --elevate-1: rgba(0, 0, 0, 0.1);
   --elevate-2: rgba(0, 0, 0, 0.2);
 
+  /* India Flag colors */
+  --india-saffron: #FF9933;
+  --india-white: #FFFFFF;
+  --india-green: #138808;
+  --india-navy: #000080;
+  --india-chakra: #000080;
+
   /* Very dark navy */
   --background: 222 47% 7%;
   /* Near white text */
@@ -145,35 +152,52 @@
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
+    overflow-x: hidden;
   }
   
   h1, h2, h3, .font-serif {
     font-family: var(--font-serif);
+  }
+
+  /* Premium scrollbar */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.18);
   }
 }
 
 @layer utilities {
   /* ── Core glass card ─────────────────────────────── */
   .glass-card {
-    background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.035);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     border: 1px solid rgba(255, 255, 255, 0.07);
     border-radius: 18px;
     transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .glass-card:hover {
-    border-color: rgba(212, 175, 55, 0.3);
-    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(212, 175, 55, 0.08), inset 0 1px 0 rgba(255,255,255,0.06);
-    background: rgba(255, 255, 255, 0.055);
+    border-color: rgba(212, 175, 55, 0.25);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(212, 175, 55, 0.06), inset 0 1px 0 rgba(255,255,255,0.06);
+    background: rgba(255, 255, 255, 0.05);
   }
 
   /* ── Elevated glass (featured cards) ─────────────── */
   .glass-card-premium {
-    background: rgba(255, 255, 255, 0.035);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 22px;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -182,11 +206,11 @@
 
   .glass-card-premium:hover {
     border-color: rgba(212, 175, 55, 0.25);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(212, 175, 55, 0.12), inset 0 1px 0 rgba(255,255,255,0.08);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(212, 175, 55, 0.1), inset 0 1px 0 rgba(255,255,255,0.08);
     transform: translateY(-3px);
   }
 
-  /* ── Gradient border (used as wrapper) ───────────── */
+  /* ── Gradient border ────────────────────────────── */
   .gradient-border {
     position: relative;
     border-radius: 20px;
@@ -205,7 +229,7 @@
     opacity: 1;
   }
 
-  /* ── Text gradients ───────────────────────────────── */
+  /* ── Text gradients ────────────────────────────── */
   .text-gradient-gold {
     background: linear-gradient(135deg, #c9a227 0%, #f5d06b 40%, #d4af37 100%);
     -webkit-background-clip: text;
@@ -220,7 +244,14 @@
     background-clip: text;
   }
 
-  /* ── Glow effects ────────────────────────────────── */
+  .text-gradient-tricolor {
+    background: linear-gradient(90deg, #FF9933 0%, #ffffff 50%, #138808 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── Glow effects ─────────────────────────────── */
   .glow-gold {
     box-shadow: 0 0 20px rgba(212, 175, 55, 0.35), 0 0 60px rgba(212, 175, 55, 0.1);
   }
@@ -230,8 +261,11 @@
   .glow-red {
     box-shadow: 0 0 20px rgba(220, 38, 38, 0.4), 0 0 60px rgba(220, 38, 38, 0.12);
   }
+  .glow-saffron {
+    box-shadow: 0 0 20px rgba(255, 153, 51, 0.35), 0 0 60px rgba(255, 153, 51, 0.1);
+  }
 
-  /* ── Shimmer ─────────────────────────────────────── */
+  /* ── Shimmer ──────────────────────────────────── */
   .shimmer-bg {
     background: linear-gradient(
       90deg,
@@ -253,7 +287,7 @@
     animation: shimmer 1.8s linear infinite;
   }
 
-  /* ── Floating animation ──────────────────────────── */
+  /* ── Floating animations ─────────────────────── */
   .animate-float {
     animation: float 7s ease-in-out infinite;
   }
@@ -264,20 +298,73 @@
     animation: float 5s ease-in-out infinite 0.7s;
   }
 
-  /* ── Scrollbar hiding ────────────────────────────── */
+  /* ── Mesh / Aurora gradient ──────────────────── */
+  .mesh-gradient-bg {
+    background:
+      radial-gradient(ellipse 80% 70% at 10% 10%, rgba(43,108,235,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 90% 90%, rgba(212,175,55,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 50% 50%, rgba(19,136,8,0.06) 0%, transparent 70%),
+      hsl(var(--background));
+  }
+
+  /* ── India flag stripe ───────────────────────── */
+  .flag-stripe-saffron { background: #FF9933; }
+  .flag-stripe-white   { background: #F0F0F0; }
+  .flag-stripe-green   { background: #138808; }
+
+  /* ── Scrollbar hiding ────────────────────────── */
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-  /* ── Status dot pulse ────────────────────────────── */
+  /* ── Status dot pulse ────────────────────────── */
   .status-live {
     animation: live-pulse 2s ease-in-out infinite;
   }
 
-  /* ── Ticker ──────────────────────────────────────── */
+  /* ── Ticker ───────────────────────────────────── */
   .animate-ticker {
     animation: ticker 30s linear infinite;
   }
+
+  /* ── Flag wave ───────────────────────────────── */
+  .animate-flag-wave {
+    animation: flagWave 4s ease-in-out infinite;
+    transform-origin: left center;
+  }
+
+  /* ── Particle float ──────────────────────────── */
+  .animate-particle-1 { animation: particleFloat1 12s ease-in-out infinite; }
+  .animate-particle-2 { animation: particleFloat2 15s ease-in-out infinite 2s; }
+  .animate-particle-3 { animation: particleFloat3 10s ease-in-out infinite 4s; }
+  .animate-particle-4 { animation: particleFloat4 13s ease-in-out infinite 1s; }
+  .animate-particle-5 { animation: particleFloat1 8s ease-in-out infinite 3s; }
+
+  /* ── Orb pulse ───────────────────────────────── */
+  .animate-orb-pulse {
+    animation: orbPulse 3s ease-in-out infinite;
+  }
+  .animate-orb-ring {
+    animation: orbRing 2.5s ease-out infinite;
+  }
+
+  /* ── AI thinking dots ────────────────────────── */
+  .animate-typing-dot {
+    animation: typing-dot 1.2s ease-in-out infinite;
+  }
+
+  /* ── Ripple ──────────────────────────────────── */
+  .animate-ripple {
+    animation: ripple 0.6s linear;
+  }
+
+  /* ── Progress ring ───────────────────────────── */
+  .progress-ring-fill {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 }
+
+/* ── Keyframes ──────────────────────────────────── */
 
 @keyframes float {
   0%, 100% { transform: translateY(0px) scale(1); }
@@ -303,4 +390,89 @@
 @keyframes typing-dot {
   0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
   30%            { transform: translateY(-6px); opacity: 1; }
+}
+
+@keyframes flagWave {
+  0%   { clip-path: polygon(0 0, 100% 2%, 100% 98%, 0 100%); }
+  25%  { clip-path: polygon(0 2%, 100% 0, 100% 100%, 0 98%); }
+  50%  { clip-path: polygon(0 0, 100% 3%, 100% 97%, 0 100%); }
+  75%  { clip-path: polygon(0 3%, 100% 0, 100% 100%, 0 97%); }
+  100% { clip-path: polygon(0 0, 100% 2%, 100% 98%, 0 100%); }
+}
+
+@keyframes particleFloat1 {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+  25%  { transform: translate(30px, -40px) scale(1.1); opacity: 0.5; }
+  50%  { transform: translate(-20px, -80px) scale(0.9); opacity: 0.2; }
+  75%  { transform: translate(40px, -50px) scale(1.05); opacity: 0.4; }
+}
+@keyframes particleFloat2 {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.2; }
+  33%  { transform: translate(-40px, -60px) scale(1.2); opacity: 0.5; }
+  66%  { transform: translate(25px, -100px) scale(0.85); opacity: 0.15; }
+}
+@keyframes particleFloat3 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.25; }
+  50%  { transform: translate(-30px, -70px) rotate(180deg); opacity: 0.4; }
+}
+@keyframes particleFloat4 {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.35; }
+  40%  { transform: translate(50px, -45px) scale(1.15); opacity: 0.5; }
+  80%  { transform: translate(-25px, -90px) scale(0.9); opacity: 0.2; }
+}
+
+@keyframes orbPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(43,108,235,0.4), 0 0 80px rgba(43,108,235,0.15); }
+  50%       { transform: scale(1.05); box-shadow: 0 0 50px rgba(43,108,235,0.6), 0 0 120px rgba(43,108,235,0.25); }
+}
+
+@keyframes orbRing {
+  0%   { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+@keyframes ripple {
+  0%   { transform: scale(0); opacity: 0.5; }
+  100% { transform: scale(4); opacity: 0; }
+}
+
+@keyframes auroraShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes meshMove1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%  { transform: translate(60px, -40px) scale(1.1); }
+  66%  { transform: translate(-40px, 60px) scale(0.95); }
+}
+@keyframes meshMove2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%  { transform: translate(-50px, 60px) scale(1.08); }
+  66%  { transform: translate(40px, -50px) scale(1.05); }
+}
+@keyframes meshMove3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(30px, 40px) scale(1.12); }
+}
+
+@keyframes shimmerSweep {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes borderGlow {
+  0%, 100% { border-color: rgba(212,175,55,0.2); box-shadow: 0 0 0 0 rgba(212,175,55,0); }
+  50%       { border-color: rgba(212,175,55,0.5); box-shadow: 0 0 20px rgba(212,175,55,0.15); }
+}
+
+@keyframes chakraSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }

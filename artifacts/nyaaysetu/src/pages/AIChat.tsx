@@ -7,7 +7,7 @@ import {
 } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Bot, Send, Trash2, Plus, MessageSquare, Menu, Sparkles, Download, Eraser, MoreVertical } from "lucide-react";
+import { Bot, Send, Trash2, Plus, MessageSquare, Menu, Sparkles, Download, Eraser, MoreVertical, Mic } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQueryClient } from "@tanstack/react-query";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
@@ -26,18 +26,87 @@ interface Message {
   content: string;
 }
 
+/** Animated AI orb with pulsing rings */
+function AIOrb({ size = 80, active = false }: { size?: number; active?: boolean }) {
+  return (
+    <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
+      {/* Outer rings */}
+      {active && (
+        <>
+          <div
+            className="absolute rounded-full border border-secondary/20"
+            style={{ width: size * 1.8, height: size * 1.8, animation: "orbRing 2s ease-out infinite" }}
+          />
+          <div
+            className="absolute rounded-full border border-secondary/15"
+            style={{ width: size * 1.5, height: size * 1.5, animation: "orbRing 2s ease-out infinite 0.5s" }}
+          />
+        </>
+      )}
+      {/* Outer glow ring */}
+      <div
+        className="absolute rounded-full"
+        style={{
+          width: size * 1.25,
+          height: size * 1.25,
+          background: `radial-gradient(circle, rgba(43,108,235,0.2) 0%, transparent 70%)`,
+          filter: "blur(8px)",
+          animation: active ? "orbPulse 2s ease-in-out infinite" : undefined,
+        }}
+      />
+      {/* Core orb */}
+      <div
+        className="relative rounded-full flex items-center justify-center"
+        style={{
+          width: size,
+          height: size,
+          background: "linear-gradient(135deg, rgba(43,108,235,0.35) 0%, rgba(43,108,235,0.15) 50%, rgba(43,108,235,0.25) 100%)",
+          border: "1px solid rgba(43,108,235,0.4)",
+          boxShadow: "0 0 40px rgba(43,108,235,0.35), 0 8px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)",
+          backdropFilter: "blur(8px)",
+        }}
+      >
+        {/* Inner shimmer */}
+        <div
+          className="absolute inset-0 rounded-full overflow-hidden"
+        >
+          <div
+            className="absolute inset-y-0 w-1/2"
+            style={{
+              background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)",
+              animation: active ? "shimmerSweep 2s ease-in-out infinite" : undefined,
+            }}
+          />
+        </div>
+        <Bot className="relative z-10 text-white" style={{ width: size * 0.45, height: size * 0.45 }} />
+      </div>
+    </div>
+  );
+}
+
 function TypingIndicator() {
   return (
     <div className="flex gap-3 justify-start">
-      <div className="w-8 h-8 rounded-full bg-secondary/20 border border-secondary/30 flex items-center justify-center shrink-0 mt-1">
-        <Bot className="h-4 w-4 text-secondary" />
+      <div className="shrink-0 mt-1">
+        <AIOrb size={32} active />
       </div>
-      <div className="glass-card px-5 py-4 rounded-2xl rounded-tl-sm flex items-center gap-1.5">
+      <div
+        className="px-5 py-4 rounded-2xl rounded-tl-sm flex items-center gap-2"
+        style={{
+          background: "rgba(255,255,255,0.04)",
+          backdropFilter: "blur(20px)",
+          border: "1px solid rgba(255,255,255,0.08)",
+        }}
+      >
         {[0, 1, 2].map(i => (
           <span
             key={i}
-            className="w-2 h-2 rounded-full bg-secondary/70 block"
-            style={{ animation: `typing-dot 1.2s ease-in-out infinite`, animationDelay: `${i * 0.2}s` }}
+            className="w-2 h-2 rounded-full block"
+            style={{
+              background: "rgba(43,108,235,0.8)",
+              animation: "typing-dot 1.2s ease-in-out infinite",
+              animationDelay: `${i * 0.2}s`,
+            }}
           />
         ))}
       </div>
@@ -137,7 +206,6 @@ export default function AIChat() {
     }
   }, [queryClient]);
 
-  // After creating a conversation with a pending question, send it
   useEffect(() => {
     if (pendingQuestion && activeConvoId && !isStreaming) {
       const q = pendingQuestion;
@@ -157,9 +225,7 @@ export default function AIChat() {
         setLocalMessages([]);
         setActiveConvoId(data.id);
         setDrawerOpen(false);
-        if (prefillQuestion) {
-          setPendingQuestion(prefillQuestion);
-        }
+        if (prefillQuestion) setPendingQuestion(prefillQuestion);
       }
     });
   };
@@ -229,7 +295,6 @@ export default function AIChat() {
     if (!inputValue.trim() || isStreaming) return;
     const userMsg = inputValue.trim();
     setInputValue("");
-
     if (!activeConvoId) {
       handleCreateNew(userMsg);
       return;
@@ -238,16 +303,37 @@ export default function AIChat() {
   };
 
   const ConversationList = () => (
-    <div className="flex flex-col h-full" style={{ background: "hsl(222 50% 8%)", borderRight: "1px solid rgba(255,255,255,0.05)" }}>
+    <div
+      className="flex flex-col h-full"
+      style={{
+        background: "rgba(8,12,26,0.95)",
+        backdropFilter: "blur(24px)",
+        borderRight: "1px solid rgba(255,255,255,0.05)",
+      }}
+    >
       <div className="p-4 border-b border-white/5">
         <motion.div whileTap={{ scale: 0.97 }}>
           <Button
             onClick={() => handleCreateNew()}
-            className="w-full gap-2 bg-secondary hover:bg-secondary/90 text-white rounded-2xl h-12 font-semibold border-0"
-            style={{ boxShadow: "0 4px 16px rgba(43,108,235,0.3)" }}
+            className="w-full gap-2 text-white rounded-2xl h-12 font-semibold border-0 relative overflow-hidden"
+            style={{
+              background: "linear-gradient(135deg, hsl(221 83% 55%) 0%, hsl(221 83% 42%) 100%)",
+              boxShadow: "0 4px 20px rgba(43,108,235,0.35)",
+            }}
             disabled={createConvo.isPending}
           >
-            <Plus className="h-4 w-4" /> New Chat
+            <div className="absolute inset-0 overflow-hidden rounded-2xl">
+              <div
+                className="absolute inset-y-0 w-1/3"
+                style={{
+                  background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent)",
+                  animation: "shimmerSweep 2.5s ease-in-out infinite",
+                }}
+              />
+            </div>
+            <span className="relative z-10 flex items-center gap-2">
+              <Plus className="h-4 w-4" /> New Chat
+            </span>
           </Button>
         </motion.div>
       </div>
@@ -256,8 +342,8 @@ export default function AIChat() {
           Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-14 w-full rounded-2xl bg-white/5" />)
         ) : conversations?.length === 0 ? (
           <div className="text-center p-6 text-sm text-muted-foreground">
-            <Bot className="w-8 h-8 mx-auto mb-2 text-secondary/30" />
-            No conversations yet.
+            <AIOrb size={48} />
+            <p className="mt-3">No conversations yet.</p>
           </div>
         ) : (
           conversations?.map((conv) => (
@@ -266,9 +352,14 @@ export default function AIChat() {
               whileTap={{ scale: 0.97 }}
               className={`group flex items-center justify-between p-3.5 rounded-2xl cursor-pointer transition-all ${
                 activeConvoId === conv.id
-                  ? "bg-secondary/15 border border-secondary/25"
-                  : "hover:bg-white/5 border border-transparent"
+                  ? "border"
+                  : "hover:bg-white/4 border border-transparent"
               }`}
+              style={activeConvoId === conv.id ? {
+                background: "rgba(43,108,235,0.12)",
+                border: "1px solid rgba(43,108,235,0.22)",
+                boxShadow: "0 4px 16px rgba(43,108,235,0.1)",
+              } : {}}
               onClick={() => { setActiveConvoId(conv.id); setDrawerOpen(false); }}
             >
               <div className="flex items-center gap-3 overflow-hidden flex-1 min-w-0">
@@ -303,9 +394,16 @@ export default function AIChat() {
 
       {/* Chat Area */}
       <div className="flex-1 flex flex-col relative w-full h-[100dvh] lg:h-auto">
+
         {/* Mobile Header */}
-        <div className="md:hidden flex items-center justify-between px-4 h-16 border-b border-white/5 sticky top-0 z-20"
-          style={{ background: "hsl(222 47% 7% / 0.9)", backdropFilter: "blur(20px)" }}>
+        <div
+          className="md:hidden flex items-center justify-between px-4 h-16 border-b border-white/5 sticky top-0 z-20"
+          style={{
+            background: "rgba(8,12,26,0.92)",
+            backdropFilter: "blur(24px)",
+            WebkitBackdropFilter: "blur(24px)",
+          }}
+        >
           <div className="flex items-center gap-3">
             <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
               <DrawerTrigger asChild>
@@ -313,19 +411,21 @@ export default function AIChat() {
                   <Menu className="h-5 w-5" />
                 </Button>
               </DrawerTrigger>
-              <DrawerContent className="h-[80vh] border-white/5 px-0" style={{ background: "hsl(222 50% 8%)" }}>
+              <DrawerContent className="h-[80vh] border-white/5 px-0" style={{ background: "rgba(8,12,26,0.97)", backdropFilter: "blur(40px)" }}>
                 <ConversationList />
               </DrawerContent>
             </Drawer>
-            <div>
-              <span className="font-serif font-bold text-base">AI Assistant</span>
-              <div className="flex items-center gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                <span className="text-[10px] text-emerald-400/80 font-medium">Online</span>
+            <div className="flex items-center gap-2.5">
+              <AIOrb size={28} active={isStreaming} />
+              <div>
+                <span className="font-serif font-bold text-base leading-none">AI Assistant</span>
+                <div className="flex items-center gap-1 mt-0.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-[10px] text-emerald-400/80 font-medium">Online</span>
+                </div>
               </div>
             </div>
           </div>
-          {/* Mobile actions */}
           {activeConvoId && hasMessages && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -333,11 +433,15 @@ export default function AIChat() {
                   <MoreVertical className="h-5 w-5" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="bg-card border-white/10 text-foreground">
+              <DropdownMenuContent
+                align="end"
+                className="text-foreground"
+                style={{ background: "rgba(16,22,42,0.97)", backdropFilter: "blur(24px)", border: "1px solid rgba(255,255,255,0.08)" }}
+              >
                 <DropdownMenuItem onClick={handleSaveChat} className="gap-2 cursor-pointer hover:bg-white/5">
                   <Download className="h-4 w-4 text-emerald-400" /> Save Chat
                 </DropdownMenuItem>
-                <DropdownMenuSeparator className="bg-white/10" />
+                <DropdownMenuSeparator className="bg-white/8" />
                 <DropdownMenuItem
                   onClick={handleClearMessages}
                   disabled={isClearing}
@@ -350,61 +454,95 @@ export default function AIChat() {
           )}
         </div>
 
-        {/* Desktop action bar (shown when chat is active & has messages) */}
+        {/* Desktop action bar */}
         {activeConvoId && hasMessages && (
-          <div className="hidden md:flex items-center justify-end gap-2 px-6 pt-4 pb-0">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleSaveChat}
-              className="gap-1.5 text-xs text-muted-foreground hover:text-emerald-400 hover:bg-emerald-400/10 rounded-xl h-8"
-            >
-              <Download className="h-3.5 w-3.5" /> Save Chat
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleClearMessages}
-              disabled={isClearing}
-              className="gap-1.5 text-xs text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-xl h-8"
-            >
-              <Eraser className="h-3.5 w-3.5" /> Clear
-            </Button>
+          <div className="hidden md:flex items-center justify-between gap-2 px-6 pt-4 pb-0">
+            <div className="flex items-center gap-2">
+              <AIOrb size={24} active={isStreaming} />
+              <span className="text-sm font-semibold text-foreground/60">
+                {conversations?.find(c => c.id === activeConvoId)?.title || "Legal Inquiry"}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleSaveChat}
+                className="gap-1.5 text-xs text-muted-foreground hover:text-emerald-400 hover:bg-emerald-400/10 rounded-xl h-8"
+              >
+                <Download className="h-3.5 w-3.5" /> Save Chat
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleClearMessages}
+                disabled={isClearing}
+                className="gap-1.5 text-xs text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-xl h-8"
+              >
+                <Eraser className="h-3.5 w-3.5" /> Clear
+              </Button>
+            </div>
           </div>
         )}
 
         {/* Empty state */}
         {!activeConvoId ? (
-          <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
+          <div className="flex-1 flex flex-col items-center justify-center p-8 text-center relative overflow-hidden">
+            {/* Background glow */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{ background: "radial-gradient(ellipse 60% 50% at 50% 40%, rgba(43,108,235,0.08) 0%, transparent 70%)" }}
+            />
+
             <motion.div
-              animate={{ y: [0, -8, 0] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              className="w-24 h-24 rounded-3xl bg-secondary/10 border border-secondary/20 flex items-center justify-center mb-6"
-              style={{ boxShadow: "0 0 40px rgba(43,108,235,0.15)" }}
+              animate={{ y: [0, -10, 0], rotate: [0, 2, -2, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              className="mb-8 relative z-10"
             >
-              <Bot className="h-12 w-12 text-secondary" />
+              <AIOrb size={100} active />
             </motion.div>
-            <h2 className="text-2xl font-bold text-foreground font-serif mb-2">NyaySetu AI</h2>
-            <p className="max-w-sm text-sm text-muted-foreground mb-8 leading-relaxed">
+
+            <h2 className="text-2xl font-bold text-foreground font-serif mb-2 relative z-10">NyaySetu AI</h2>
+            <p className="max-w-sm text-sm text-muted-foreground mb-3 leading-relaxed relative z-10">
               Your intelligent legal companion. Ask about fundamental rights, IPC codes, court procedures, and more.
             </p>
-            <div className="w-full max-w-md space-y-2.5">
+            <p className="text-xs text-muted-foreground/40 mb-8 relative z-10 uppercase tracking-wider font-medium">
+              Powered by Google Gemini AI
+            </p>
+
+            <div className="w-full max-w-md space-y-2.5 relative z-10">
               <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
                 <Sparkles className="w-3.5 h-3.5 text-accent" /> Suggested Questions
               </p>
               {suggestedQuestions.map((q, i) => (
                 <motion.button
                   key={i}
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.08 }}
-                  whileHover={{ scale: 1.02 }}
+                  transition={{ delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                  whileHover={{ scale: 1.02, x: 4 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleSuggestedQuestion(q)}
                   disabled={createConvo.isPending}
-                  className="w-full text-left px-4 py-3 rounded-2xl glass-card text-sm text-foreground/70 hover:text-white transition-colors disabled:opacity-50"
+                  className="w-full text-left px-4 py-3.5 rounded-2xl text-sm text-foreground/65 hover:text-white transition-all disabled:opacity-50 relative group"
+                  style={{
+                    background: "rgba(255,255,255,0.025)",
+                    backdropFilter: "blur(20px)",
+                    border: "1px solid rgba(255,255,255,0.07)",
+                  }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(43,108,235,0.3)";
+                    (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 20px rgba(43,108,235,0.1)";
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.07)";
+                    (e.currentTarget as HTMLElement).style.boxShadow = "none";
+                  }}
                 >
-                  {q}
+                  <span className="flex items-center gap-2">
+                    <span className="text-secondary/60 text-xs font-mono">{String(i + 1).padStart(2, "0")}</span>
+                    {q}
+                  </span>
                 </motion.button>
               ))}
             </div>
@@ -422,40 +560,53 @@ export default function AIChat() {
                   </div>
                 ) : localMessages.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-16 text-center">
-                    <div className="w-16 h-16 rounded-2xl bg-secondary/10 border border-secondary/20 flex items-center justify-center mb-4">
-                      <Bot className="h-8 w-8 text-secondary/50" />
-                    </div>
-                    <p className="text-sm text-muted-foreground">Chat cleared. Start a new conversation below.</p>
+                    <AIOrb size={56} />
+                    <p className="text-sm text-muted-foreground mt-4">Chat cleared. Start a new conversation below.</p>
                   </div>
                 ) : (
                   <AnimatePresence initial={false}>
                     {localMessages.map((msg, i) => (
                       <motion.div
                         key={i}
-                        initial={{ opacity: 0, y: 12, scale: 0.97 }}
+                        initial={{ opacity: 0, y: 14, scale: 0.97 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                         className={`flex gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                       >
                         {msg.role === "assistant" && (
-                          <div className="w-8 h-8 rounded-full bg-secondary/15 border border-secondary/25 flex items-center justify-center shrink-0 mt-1">
-                            <Bot className="h-4 w-4 text-secondary" />
+                          <div className="shrink-0 mt-1">
+                            <AIOrb size={32} active={isStreaming && i === localMessages.length - 1} />
                           </div>
                         )}
-                        <div className={`px-5 py-3.5 rounded-2xl max-w-[85%] text-[15px] leading-relaxed whitespace-pre-wrap ${
-                          msg.role === "user"
-                            ? "text-white rounded-tr-sm font-medium"
-                            : "glass-card rounded-tl-sm text-foreground/90"
-                        }`}
+
+                        <div
+                          className={`px-5 py-3.5 rounded-2xl max-w-[85%] text-[15px] leading-relaxed whitespace-pre-wrap ${
+                            msg.role === "user"
+                              ? "rounded-tr-sm font-medium text-white"
+                              : "rounded-tl-sm text-foreground/90"
+                          }`}
                           style={msg.role === "user" ? {
-                            background: "linear-gradient(135deg, hsl(221 83% 55%) 0%, hsl(221 83% 48%) 100%)",
-                            boxShadow: "0 4px 20px rgba(43,108,235,0.3)"
-                          } : undefined}
+                            background: "linear-gradient(135deg, hsl(221 83% 52%) 0%, hsl(221 83% 43%) 100%)",
+                            boxShadow: "0 4px 24px rgba(43,108,235,0.35), inset 0 1px 0 rgba(255,255,255,0.12)",
+                          } : {
+                            background: "rgba(255,255,255,0.04)",
+                            backdropFilter: "blur(20px)",
+                            border: "1px solid rgba(255,255,255,0.08)",
+                            boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
+                          }}
                         >
                           {msg.content}
                         </div>
+
                         {msg.role === "user" && (
-                          <div className="w-8 h-8 rounded-full bg-white/10 border border-white/10 flex items-center justify-center shrink-0 mt-1 text-xs font-bold text-foreground/60">
+                          <div
+                            className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-1 text-xs font-bold"
+                            style={{
+                              background: "rgba(255,255,255,0.08)",
+                              border: "1px solid rgba(255,255,255,0.1)",
+                              color: "rgba(255,255,255,0.5)",
+                            }}
+                          >
                             C
                           </div>
                         )}
@@ -470,34 +621,53 @@ export default function AIChat() {
             </div>
 
             {/* Input */}
-            <div className="absolute bottom-0 left-0 right-0 p-4 pb-safe pb-24 lg:pb-5"
-              style={{ background: "linear-gradient(to top, hsl(222 47% 7%) 60%, transparent)", backdropFilter: "blur(8px)" }}>
+            <div
+              className="absolute bottom-0 left-0 right-0 p-4 pb-safe pb-24 lg:pb-5"
+              style={{
+                background: "linear-gradient(to top, rgba(8,12,26,0.98) 60%, transparent)",
+                backdropFilter: "blur(12px)",
+              }}
+            >
               <form onSubmit={handleSendMessage} className="max-w-3xl mx-auto relative flex items-end gap-2">
                 <div className="relative flex-1">
                   <Input
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     placeholder="Ask a legal question..."
-                    className="w-full pl-5 pr-14 min-h-[56px] py-4 rounded-3xl border-white/10 bg-white/6 focus-visible:ring-secondary/50 focus-visible:border-secondary/40 text-base focus-visible:bg-white/8 transition-all text-foreground placeholder:text-muted-foreground/60"
+                    className="w-full pl-5 pr-24 min-h-[56px] py-4 rounded-3xl text-base text-foreground placeholder:text-muted-foreground/50 transition-all focus-visible:ring-0 focus-visible:outline-none"
+                    style={{
+                      background: "rgba(255,255,255,0.05)",
+                      backdropFilter: "blur(20px)",
+                      border: inputValue ? "1px solid rgba(43,108,235,0.4)" : "1px solid rgba(255,255,255,0.09)",
+                      boxShadow: inputValue ? "0 0 0 3px rgba(43,108,235,0.08), inset 0 1px 0 rgba(255,255,255,0.05)" : "inset 0 1px 0 rgba(255,255,255,0.04)",
+                      transition: "all 0.2s ease",
+                    }}
                     disabled={isStreaming}
                     autoComplete="off"
                     onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSendMessage(e as any); } }}
                   />
-                  <motion.div whileTap={{ scale: 0.9 }}>
+
+                  {/* Send button */}
+                  <motion.div whileTap={{ scale: 0.88 }} className="absolute right-2 bottom-2">
                     <Button
                       type="submit"
                       size="icon"
                       disabled={!inputValue.trim() || isStreaming}
-                      className="absolute right-2 bottom-2 rounded-2xl w-10 h-10 bg-secondary hover:bg-secondary/90 text-white disabled:bg-white/8 disabled:text-white/25 border-0"
-                      style={{ boxShadow: inputValue.trim() ? "0 4px 12px rgba(43,108,235,0.4)" : undefined }}
+                      className="rounded-2xl w-10 h-10 text-white border-0 transition-all"
+                      style={{
+                        background: inputValue.trim()
+                          ? "linear-gradient(135deg, hsl(221 83% 55%) 0%, hsl(221 83% 44%) 100%)"
+                          : "rgba(255,255,255,0.06)",
+                        boxShadow: inputValue.trim() ? "0 4px 16px rgba(43,108,235,0.45)" : undefined,
+                      }}
                     >
                       <Send className="h-4 w-4" />
                     </Button>
                   </motion.div>
                 </div>
               </form>
-              <p className="text-center mt-2.5 text-[10px] text-muted-foreground/40 uppercase tracking-widest hidden md:block">
-                AI can make mistakes · Verify important legal information
+              <p className="text-center mt-2.5 text-[10px] text-muted-foreground/35 uppercase tracking-widest hidden md:block">
+                AI can make mistakes · Verify important legal information with a licensed advocate
               </p>
             </div>
           </>

@@ -4,6 +4,7 @@ import { FileText, Download, Globe, ChevronRight, Folder } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { TricolorBar } from "@/components/ui/india-flag-bg";
 
 const CATEGORY_COLORS: Record<string, { icon: string; bg: string; border: string }> = {
   "Affidavits":  { icon: "text-blue-400",   bg: "bg-blue-500/10",   border: "border-blue-500/20" },

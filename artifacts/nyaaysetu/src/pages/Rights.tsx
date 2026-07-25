@@ -4,6 +4,7 @@ import { BookOpen, Clock, ChevronRight, Scale } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { TricolorBar } from "@/components/ui/india-flag-bg";
 
 const CATEGORY_ACCENTS: Record<string, { text: string; bg: string; bar: string }> = {
   "Constitutional Rights": { text: "text-accent",    bg: "bg-accent/10",    bar: "from-accent/60" },
