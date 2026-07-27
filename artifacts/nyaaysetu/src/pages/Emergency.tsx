@@ -1,127 +1,122 @@
 import { useListEmergencyContacts } from "@workspace/api-client-react";
-import { Phone, AlertTriangle, Shield, Zap } from "lucide-react";
+import { Phone, AlertTriangle, Shield, Zap, Radio } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { TricolorBar } from "@/components/ui/india-flag-bg";
 
 export default function Emergency() {
   const { data: contacts, isLoading } = useListEmergencyContacts();
-  const categories = Array.from(new Set(contacts?.map(c => c.category) || []));
+  const categories = Array.from(new Set(contacts?.map((c: { category: string }) => c.category) || []));
 
   return (
-    <div className="min-h-screen bg-transparent relative overflow-hidden pb-28">
+    <div className="min-h-screen bg-transparent relative overflow-hidden pb-32">
 
-      {/* Ambient red glow */}
-      <div
-        className="absolute top-0 left-0 right-0 h-[50vh] pointer-events-none"
-        style={{ background: "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(220,38,38,0.15) 0%, transparent 70%)" }}
-      />
-      <motion.div
-        animate={{ scale: [1, 1.1, 1], opacity: [0.06, 0.12, 0.06] }}
-        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[-10%] left-[20%] w-[60%] h-[40%] rounded-full pointer-events-none"
-        style={{ background: "radial-gradient(circle, rgba(220,38,38,0.15) 0%, transparent 70%)", filter: "blur(60px)" }}
-      />
+      {/* ── Background ambient glows ──────────────────────────── */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-0 right-0 h-[60vh]" style={{ background: "radial-gradient(ellipse 80% 55% at 50% 0%, rgba(220,38,38,0.13) 0%, transparent 70%)" }} />
+        <motion.div
+          animate={{ scale: [1,1.15,1], opacity: [0.07,0.14,0.07] }}
+          transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[-10%] left-[15%] w-[70%] h-[45%] rounded-full"
+          style={{ background: "radial-gradient(circle, rgba(220,38,38,0.18) 0%, transparent 70%)", filter: "blur(70px)" }}
+        />
+        {/* Pulsing grid lines for drama */}
+        <div className="absolute inset-0 opacity-[0.015]" style={{
+          backgroundImage: "linear-gradient(rgba(220,38,38,1) 1px, transparent 1px), linear-gradient(90deg, rgba(220,38,38,1) 1px, transparent 1px)",
+          backgroundSize: "80px 80px",
+        }} />
+      </div>
 
       <div className="container mx-auto px-4 py-8 max-w-4xl relative z-10 pt-4 lg:pt-8">
 
-        {/* Hero Header */}
+        {/* ── Emergency Hero ────────────────────────────────────── */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 350, damping: 25 }}
-          className="rounded-3xl p-8 md:p-10 mb-10 flex flex-col items-center text-center relative overflow-hidden"
+          initial={{ opacity: 0, y: 30, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ type: "spring", stiffness: 300, damping: 24 }}
+          className="rounded-[28px] mb-10 overflow-hidden relative"
           style={{
-            background: "linear-gradient(135deg, rgba(220,38,38,0.16) 0%, rgba(185,28,28,0.08) 100%)",
-            border: "1px solid rgba(220,38,38,0.28)",
-            boxShadow: "0 0 80px rgba(220,38,38,0.1), 0 20px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)",
-            backdropFilter: "blur(24px)",
+            background: "linear-gradient(140deg, rgba(220,38,38,0.16) 0%, rgba(153,27,27,0.1) 60%, rgba(8,12,26,0.6) 100%)",
+            border: "1px solid rgba(220,38,38,0.3)",
+            boxShadow: "0 0 100px rgba(220,38,38,0.12), 0 24px 80px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05)",
+            backdropFilter: "blur(32px)",
           }}
         >
           {/* Top shimmer */}
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-destructive/50 to-transparent" />
+          <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(220,38,38,0.7), transparent)" }} />
 
-          {/* Pulsing rings */}
-          <div className="relative mb-6 flex items-center justify-center">
-            <motion.div
-              animate={{ scale: [1, 1.6, 1], opacity: [0.12, 0, 0.12] }}
-              transition={{ duration: 2.2, repeat: Infinity }}
-              className="absolute rounded-full bg-destructive/20"
-              style={{ width: 100, height: 100 }}
-            />
-            <motion.div
-              animate={{ scale: [1, 1.35, 1], opacity: [0.18, 0, 0.18] }}
-              transition={{ duration: 2.2, repeat: Infinity, delay: 0.4 }}
-              className="absolute rounded-full bg-destructive/25"
-              style={{ width: 84, height: 84 }}
-            />
-            <motion.div
-              animate={{ scale: [1, 1.05, 1] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-              className="relative rounded-2xl flex items-center justify-center text-white"
-              style={{
-                width: 68,
-                height: 68,
-                background: "linear-gradient(135deg, #dc2626 0%, #991b1b 100%)",
-                boxShadow: "0 0 40px rgba(220,38,38,0.55), 0 8px 32px rgba(0,0,0,0.5)",
-              }}
-            >
-              <AlertTriangle className="w-9 h-9" />
-            </motion.div>
+          {/* Live indicator */}
+          <div className="flex justify-end px-6 pt-5">
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full" style={{ background: "rgba(220,38,38,0.1)", border: "1px solid rgba(220,38,38,0.2)" }}>
+              <motion.div animate={{ opacity: [1,0.3,1] }} transition={{ duration: 1.2, repeat: Infinity }} className="w-1.5 h-1.5 rounded-full bg-red-400" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-red-400">LIVE · 24/7</span>
+            </div>
           </div>
 
-          <h1 className="text-2xl md:text-4xl font-bold font-serif text-white mb-3 tracking-tight">
-            URGENT RESPONSE
-          </h1>
-          <p className="text-destructive-foreground/65 text-sm md:text-base max-w-md leading-relaxed mb-6">
-            If you are in immediate physical danger, tap the button below to call National Emergency Dispatch.
-          </p>
-
-          {/* Tricolor divider */}
-          <TricolorBar className="w-24 mb-6" />
-
-          <motion.a
-            href="tel:112"
-            whileHover={{ scale: 1.04, y: -3 }}
-            whileTap={{ scale: 0.96 }}
-            className="w-full max-w-xs flex items-center justify-center gap-3 text-white font-mono text-3xl font-bold py-5 rounded-2xl relative overflow-hidden"
-            style={{
-              background: "linear-gradient(135deg, #dc2626 0%, #991b1b 100%)",
-              boxShadow: "0 0 40px rgba(220,38,38,0.5), 0 12px 32px rgba(0,0,0,0.5)",
-            }}
-          >
-            {/* Shimmer */}
-            <div className="absolute inset-0 overflow-hidden rounded-2xl">
-              <div
-                className="absolute inset-y-0 w-1/3"
-                style={{
-                  background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)",
-                  animation: "shimmerSweep 2s ease-in-out infinite",
-                }}
-              />
+          <div className="px-8 pb-10 flex flex-col items-center text-center">
+            {/* Pulsing alert icon */}
+            <div className="relative mb-7 flex items-center justify-center">
+              <motion.div animate={{ scale: [1,1.7,1], opacity: [0.1,0,0.1] }} transition={{ duration: 2.4, repeat: Infinity }} className="absolute w-32 h-32 rounded-full bg-red-500/20" />
+              <motion.div animate={{ scale: [1,1.45,1], opacity: [0.16,0,0.16] }} transition={{ duration: 2.4, repeat: Infinity, delay: 0.4 }} className="absolute w-24 h-24 rounded-full bg-red-500/25" />
+              <motion.div animate={{ scale: [1,1.06,1] }} transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }} className="relative rounded-3xl flex items-center justify-center text-white z-10" style={{
+                width: 76, height: 76,
+                background: "linear-gradient(135deg, #dc2626 0%, #7f1d1d 100%)",
+                boxShadow: "0 0 50px rgba(220,38,38,0.6), 0 12px 40px rgba(0,0,0,0.5)",
+                border: "1px solid rgba(255,255,255,0.1)",
+              }}>
+                <AlertTriangle className="w-9 h-9" />
+              </motion.div>
             </div>
-            <Phone className="w-7 h-7 fill-current relative z-10" />
-            <span className="relative z-10">112</span>
-          </motion.a>
 
-          <p className="mt-4 text-xs text-destructive-foreground/40 uppercase tracking-widest">
-            National Emergency Number · 24/7 Available
-          </p>
+            <h1 className="text-3xl md:text-5xl font-bold font-serif text-white mb-3 tracking-tight">
+              URGENT <span style={{ color: "#f87171" }}>RESPONSE</span>
+            </h1>
+            <p className="text-white/55 text-sm md:text-base max-w-sm leading-relaxed mb-6">
+              Immediate physical danger? Tap the button below to connect to National Emergency Dispatch instantly.
+            </p>
+
+            <TricolorBar className="w-24 mb-7" />
+
+            {/* 112 button */}
+            <motion.a
+              href="tel:112"
+              whileHover={{ scale: 1.05, y: -4 }}
+              whileTap={{ scale: 0.96 }}
+              className="relative w-full max-w-xs flex items-center justify-center gap-4 text-white py-6 rounded-3xl overflow-hidden group"
+              style={{
+                background: "linear-gradient(135deg, #dc2626 0%, #b91c1c 60%, #7f1d1d 100%)",
+                boxShadow: "0 0 50px rgba(220,38,38,0.55), 0 16px 48px rgba(0,0,0,0.55)",
+                border: "1px solid rgba(255,255,255,0.08)",
+              }}
+            >
+              {/* Shimmer */}
+              <div className="absolute inset-0 overflow-hidden rounded-3xl">
+                <div className="absolute inset-y-0 w-1/3" style={{ background: "linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent)", animation: "shimmerSweep 1.8s ease-in-out infinite" }} />
+              </div>
+              {/* Hover glow ring */}
+              <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity" style={{ boxShadow: "inset 0 0 30px rgba(255,100,100,0.15)" }} />
+              <Phone className="w-8 h-8 fill-current relative z-10" />
+              <span className="font-mono text-4xl font-black tracking-wider relative z-10">112</span>
+            </motion.a>
+
+            <p className="mt-4 text-[10px] text-white/35 uppercase tracking-[0.18em]">National Emergency · Free Call · 24/7 Available</p>
+          </div>
         </motion.div>
 
-        {/* Contacts */}
+        {/* ── Contact Directory ─────────────────────────────────── */}
+        <div className="mb-6">
+          <div className="flex items-center gap-3 mb-2">
+            <Radio className="w-4 h-4 text-red-400/60" />
+            <h2 className="text-sm font-bold uppercase tracking-[0.18em] text-muted-foreground/60">Verified Helplines</h2>
+            <div className="flex-1 h-px bg-gradient-to-r from-white/8 to-transparent" />
+          </div>
+        </div>
+
         {isLoading ? (
           <div className="space-y-3">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div
-                key={i}
-                className="p-5 flex items-center gap-4 rounded-[20px]"
-                style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.07)" }}
-              >
-                <div className="flex-1">
-                  <Skeleton className="h-5 w-1/2 mb-2 bg-white/8 rounded-lg" />
-                  <Skeleton className="h-4 w-3/4 bg-white/5 rounded-lg" />
-                </div>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="p-5 flex items-center gap-4 rounded-3xl" style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                <div className="flex-1"><Skeleton className="h-5 w-1/2 mb-2 bg-white/8 rounded-lg" /><Skeleton className="h-4 w-3/4 bg-white/5 rounded-lg" /></div>
                 <Skeleton className="h-12 w-12 rounded-2xl bg-white/8 shrink-0" />
               </div>
             ))}
@@ -130,81 +125,81 @@ export default function Emergency() {
           <div className="space-y-10">
             {categories.map((category, catIdx) => (
               <div key={category}>
-                {/* Category header */}
-                <div className="flex items-center gap-3 mb-5">
-                  <div
-                    className="w-7 h-7 rounded-xl flex items-center justify-center"
-                    style={{ background: "rgba(220,38,38,0.12)", border: "1px solid rgba(220,38,38,0.2)" }}
-                  >
-                    <Shield className="w-3.5 h-3.5 text-destructive/70" />
+                {/* Category heading */}
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-7 h-7 rounded-xl flex items-center justify-center" style={{ background: "rgba(220,38,38,0.1)", border: "1px solid rgba(220,38,38,0.2)" }}>
+                    <Shield className="w-3.5 h-3.5 text-red-400/80" />
                   </div>
-                  <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground/60">{category}</h2>
+                  <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground/55">{category}</h3>
                   <div className="flex-1 h-px bg-gradient-to-r from-white/8 to-transparent" />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {contacts?.filter(c => c.category === category).map((contact, idx) => (
+                  {contacts?.filter((c: { category: string }) => c.category === category).map((contact: {
+                    id: number; name: string; description: string; phone: string; available247?: boolean;
+                  }, idx: number) => (
                     <motion.div
                       key={contact.id}
-                      initial={{ opacity: 0, y: 20 }}
+                      initial={{ opacity: 0, y: 18 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, margin: "-40px" }}
-                      transition={{ type: "spring", stiffness: 350, damping: 28, delay: idx * 0.06 + catIdx * 0.08 }}
+                      viewport={{ once: true, margin: "-30px" }}
+                      transition={{ type: "spring", stiffness: 320, damping: 28, delay: idx * 0.06 + catIdx * 0.08 }}
                       whileHover={{ y: -3 }}
-                      className="group relative overflow-hidden flex items-center justify-between p-5 rounded-[20px] transition-all duration-300"
+                      className="group relative overflow-hidden flex items-center justify-between p-5 rounded-[22px] transition-all duration-300 cursor-default"
                       style={{
                         background: "rgba(255,255,255,0.025)",
-                        backdropFilter: "blur(20px)",
+                        backdropFilter: "blur(24px)",
                         border: "1px solid rgba(255,255,255,0.07)",
-                        boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
+                        boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
                       }}
                       onMouseEnter={e => {
-                        (e.currentTarget as HTMLElement).style.borderColor = "rgba(220,38,38,0.25)";
-                        (e.currentTarget as HTMLElement).style.boxShadow = "0 12px 40px rgba(0,0,0,0.3), 0 0 24px rgba(220,38,38,0.08)";
+                        (e.currentTarget as HTMLElement).style.borderColor = "rgba(220,38,38,0.28)";
+                        (e.currentTarget as HTMLElement).style.boxShadow = "0 16px 50px rgba(0,0,0,0.32), 0 0 30px rgba(220,38,38,0.08)";
                       }}
                       onMouseLeave={e => {
                         (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.07)";
-                        (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 16px rgba(0,0,0,0.2)";
+                        (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 20px rgba(0,0,0,0.2)";
                       }}
                     >
-                      {/* Left accent */}
-                      <div className="absolute left-0 top-0 bottom-0 w-[3px] rounded-l-[20px] opacity-0 group-hover:opacity-100 transition-opacity"
-                        style={{ background: "linear-gradient(to bottom, #dc2626, #991b1b)" }}
-                      />
+                      {/* Left accent bar */}
+                      <div className="absolute left-0 top-4 bottom-4 w-[3px] rounded-r-full opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: "linear-gradient(to bottom, #dc2626, #991b1b)", boxShadow: "2px 0 10px rgba(220,38,38,0.4)" }} />
+                      {/* Top shimmer */}
+                      <div className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: "linear-gradient(90deg,transparent,rgba(220,38,38,0.4),transparent)" }} />
 
                       <div className="flex-1 pr-4 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <h3 className="text-base font-bold text-white truncate">{contact.name}</h3>
+                          <h3 className="text-[15px] font-bold text-white truncate">{contact.name}</h3>
                           {contact.available247 && (
                             <div className="flex items-center gap-1 shrink-0">
-                              <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                              <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">24/7</span>
+                              <motion.div animate={{ opacity: [1,0.4,1] }} transition={{ duration: 1.5, repeat: Infinity }} className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                              <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider">24/7</span>
                             </div>
                           )}
                         </div>
-                        <p className="text-xs text-muted-foreground/65 line-clamp-1">{contact.description}</p>
+                        <p className="text-xs text-muted-foreground/60 line-clamp-1">{contact.description}</p>
                       </div>
 
+                      {/* Call button */}
                       <motion.a
                         href={`tel:${contact.phone}`}
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.92 }}
-                        className="w-12 h-12 rounded-2xl flex items-center justify-center text-white shrink-0 relative overflow-hidden group/btn transition-all duration-200"
-                        style={{
-                          background: "rgba(220,38,38,0.12)",
-                          border: "1px solid rgba(220,38,38,0.2)",
-                        }}
+                        onClick={(e) => e.stopPropagation()}
+                        className="w-13 h-13 w-[52px] h-[52px] rounded-2xl flex items-center justify-center text-white shrink-0 transition-all duration-200 relative overflow-hidden"
+                        style={{ background: "rgba(220,38,38,0.1)", border: "1px solid rgba(220,38,38,0.2)" }}
                         onMouseEnter={e => {
-                          (e.currentTarget as HTMLElement).style.background = "rgba(220,38,38,0.85)";
-                          (e.currentTarget as HTMLElement).style.boxShadow = "0 0 20px rgba(220,38,38,0.4)";
+                          (e.currentTarget as HTMLElement).style.background = "#dc2626";
+                          (e.currentTarget as HTMLElement).style.boxShadow = "0 0 24px rgba(220,38,38,0.5)";
+                          (e.currentTarget as HTMLElement).style.borderColor = "#dc2626";
                         }}
                         onMouseLeave={e => {
-                          (e.currentTarget as HTMLElement).style.background = "rgba(220,38,38,0.12)";
+                          (e.currentTarget as HTMLElement).style.background = "rgba(220,38,38,0.1)";
                           (e.currentTarget as HTMLElement).style.boxShadow = "none";
+                          (e.currentTarget as HTMLElement).style.borderColor = "rgba(220,38,38,0.2)";
                         }}
-                        onClick={(e) => e.stopPropagation()}
                       >
-                        <Phone className="w-5 h-5 text-destructive group-hover/btn:text-white transition-colors" />
+                        <Phone className="w-5 h-5 text-red-400 group-hover:text-white transition-colors" />
+                        <span className="sr-only">Call {contact.name}</span>
                       </motion.a>
                     </motion.div>
                   ))}
@@ -212,22 +207,17 @@ export default function Emergency() {
               </div>
             ))}
 
-            {/* Bottom note */}
+            {/* Bottom legal note */}
             {categories.length > 0 && (
               <motion.div
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
-                className="flex items-center gap-3 p-4 rounded-2xl text-center justify-center"
-                style={{
-                  background: "rgba(43,108,235,0.05)",
-                  border: "1px solid rgba(43,108,235,0.12)",
-                }}
+                className="flex items-center gap-3 p-4 rounded-2xl"
+                style={{ background: "rgba(43,108,235,0.05)", border: "1px solid rgba(43,108,235,0.12)" }}
               >
-                <Zap className="w-4 h-4 text-secondary/60 shrink-0" />
-                <p className="text-xs text-muted-foreground/60">
-                  All helplines are government-verified. For general legal advice, use the AI Chat feature.
-                </p>
+                <Zap className="w-4 h-4 text-blue-400/60 shrink-0" />
+                <p className="text-xs text-muted-foreground/55">All helplines are government-verified and active. For general legal queries, use the AI Chat feature.</p>
               </motion.div>
             )}
           </div>
