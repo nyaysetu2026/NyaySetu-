@@ -476,3 +476,72 @@
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
 }
+
+/* ── Silk flag wave — slow, elegant ── */
+@keyframes silkFlagWave {
+  0%   { clip-path: polygon(0 0, 100% 1.5%, 100% 98.5%, 0 100%); transform: skewY(0.3deg); }
+  20%  { clip-path: polygon(0 1%, 100% 0, 100% 100%, 0 99%); transform: skewY(-0.5deg); }
+  40%  { clip-path: polygon(0 0, 100% 2%, 100% 98%, 0 100%); transform: skewY(0.4deg); }
+  60%  { clip-path: polygon(0 1.5%, 100% 0, 100% 100%, 0 98.5%); transform: skewY(-0.3deg); }
+  80%  { clip-path: polygon(0 0, 100% 1%, 100% 99%, 0 100%); transform: skewY(0.5deg); }
+  100% { clip-path: polygon(0 0, 100% 1.5%, 100% 98.5%, 0 100%); transform: skewY(0.3deg); }
+}
+
+/* ── Light ray fade in/out ── */
+@keyframes lightRayFade {
+  0%,100% { opacity: 0; }
+  30%,70%  { opacity: 1; }
+}
+
+/* ── Glowing horizontal line pulse ── */
+@keyframes goldenLineGlow {
+  0%,100% { opacity: 0; transform: scaleX(0.3); }
+  40%,60%  { opacity: 1; transform: scaleX(1); }
+}
+
+/* ── Grid accent pulse ── */
+@keyframes gridPulse {
+  0%,100% { opacity: 0.012; }
+  50%      { opacity: 0.025; }
+}
+
+/* ── Justice scale balance tilt ── */
+@keyframes scaleBalance {
+  0%   { transform: rotate(0deg); }
+  25%  { transform: rotate(4deg); }
+  50%  { transform: rotate(0deg); }
+  75%  { transform: rotate(-4deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* ── Pan swing (left pan) ── */
+@keyframes panSwingLeft {
+  0%,100% { transform: translateY(0px); }
+  25%      { transform: translateY(-5px); }
+  75%      { transform: translateY(5px); }
+}
+
+/* ── Pan swing (right pan) ── */
+@keyframes panSwingRight {
+  0%,100% { transform: translateY(0px); }
+  25%      { transform: translateY(5px); }
+  75%      { transform: translateY(-5px); }
+}
+
+/* ── AI breathe glow ── */
+@keyframes aiBreath {
+  0%,100% { box-shadow: 0 0 20px rgba(43,108,235,0.3), 0 0 60px rgba(43,108,235,0.1); transform: scale(1); }
+  50%      { box-shadow: 0 0 40px rgba(43,108,235,0.6), 0 0 100px rgba(43,108,235,0.2); transform: scale(1.04); }
+}
+
+/* ── Mic pulse ── */
+@keyframes micPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(52,211,153,0); }
+  50%      { box-shadow: 0 0 0 6px rgba(52,211,153,0.15); }
+}
+
+/* ── Premium ripple effect ── */
+@keyframes navRipple {
+  0%   { transform: scale(0); opacity: 0.6; }
+  100% { transform: scale(3); opacity: 0; }
+}

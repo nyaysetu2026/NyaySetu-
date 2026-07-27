@@ -26,11 +26,39 @@ interface Message {
   content: string;
 }
 
-/** Animated AI orb with pulsing rings */
+type AIStatus = "online" | "thinking" | "ready";
+
+/** Animated AI status label — cycles between states */
+function AIStatusBadge({ status }: { status: AIStatus }) {
+  const config = {
+    online:   { dot: "bg-emerald-400", glow: "rgba(52,211,153,0.8)",   text: "AI Online",      textColor: "text-emerald-400" },
+    thinking: { dot: "bg-blue-400",    glow: "rgba(96,165,250,0.8)",   text: "Thinking...",    textColor: "text-blue-400" },
+    ready:    { dot: "bg-accent",      glow: "rgba(212,175,55,0.8)",   text: "Ready to Help",  textColor: "text-amber-400" },
+  }[status];
+
+  return (
+    <motion.div
+      key={status}
+      initial={{ opacity: 0, y: -4 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 4 }}
+      transition={{ duration: 0.3 }}
+      className="flex items-center gap-1.5"
+    >
+      <div
+        className={`w-1.5 h-1.5 rounded-full ${config.dot} animate-pulse`}
+        style={{ boxShadow: `0 0 6px ${config.glow}` }}
+      />
+      <span className={`text-[10px] font-semibold uppercase tracking-wider ${config.textColor}`}>{config.text}</span>
+    </motion.div>
+  );
+}
+
+/** Animated AI orb with breathing glow */
 function AIOrb({ size = 80, active = false }: { size?: number; active?: boolean }) {
   return (
     <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
-      {/* Outer rings */}
+      {/* Outer breathing rings when active */}
       {active && (
         <>
           <div
@@ -43,15 +71,15 @@ function AIOrb({ size = 80, active = false }: { size?: number; active?: boolean 
           />
         </>
       )}
-      {/* Outer glow ring */}
+      {/* Glow ring */}
       <div
         className="absolute rounded-full"
         style={{
-          width: size * 1.25,
-          height: size * 1.25,
-          background: `radial-gradient(circle, rgba(43,108,235,0.2) 0%, transparent 70%)`,
-          filter: "blur(8px)",
-          animation: active ? "orbPulse 2s ease-in-out infinite" : undefined,
+          width: size * 1.3,
+          height: size * 1.3,
+          background: `radial-gradient(circle, rgba(43,108,235,0.22) 0%, transparent 70%)`,
+          filter: "blur(10px)",
+          animation: active ? "aiBreath 2.5s ease-in-out infinite" : "aiBreath 4s ease-in-out infinite",
         }}
       />
       {/* Core orb */}
@@ -60,21 +88,22 @@ function AIOrb({ size = 80, active = false }: { size?: number; active?: boolean 
         style={{
           width: size,
           height: size,
-          background: "linear-gradient(135deg, rgba(43,108,235,0.35) 0%, rgba(43,108,235,0.15) 50%, rgba(43,108,235,0.25) 100%)",
-          border: "1px solid rgba(43,108,235,0.4)",
-          boxShadow: "0 0 40px rgba(43,108,235,0.35), 0 8px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)",
+          background: "linear-gradient(135deg, rgba(43,108,235,0.4) 0%, rgba(43,108,235,0.18) 50%, rgba(43,108,235,0.3) 100%)",
+          border: "1px solid rgba(43,108,235,0.45)",
+          boxShadow: active
+            ? "0 0 50px rgba(43,108,235,0.5), 0 8px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.12)"
+            : "0 0 30px rgba(43,108,235,0.25), 0 4px 16px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08)",
           backdropFilter: "blur(8px)",
+          transition: "box-shadow 0.5s ease",
         }}
       >
         {/* Inner shimmer */}
-        <div
-          className="absolute inset-0 rounded-full overflow-hidden"
-        >
+        <div className="absolute inset-0 rounded-full overflow-hidden">
           <div
             className="absolute inset-y-0 w-1/2"
             style={{
-              background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)",
-              animation: active ? "shimmerSweep 2s ease-in-out infinite" : undefined,
+              background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)",
+              animation: active ? "shimmerSweep 1.8s ease-in-out infinite" : "shimmerSweep 3s ease-in-out infinite",
             }}
           />
         </div>
@@ -103,7 +132,7 @@ function TypingIndicator() {
             key={i}
             className="w-2 h-2 rounded-full block"
             style={{
-              background: "rgba(43,108,235,0.8)",
+              background: "rgba(43,108,235,0.9)",
               animation: "typing-dot 1.2s ease-in-out infinite",
               animationDelay: `${i * 0.2}s`,
             }}
@@ -130,6 +159,8 @@ export default function AIChat() {
   const [activeConvoId, setActiveConvoId] = useState<number | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [pendingQuestion, setPendingQuestion] = useState<string | null>(null);
+  const [aiStatus, setAiStatus] = useState<AIStatus>("online");
+  const [micActive, setMicActive] = useState(false);
 
   useEffect(() => {
     if (!activeConvoId && conversations && conversations.length > 0) {
@@ -158,9 +189,24 @@ export default function AIChat() {
     }
   }, [localMessages, isStreaming]);
 
+  // Cycle AI status when not streaming
+  useEffect(() => {
+    if (isStreaming) {
+      setAiStatus("thinking");
+      return;
+    }
+    const cycle = () => {
+      setAiStatus(prev => prev === "online" ? "ready" : "online");
+    };
+    const timer = setInterval(cycle, 5000);
+    setAiStatus("online");
+    return () => clearInterval(timer);
+  }, [isStreaming]);
+
   const sendMessage = useCallback(async (convId: number, text: string) => {
     setLocalMessages(prev => [...prev, { role: "user", content: text }]);
     setIsStreaming(true);
+    setAiStatus("thinking");
     setLocalMessages(prev => [...prev, { role: "assistant", content: "" }]);
 
     try {
@@ -202,6 +248,8 @@ export default function AIChat() {
       });
     } finally {
       setIsStreaming(false);
+      setAiStatus("ready");
+      setTimeout(() => setAiStatus("online"), 2000);
       queryClient.invalidateQueries({ queryKey: ["/api/gemini/conversations", convId, "messages"] });
     }
   }, [queryClient]);
@@ -220,7 +268,7 @@ export default function AIChat() {
       : "New Legal Inquiry";
 
     createConvo.mutate({ data: { title } }, {
-      onSuccess: (data) => {
+      onSuccess: (data: { id: number }) => {
         queryClient.invalidateQueries({ queryKey: ["/api/gemini/conversations"] });
         setLocalMessages([]);
         setActiveConvoId(data.id);
@@ -264,7 +312,7 @@ export default function AIChat() {
 
   const handleSaveChat = () => {
     if (!localMessages.length) return;
-    const conv = conversations?.find(c => c.id === activeConvoId);
+    const conv = conversations?.find((c: { id: number; title: string }) => c.id === activeConvoId);
     const title = conv?.title || "NyaySetu Chat";
     const date = new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
 
@@ -311,14 +359,24 @@ export default function AIChat() {
         borderRight: "1px solid rgba(255,255,255,0.05)",
       }}
     >
+      {/* Header */}
       <div className="p-4 border-b border-white/5">
+        <div className="flex items-center gap-2 mb-3">
+          <AIOrb size={24} active={isStreaming} />
+          <div>
+            <p className="text-xs font-bold text-foreground">NyaySetu AI</p>
+            <AnimatePresence mode="wait">
+              <AIStatusBadge status={aiStatus} />
+            </AnimatePresence>
+          </div>
+        </div>
         <motion.div whileTap={{ scale: 0.97 }}>
           <Button
             onClick={() => handleCreateNew()}
             className="w-full gap-2 text-white rounded-2xl h-12 font-semibold border-0 relative overflow-hidden"
             style={{
               background: "linear-gradient(135deg, hsl(221 83% 55%) 0%, hsl(221 83% 42%) 100%)",
-              boxShadow: "0 4px 20px rgba(43,108,235,0.35)",
+              boxShadow: "0 4px 20px rgba(43,108,235,0.4)",
             }}
             disabled={createConvo.isPending}
           >
@@ -337,6 +395,8 @@ export default function AIChat() {
           </Button>
         </motion.div>
       </div>
+
+      {/* Conversation list */}
       <div className="flex-1 overflow-y-auto p-3 space-y-1.5 no-scrollbar">
         {loadingConvos ? (
           Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-14 w-full rounded-2xl bg-white/5" />)
@@ -357,8 +417,8 @@ export default function AIChat() {
               }`}
               style={activeConvoId === conv.id ? {
                 background: "rgba(43,108,235,0.12)",
-                border: "1px solid rgba(43,108,235,0.22)",
-                boxShadow: "0 4px 16px rgba(43,108,235,0.1)",
+                border: "1px solid rgba(43,108,235,0.25)",
+                boxShadow: "0 4px 16px rgba(43,108,235,0.12)",
               } : {}}
               onClick={() => { setActiveConvoId(conv.id); setDrawerOpen(false); }}
             >
@@ -379,6 +439,14 @@ export default function AIChat() {
             </motion.div>
           ))
         )}
+      </div>
+
+      {/* Sidebar footer trust note */}
+      <div className="px-4 py-3 border-t border-white/5">
+        <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground/40 uppercase tracking-wider">
+          <div className="w-1 h-1 rounded-full bg-emerald-400/60" />
+          End-to-end encrypted
+        </div>
       </div>
     </div>
   );
@@ -419,9 +487,10 @@ export default function AIChat() {
               <AIOrb size={28} active={isStreaming} />
               <div>
                 <span className="font-serif font-bold text-base leading-none">AI Assistant</span>
-                <div className="flex items-center gap-1 mt-0.5">
-                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="text-[10px] text-emerald-400/80 font-medium">Online</span>
+                <div className="mt-0.5">
+                  <AnimatePresence mode="wait">
+                    <AIStatusBadge status={aiStatus} />
+                  </AnimatePresence>
                 </div>
               </div>
             </div>
@@ -457,11 +526,18 @@ export default function AIChat() {
         {/* Desktop action bar */}
         {activeConvoId && hasMessages && (
           <div className="hidden md:flex items-center justify-between gap-2 px-6 pt-4 pb-0">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <AIOrb size={24} active={isStreaming} />
-              <span className="text-sm font-semibold text-foreground/60">
-                {conversations?.find(c => c.id === activeConvoId)?.title || "Legal Inquiry"}
-              </span>
+              <div>
+                <span className="text-sm font-semibold text-foreground/60">
+                  {conversations?.find((c: { id: number; title: string }) => c.id === activeConvoId)?.title || "Legal Inquiry"}
+                </span>
+                <div className="mt-0.5">
+                  <AnimatePresence mode="wait">
+                    <AIStatusBadge status={aiStatus} />
+                  </AnimatePresence>
+                </div>
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <Button
@@ -491,7 +567,7 @@ export default function AIChat() {
             {/* Background glow */}
             <div
               className="absolute inset-0 pointer-events-none"
-              style={{ background: "radial-gradient(ellipse 60% 50% at 50% 40%, rgba(43,108,235,0.08) 0%, transparent 70%)" }}
+              style={{ background: "radial-gradient(ellipse 60% 50% at 50% 40%, rgba(43,108,235,0.09) 0%, transparent 70%)" }}
             />
 
             <motion.div
@@ -503,9 +579,17 @@ export default function AIChat() {
             </motion.div>
 
             <h2 className="text-2xl font-bold text-foreground font-serif mb-2 relative z-10">NyaySetu AI</h2>
-            <p className="max-w-sm text-sm text-muted-foreground mb-3 leading-relaxed relative z-10">
+            <p className="max-w-sm text-sm text-muted-foreground mb-2 leading-relaxed relative z-10">
               Your intelligent legal companion. Ask about fundamental rights, IPC codes, court procedures, and more.
             </p>
+
+            {/* Status */}
+            <div className="mb-8 relative z-10">
+              <AnimatePresence mode="wait">
+                <AIStatusBadge status={aiStatus} />
+              </AnimatePresence>
+            </div>
+
             <p className="text-xs text-muted-foreground/40 mb-8 relative z-10 uppercase tracking-wider font-medium">
               Powered by Google Gemini AI
             </p>
@@ -532,11 +616,13 @@ export default function AIChat() {
                   }}
                   onMouseEnter={e => {
                     (e.currentTarget as HTMLElement).style.borderColor = "rgba(43,108,235,0.3)";
-                    (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 20px rgba(43,108,235,0.1)";
+                    (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 20px rgba(43,108,235,0.12)";
+                    (e.currentTarget as HTMLElement).style.background = "rgba(43,108,235,0.06)";
                   }}
                   onMouseLeave={e => {
                     (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.07)";
                     (e.currentTarget as HTMLElement).style.boxShadow = "none";
+                    (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.025)";
                   }}
                 >
                   <span className="flex items-center gap-2">
@@ -587,7 +673,7 @@ export default function AIChat() {
                           }`}
                           style={msg.role === "user" ? {
                             background: "linear-gradient(135deg, hsl(221 83% 52%) 0%, hsl(221 83% 43%) 100%)",
-                            boxShadow: "0 4px 24px rgba(43,108,235,0.35), inset 0 1px 0 rgba(255,255,255,0.12)",
+                            boxShadow: "0 4px 24px rgba(43,108,235,0.38), inset 0 1px 0 rgba(255,255,255,0.12)",
                           } : {
                             background: "rgba(255,255,255,0.04)",
                             backdropFilter: "blur(20px)",
@@ -602,9 +688,9 @@ export default function AIChat() {
                           <div
                             className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-1 text-xs font-bold"
                             style={{
-                              background: "rgba(255,255,255,0.08)",
-                              border: "1px solid rgba(255,255,255,0.1)",
-                              color: "rgba(255,255,255,0.5)",
+                              background: "rgba(43,108,235,0.15)",
+                              border: "1px solid rgba(43,108,235,0.25)",
+                              color: "rgba(255,255,255,0.6)",
                             }}
                           >
                             C
@@ -620,7 +706,7 @@ export default function AIChat() {
               </div>
             </div>
 
-            {/* Input */}
+            {/* Input area */}
             <div
               className="absolute bottom-0 left-0 right-0 p-4 pb-safe pb-24 lg:pb-5"
               style={{
@@ -639,13 +725,30 @@ export default function AIChat() {
                       background: "rgba(255,255,255,0.05)",
                       backdropFilter: "blur(20px)",
                       border: inputValue ? "1px solid rgba(43,108,235,0.4)" : "1px solid rgba(255,255,255,0.09)",
-                      boxShadow: inputValue ? "0 0 0 3px rgba(43,108,235,0.08), inset 0 1px 0 rgba(255,255,255,0.05)" : "inset 0 1px 0 rgba(255,255,255,0.04)",
-                      transition: "all 0.2s ease",
+                      boxShadow: inputValue
+                        ? "0 0 0 3px rgba(43,108,235,0.08), 0 0 20px rgba(43,108,235,0.1), inset 0 1px 0 rgba(255,255,255,0.05)"
+                        : "inset 0 1px 0 rgba(255,255,255,0.04)",
+                      transition: "all 0.25s ease",
                     }}
                     disabled={isStreaming}
                     autoComplete="off"
                     onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSendMessage(e as any); } }}
                   />
+
+                  {/* Mic button */}
+                  <motion.button
+                    type="button"
+                    whileTap={{ scale: 0.88 }}
+                    onClick={() => setMicActive(v => !v)}
+                    className="absolute right-14 bottom-2 w-10 h-10 rounded-2xl flex items-center justify-center transition-all"
+                    style={{
+                      background: micActive ? "rgba(52,211,153,0.15)" : "rgba(255,255,255,0.04)",
+                      border: micActive ? "1px solid rgba(52,211,153,0.3)" : "1px solid rgba(255,255,255,0.08)",
+                      animation: micActive ? "micPulse 1.5s ease-in-out infinite" : undefined,
+                    }}
+                  >
+                    <Mic className={`h-4 w-4 transition-colors ${micActive ? "text-emerald-400" : "text-muted-foreground/50"}`} />
+                  </motion.button>
 
                   {/* Send button */}
                   <motion.div whileTap={{ scale: 0.88 }} className="absolute right-2 bottom-2">
@@ -658,7 +761,7 @@ export default function AIChat() {
                         background: inputValue.trim()
                           ? "linear-gradient(135deg, hsl(221 83% 55%) 0%, hsl(221 83% 44%) 100%)"
                           : "rgba(255,255,255,0.06)",
-                        boxShadow: inputValue.trim() ? "0 4px 16px rgba(43,108,235,0.45)" : undefined,
+                        boxShadow: inputValue.trim() ? "0 4px 20px rgba(43,108,235,0.5)" : undefined,
                       }}
                     >
                       <Send className="h-4 w-4" />

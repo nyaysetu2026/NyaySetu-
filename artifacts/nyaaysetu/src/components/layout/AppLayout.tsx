@@ -4,7 +4,7 @@ import { Home, Bot, Landmark, Menu, Users, FileText, BookOpen, AlertTriangle, X,
 import { Drawer, DrawerContent, DrawerTrigger, DrawerClose } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
-import logoSrc from "@assets/logo_1784444903511.png";
+import logoSrc from "@assets/nyaaysetu-logo.png";
 import { AnimatedBackground } from "@/components/ui/animated-bg";
 import { TricolorBar } from "@/components/ui/india-flag-bg";
 
