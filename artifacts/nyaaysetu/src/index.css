@@ -193,6 +193,76 @@
     background: rgba(255, 255, 255, 0.05);
   }
 
+  /* ── Premium button base ─────────────────────────── */
+  .btn-premium {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .btn-premium::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%);
+    transform: translateX(-100%);
+    transition: transform 0.5s ease;
+  }
+  .btn-premium:hover::after {
+    transform: translateX(100%);
+  }
+  .btn-premium:active {
+    transform: scale(0.97);
+  }
+
+  /* ── Premium input focus ─────────────────────────── */
+  .input-premium {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    outline: none;
+  }
+  .input-premium:focus {
+    border-color: rgba(43, 108, 235, 0.4);
+    box-shadow: 0 0 0 3px rgba(43, 108, 235, 0.08), 0 0 20px rgba(43, 108, 235, 0.1);
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  /* ── Premium skeleton ─────────────────────────────── */
+  .skeleton-premium {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.04) 0%,
+      rgba(255, 255, 255, 0.08) 50%,
+      rgba(255, 255, 255, 0.04) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.8s linear infinite;
+    border-radius: 12px;
+  }
+
+  /* ── Section header accent ────────────────────────── */
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: rgba(212, 175, 55, 0.85);
+  }
+
+  /* ── Gold divider ─────────────────────────────────── */
+  .divider-gold {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+  }
+
+  /* ── Container max-width ─────────────────────────── */
+  .container-premium {
+    width: 100%;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   /* ── Elevated glass (featured cards) ─────────────── */
   .glass-card-premium {
     background: rgba(255, 255, 255, 0.03);

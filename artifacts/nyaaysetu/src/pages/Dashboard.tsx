@@ -73,7 +73,7 @@ function ProgressRing({ value = 0, max = 100, color, size = 72, stroke = 5 }: {
   );
 }
 
-/* ─── Mini AI Orb (for dashboard card) ─────────────────────── */
+/* ─── Mini AI Orb ─────────────────────────────────────────── */
 function MiniOrb({ size = 48, pulse = true }: { size?: number; pulse?: boolean }) {
   return (
     <div className="relative flex items-center justify-center shrink-0" style={{ width: size, height: size }}>
@@ -95,6 +95,13 @@ function MiniOrb({ size = 48, pulse = true }: { size?: number; pulse?: boolean }
     </div>
   );
 }
+
+const cardStyle = {
+  background: "rgba(255,255,255,0.03)",
+  backdropFilter: "blur(24px)",
+  border: "1px solid rgba(255,255,255,0.07)",
+  boxShadow: "0 4px 28px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.05)",
+};
 
 /* ═══════════════════════════════════════════════════════════ */
 export default function Dashboard() {
@@ -123,9 +130,9 @@ export default function Dashboard() {
   ];
 
   const insights = [
-    { label: "Case Resolution",  value: 87,  unit: "%", color: "#34d399", desc: "Above national average" },
-    { label: "AI Response Time", value: 1.2, unit: "s", color: "#3b82f6", desc: "Average latency" },
-    { label: "User Satisfaction",value: 96,  unit: "%", color: "#f59e0b", desc: "Platform reviews" },
+    { label: "Case Resolution",   value: 87,  unit: "%", color: "#34d399", desc: "Above national average" },
+    { label: "AI Response Time",  value: 1.2, unit: "s", color: "#3b82f6", desc: "Average latency" },
+    { label: "User Satisfaction", value: 96,  unit: "%", color: "#f59e0b", desc: "Platform reviews" },
   ];
 
   const activity = [
@@ -141,14 +148,14 @@ export default function Dashboard() {
         background: "radial-gradient(ellipse 70% 40% at 50% 0%, rgba(43,108,235,0.08) 0%, transparent 70%)",
       }} />
 
-      <div className="container mx-auto px-4 py-8 sm:px-6 lg:px-8 max-w-7xl relative z-10">
+      <div className="mx-auto px-4 py-8 sm:px-6 lg:px-8 max-w-[1400px] relative z-10">
 
         {/* ── Live Status Banner ─────────────────────────────────── */}
         <motion.div
           initial={{ opacity: 0, y: -14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-          className="mb-7 flex items-center gap-3 px-4 py-3 rounded-2xl relative overflow-hidden"
+          className="mb-6 flex items-center gap-3 px-4 py-3 rounded-2xl relative overflow-hidden"
           style={{
             background: "rgba(43,108,235,0.06)",
             border: "1px solid rgba(43,108,235,0.14)",
@@ -166,42 +173,42 @@ export default function Dashboard() {
           <p className="text-xs font-semibold text-secondary/85 truncate relative z-10">
             eCourts Integration: Live &nbsp;·&nbsp; AI Assistant: Online &nbsp;·&nbsp; Last sync: just now
           </p>
-          <Bell className="w-4 h-4 text-secondary/35 shrink-0 relative z-10" />
+          <Bell className="w-4 h-4 text-secondary/35 shrink-0 relative z-10 ml-auto" />
         </motion.div>
 
         {/* ── Header ────────────────────────────────────────────── */}
-        <div className="mb-9 pt-1 lg:pt-0">
+        <div className="mb-8 pt-1 lg:pt-0">
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.05 }}>
             <div className="flex items-start justify-between gap-3 mb-2">
               <div className="flex-1 min-w-0">
-                <h1 className="text-3xl lg:text-5xl font-bold font-serif text-white tracking-tight mb-1.5">
+                <h1 className="text-3xl lg:text-4xl xl:text-5xl font-bold font-serif text-white tracking-tight mb-1.5">
                   {greeting.emoji} {greeting.text},
                   <span style={{ background: "linear-gradient(135deg,#d4af37,#f5d06b)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}> Citizen</span>
                 </h1>
                 <p className="text-muted-foreground text-sm">{greeting.sub}</p>
               </div>
               {/* India mini flag */}
-              <div className="flex flex-col rounded-lg overflow-hidden shrink-0 mt-2" style={{ width: 30, height: 20, boxShadow: "0 2px 10px rgba(0,0,0,0.45)" }}>
+              <div className="flex flex-col rounded-lg overflow-hidden shrink-0 mt-1.5" style={{ width: 28, height: 18, boxShadow: "0 2px 10px rgba(0,0,0,0.45)" }}>
                 <div style={{ flex: 1, background: "#FF9933" }} />
                 <div style={{ flex: 1, background: "#F0F0F0" }} />
                 <div style={{ flex: 1, background: "#138808" }} />
               </div>
             </div>
-            <div className="flex items-center gap-3 mt-3">
+            <div className="flex items-center gap-3 mt-2">
               <span className="text-xs text-foreground/30 font-mono">
                 {new Date().toLocaleDateString("en-IN", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
               </span>
-              <TricolorBar className="w-14" />
+              <TricolorBar className="w-12" />
             </div>
           </motion.div>
         </div>
 
-        {/* ── Stat Cards ────────────────────────────────────────── */}
+        {/* ── Stat Cards — proper 4-col grid on desktop ─────────── */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="flex overflow-x-auto pb-5 -mx-4 px-4 sm:mx-0 sm:px-0 gap-4 no-scrollbar snap-x mb-7"
+          className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6"
         >
           {statCards.map((card, i) => {
             const Icon = card.icon;
@@ -211,12 +218,10 @@ export default function Dashboard() {
                 initial={{ opacity: 0, y: 20, scale: 0.94 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ delay: i * 0.07 + 0.12, type: "spring", stiffness: 280, damping: 26 }}
-                whileHover={{ y: -6, scale: 1.02 }}
-                className="min-w-[182px] p-5 flex flex-col shrink-0 snap-start rounded-3xl relative overflow-hidden cursor-default"
+                whileHover={{ y: -5, scale: 1.02 }}
+                className="p-5 flex flex-col rounded-3xl relative overflow-hidden cursor-default"
                 style={{
-                  background: "rgba(255,255,255,0.03)",
-                  backdropFilter: "blur(24px)",
-                  border: "1px solid rgba(255,255,255,0.07)",
+                  ...cardStyle,
                   boxShadow: `0 4px 28px ${card.glow}, inset 0 1px 0 rgba(255,255,255,0.05)`,
                   transition: "all 0.35s cubic-bezier(0.4,0,0.2,1)",
                 }}
@@ -235,11 +240,11 @@ export default function Dashboard() {
                 <div className="absolute inset-0 rounded-3xl pointer-events-none" style={{ background: `radial-gradient(ellipse 80% 60% at 50% 0%, ${card.color}08 0%, transparent 60%)` }} />
 
                 {/* Header row */}
-                <div className="flex items-center justify-between mb-5 relative z-10">
+                <div className="flex items-center justify-between mb-4 relative z-10">
                   <div className="w-9 h-9 rounded-2xl flex items-center justify-center" style={{ background: `${card.color}15`, border: `1px solid ${card.color}25` }}>
                     <Icon className="h-4 w-4" style={{ color: card.color }} />
                   </div>
-                  <ProgressRing value={card.value || 0} max={card.max} color={card.color} size={44} stroke={4} />
+                  <ProgressRing value={card.value || 0} max={card.max} color={card.color} size={40} stroke={4} />
                 </div>
 
                 {/* Value */}
@@ -248,7 +253,7 @@ export default function Dashboard() {
                   {isLoading ? (
                     <Skeleton className="h-9 w-16 bg-white/10 rounded-xl" />
                   ) : (
-                    <span className="text-4xl font-black font-serif" style={{ color: card.color, filter: `drop-shadow(0 0 10px ${card.color}60)` }}>
+                    <span className="text-3xl lg:text-4xl font-black font-serif" style={{ color: card.color, filter: `drop-shadow(0 0 10px ${card.color}60)` }}>
                       <AnimatedCounter value={card.value} loading={isLoading} />
                     </span>
                   )}
@@ -259,7 +264,7 @@ export default function Dashboard() {
         </motion.div>
 
         {/* ── AI Chat Feature Card ──────────────────────────────── */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mb-7">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mb-5">
           <Link href="/ai-chat">
             <motion.div
               whileHover={{ scale: 1.008, y: -4 }}
@@ -272,36 +277,32 @@ export default function Dashboard() {
                 backdropFilter: "blur(28px)",
               }}
             >
-              {/* Animated top border */}
               <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-400/70 to-transparent" />
-              {/* Shimmer on hover */}
               <div className="absolute inset-0 overflow-hidden rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                 <div className="absolute inset-y-0 w-1/3" style={{ background: "linear-gradient(90deg,transparent,rgba(255,255,255,0.04),transparent)", animation: "shimmerSweep 1.8s ease-in-out infinite" }} />
               </div>
 
-              <div className="p-7 lg:p-10 flex items-center gap-6 relative z-10">
+              <div className="p-6 lg:p-8 flex items-center gap-6 relative z-10">
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2.5 mb-3">
+                  <div className="flex items-center gap-2.5 mb-2.5">
                     <div className="w-2 h-2 rounded-full bg-blue-400" style={{ boxShadow: "0 0 8px rgba(96,165,250,0.9)", animation: "aiBreath 2s ease-in-out infinite" }} />
                     <span className="text-xs font-bold tracking-[0.18em] uppercase text-blue-400">AI Legal Assistant</span>
                     <span className="text-[9px] text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">LIVE</span>
                   </div>
-                  <h2 className="text-2xl lg:text-3xl font-serif font-bold text-white mb-2 tracking-tight">
+                  <h2 className="text-xl lg:text-2xl xl:text-3xl font-serif font-bold text-white mb-1.5 tracking-tight">
                     Ask a Legal Question
                   </h2>
                   <p className="text-sm text-foreground/55 max-w-lg leading-relaxed">
                     Get instant answers on constitutional rights, IPC codes, court procedures, and more. Powered by Gemini AI — free for every citizen.
                   </p>
-                  <div className="mt-4 flex items-center gap-2 text-blue-400 text-sm font-semibold group-hover:gap-3 transition-all">
+                  <div className="mt-3 flex items-center gap-2 text-blue-400 text-sm font-semibold group-hover:gap-3 transition-all">
                     <Sparkles className="w-4 h-4" />
                     Start a conversation
                     <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </div>
-
-                {/* Right — animated AI orb */}
                 <div className="shrink-0 hidden sm:block">
-                  <MiniOrb size={80} pulse />
+                  <MiniOrb size={72} pulse />
                 </div>
               </div>
             </motion.div>
@@ -309,12 +310,12 @@ export default function Dashboard() {
         </motion.div>
 
         {/* ── Quick Actions ─────────────────────────────────────── */}
-        <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="mb-7">
-          <div className="flex items-center gap-3 mb-4">
+        <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="mb-5">
+          <div className="flex items-center gap-3 mb-3">
             <h3 className="text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground/60">Quick Access</h3>
             <div className="flex-1 h-px bg-gradient-to-r from-white/8 to-transparent" />
           </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {quickActions.map((action, i) => {
               const Icon = action.icon;
               return (
@@ -323,9 +324,9 @@ export default function Dashboard() {
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.07 + 0.28 }}
-                    whileHover={{ y: -6 }}
+                    whileHover={{ y: -5 }}
                     whileTap={{ scale: 0.94 }}
-                    className="relative p-5 flex flex-col items-center justify-center gap-3 cursor-pointer group rounded-3xl overflow-hidden text-center"
+                    className="relative p-5 flex flex-col items-center justify-center gap-2.5 cursor-pointer group rounded-3xl overflow-hidden text-center"
                     style={{
                       background: "rgba(255,255,255,0.025)",
                       backdropFilter: "blur(24px)",
@@ -344,10 +345,10 @@ export default function Dashboard() {
                   >
                     <div className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: `linear-gradient(90deg,transparent,${action.color}60,transparent)` }} />
                     <div
-                      className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110"
+                      className="w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110"
                       style={{ background: action.bg, border: `1px solid ${action.border}`, boxShadow: `0 0 20px ${action.bg.replace("0.1","0.2")}` }}
                     >
-                      <Icon className="h-6 w-6" style={{ color: action.color }} />
+                      <Icon className="h-5 w-5" style={{ color: action.color }} />
                     </div>
                     <span className="text-sm font-semibold text-foreground/75 group-hover:text-white transition-colors leading-tight">{action.title}</span>
                     <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity -mt-1" style={{ color: action.color }} />
@@ -359,8 +360,8 @@ export default function Dashboard() {
         </motion.div>
 
         {/* ── Insights Row ──────────────────────────────────────── */}
-        <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mb-7">
-          <div className="flex items-center gap-3 mb-4">
+        <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mb-5">
+          <div className="flex items-center gap-3 mb-3">
             <TrendingUp className="w-3.5 h-3.5 text-muted-foreground/50" />
             <h3 className="text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground/60">Platform Insights</h3>
             <div className="flex-1 h-px bg-gradient-to-r from-white/8 to-transparent" />
@@ -372,10 +373,7 @@ export default function Dashboard() {
                 whileHover={{ y: -4 }}
                 className="p-5 rounded-3xl flex items-center gap-4 relative overflow-hidden"
                 style={{
-                  background: "rgba(255,255,255,0.025)",
-                  backdropFilter: "blur(24px)",
-                  border: "1px solid rgba(255,255,255,0.07)",
-                  boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
+                  ...cardStyle,
                   transition: "all 0.3s ease",
                 }}
                 onMouseEnter={e => {
@@ -388,7 +386,7 @@ export default function Dashboard() {
                 }}
               >
                 <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg,transparent,${item.color}35,transparent)` }} />
-                <ProgressRing value={item.value} max={100} color={item.color} size={60} stroke={5} />
+                <ProgressRing value={item.value} max={100} color={item.color} size={56} stroke={5} />
                 <div>
                   <div className="text-2xl font-black font-serif" style={{ color: item.color, filter: `drop-shadow(0 0 8px ${item.color}60)` }}>
                     {item.value}{item.unit}
@@ -402,19 +400,14 @@ export default function Dashboard() {
         </motion.div>
 
         {/* ── Recent Activity ───────────────────────────────────── */}
-        <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="mb-7">
+        <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="mb-5">
           <div
-            className="rounded-3xl p-6 lg:p-7 relative overflow-hidden"
-            style={{
-              background: "rgba(255,255,255,0.025)",
-              backdropFilter: "blur(28px)",
-              border: "1px solid rgba(255,255,255,0.07)",
-              boxShadow: "0 4px 28px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.04)",
-            }}
+            className="rounded-3xl p-6 relative overflow-hidden"
+            style={{ ...cardStyle }}
           >
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-5">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
                   <Activity className="w-4 h-4 text-blue-400" />
@@ -427,7 +420,7 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="space-y-5">
+            <div className="space-y-4">
               {activity.map((item, i) => {
                 const Icon = item.icon;
                 return (
@@ -452,7 +445,7 @@ export default function Dashboard() {
                     </div>
                     <div className="pb-2 flex-1">
                       <p className="text-sm text-foreground/70 leading-relaxed group-hover:text-foreground/90 transition-colors">{item.text}</p>
-                      <span className="text-xs text-muted-foreground/45 mt-1.5 block">{item.time}</span>
+                      <span className="text-xs text-muted-foreground/45 mt-1 block">{item.time}</span>
                     </div>
                   </motion.div>
                 );

@@ -30,21 +30,19 @@ function AnimatedCounter({ to, duration = 2 }: { to: number; duration?: number }
   return <span ref={ref}>{count.toLocaleString()}</span>;
 }
 
-/** Animated justice scale — the centrepiece of the hero */
 function AnimatedJusticeScale() {
   return (
-    <div className="relative flex items-center justify-center" style={{ width: 220, height: 200 }}>
-      {/* Outer glow ring */}
+    <div className="relative flex items-center justify-center" style={{ width: 180, height: 164 }}>
       <div
         className="absolute rounded-full pointer-events-none"
         style={{
-          width: 260, height: 260,
+          width: 220, height: 220,
           background: "radial-gradient(circle, rgba(212,175,55,0.12) 0%, transparent 65%)",
           filter: "blur(20px)",
           animation: "orbPulse 4s ease-in-out infinite",
         }}
       />
-      <svg viewBox="0 0 220 200" width="220" height="200" fill="none">
+      <svg viewBox="0 0 220 200" width="180" height="164" fill="none">
         <defs>
           <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#f5d06b" />
@@ -60,59 +58,36 @@ function AnimatedJusticeScale() {
             <feComposite in="SourceGraphic" in2="blur" operator="over" />
           </filter>
         </defs>
-
-        {/* Base platform */}
         <rect x="70" y="185" width="80" height="8" rx="4" fill="url(#goldGrad2)" opacity="0.9" />
         <rect x="80" y="178" width="60" height="8" rx="3" fill="url(#goldGrad2)" opacity="0.8" />
-
-        {/* Central pillar */}
         <rect x="108" y="60" width="4" height="120" rx="2" fill="url(#goldGrad)" opacity="0.9" />
-
-        {/* Top sphere */}
         <circle cx="110" cy="55" r="8" fill="url(#goldGrad)" opacity="0.95" filter="url(#goldGlow)" />
         <circle cx="108" cy="53" r="2.5" fill="rgba(255,255,255,0.5)" />
-
-        {/* Animated beam */}
         <g style={{ transformOrigin: "110px 80px", animation: "scaleBalance 5s ease-in-out infinite" }}>
           <rect x="30" y="77" width="160" height="5" rx="2.5" fill="url(#goldGrad2)" opacity="0.95" />
-
-          {/* Left chain */}
           <line x1="40" y1="82" x2="38" y2="108" stroke="url(#goldGrad)" strokeWidth="1.5" opacity="0.7" />
           <line x1="38" y1="108" x2="36" y2="130" stroke="url(#goldGrad)" strokeWidth="1.5" opacity="0.7" />
-
-          {/* Right chain */}
           <line x1="180" y1="82" x2="182" y2="108" stroke="url(#goldGrad)" strokeWidth="1.5" opacity="0.7" />
           <line x1="182" y1="108" x2="184" y2="130" stroke="url(#goldGrad)" strokeWidth="1.5" opacity="0.7" />
-
-          {/* Left pan */}
           <g style={{ transformOrigin: "40px 130px", animation: "panSwingLeft 5s ease-in-out infinite" }}>
             <path d="M12 130 Q40 140 68 130" stroke="url(#goldGrad2)" strokeWidth="2" fill="none" opacity="0.9" />
-            <line x1="12" y1="130" x2="68" y2="130" stroke="url(#goldGrad2)" strokeWidth="1" opacity="0.3" />
-            {/* Pan glow dots */}
             <circle cx="25" cy="133" r="2" fill="rgba(212,175,55,0.6)" />
             <circle cx="40" cy="136" r="2.5" fill="rgba(212,175,55,0.7)" />
             <circle cx="55" cy="133" r="2" fill="rgba(212,175,55,0.6)" />
           </g>
-
-          {/* Right pan */}
           <g style={{ transformOrigin: "180px 130px", animation: "panSwingRight 5s ease-in-out infinite" }}>
             <path d="M152 130 Q180 140 208 130" stroke="url(#goldGrad2)" strokeWidth="2" fill="none" opacity="0.9" />
-            <line x1="152" y1="130" x2="208" y2="130" stroke="url(#goldGrad2)" strokeWidth="1" opacity="0.3" />
-            {/* Pan glow dots */}
             <circle cx="165" cy="133" r="2" fill="rgba(212,175,55,0.6)" />
             <circle cx="180" cy="136" r="2.5" fill="rgba(212,175,55,0.7)" />
             <circle cx="195" cy="133" r="2" fill="rgba(212,175,55,0.6)" />
           </g>
         </g>
-
-        {/* Glow underneath beam */}
         <ellipse cx="110" cy="80" rx="80" ry="4" fill="rgba(212,175,55,0.15)" filter="url(#goldGlow)" />
       </svg>
     </div>
   );
 }
 
-/** Floating legal icon — orbits around the hero center */
 function FloatingLegalIcon({
   icon: Icon, x, y, delay, color, bg, size = 36
 }: {
@@ -120,7 +95,7 @@ function FloatingLegalIcon({
 }) {
   return (
     <motion.div
-      className="absolute pointer-events-none hidden lg:flex items-center justify-center rounded-2xl"
+      className="absolute pointer-events-none hidden xl:flex items-center justify-center rounded-2xl"
       style={{
         left: x, top: y, width: size, height: size,
         background: bg,
@@ -213,7 +188,7 @@ export default function Home() {
     <div className="w-full min-h-screen flex flex-col">
 
       {/* ── Live Ticker ── */}
-      <div className="relative overflow-hidden border-b py-2.5" style={{
+      <div className="relative overflow-hidden border-b py-2.5 shrink-0" style={{
         background: "rgba(43,108,235,0.05)",
         borderColor: "rgba(43,108,235,0.1)",
       }}>
@@ -233,20 +208,20 @@ export default function Home() {
       </div>
 
       {/* ── Hero ── */}
-      <section className="relative flex-1 flex flex-col justify-center min-h-[92vh] pt-10 pb-20 overflow-hidden bg-transparent px-4 sm:px-6">
+      <section className="relative flex flex-col justify-center min-h-[88vh] pt-10 pb-16 overflow-hidden bg-transparent px-4 sm:px-6">
 
-        {/* India flag — waving, very subtle, right side */}
-        <div className="absolute right-0 top-[10%] pointer-events-none hidden lg:block" style={{ width: 200, height: 120, opacity: 0.055 }}>
+        {/* India flag — right side, very subtle */}
+        <div className="absolute right-0 top-[10%] pointer-events-none hidden lg:block" style={{ width: 180, height: 108, opacity: 0.05 }}>
           <IndiaFlagBg />
         </div>
 
-        {/* Floating legal icons around hero — desktop only */}
-        <FloatingLegalIcon icon={Bot}      x="6%"  y="18%" delay={0}   color="#3b82f6" bg="rgba(59,130,246,0.12)"   size={44} />
-        <FloatingLegalIcon icon={Shield}   x="8%"  y="62%" delay={1.5} color="#34d399" bg="rgba(52,211,153,0.12)"   size={38} />
-        <FloatingLegalIcon icon={FileText} x="82%" y="22%" delay={0.8} color="#a78bfa" bg="rgba(167,139,250,0.12)"  size={40} />
-        <FloatingLegalIcon icon={Users}    x="84%" y="64%" delay={2.2} color="#34d399" bg="rgba(52,211,153,0.10)"   size={36} />
-        <FloatingLegalIcon icon={Landmark} x="4%"  y="40%" delay={3}   color="#f59e0b" bg="rgba(245,158,11,0.10)"   size={34} />
-        <FloatingLegalIcon icon={Scale}    x="86%" y="43%" delay={1.2} color="#d4af37" bg="rgba(212,175,55,0.12)"   size={42} />
+        {/* Floating legal icons — desktop only */}
+        <FloatingLegalIcon icon={Bot}      x="5%"  y="18%" delay={0}   color="#3b82f6" bg="rgba(59,130,246,0.12)"   size={42} />
+        <FloatingLegalIcon icon={Shield}   x="6%"  y="62%" delay={1.5} color="#34d399" bg="rgba(52,211,153,0.12)"   size={36} />
+        <FloatingLegalIcon icon={FileText} x="83%" y="22%" delay={0.8} color="#a78bfa" bg="rgba(167,139,250,0.12)"  size={38} />
+        <FloatingLegalIcon icon={Users}    x="85%" y="64%" delay={2.2} color="#34d399" bg="rgba(52,211,153,0.10)"   size={34} />
+        <FloatingLegalIcon icon={Landmark} x="3%"  y="40%" delay={3}   color="#f59e0b" bg="rgba(245,158,11,0.10)"   size={32} />
+        <FloatingLegalIcon icon={Scale}    x="87%" y="43%" delay={1.2} color="#d4af37" bg="rgba(212,175,55,0.12)"   size={40} />
 
         {/* Animated orbs */}
         <motion.div
@@ -290,28 +265,24 @@ export default function Home() {
           }} />
         </div>
 
-        {/* Grid pattern overlay */}
-        <div className="absolute inset-0 pointer-events-none opacity-[0.022]"
+        {/* Grid pattern */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.018]"
           style={{
             backgroundImage: "linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px)",
             backgroundSize: "64px 64px",
           }}
         />
 
-        <div className="relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center text-center">
+        <div className="relative z-10 w-full max-w-[1400px] mx-auto flex flex-col items-center text-center px-4">
           <motion.div initial="hidden" animate="visible" variants={containerVariants} className="w-full">
 
-            {/* NyaySetu Logo */}
-            <motion.div
-              variants={itemVariants}
-              className="flex justify-center mb-8"
-            >
+            {/* Logo */}
+            <motion.div variants={itemVariants} className="flex justify-center mb-6">
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 400, damping: 20 }}
                 className="relative"
               >
-                {/* Logo glow halo */}
                 <div
                   className="absolute inset-0 rounded-full pointer-events-none"
                   style={{
@@ -326,7 +297,7 @@ export default function Home() {
                   alt="NyaySetu"
                   className="relative z-10 drop-shadow-2xl"
                   style={{
-                    height: 90,
+                    height: 80,
                     width: "auto",
                     filter: "drop-shadow(0 0 24px rgba(212,175,55,0.35)) drop-shadow(0 4px 12px rgba(0,0,0,0.5))",
                   }}
@@ -337,7 +308,7 @@ export default function Home() {
             {/* Badge */}
             <motion.div
               variants={itemVariants}
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm text-foreground/80 mb-8"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2 rounded-full text-sm text-foreground/80 mb-6"
               style={{
                 background: "rgba(255,255,255,0.04)",
                 backdropFilter: "blur(20px)",
@@ -356,16 +327,16 @@ export default function Home() {
               </div>
             </motion.div>
 
-            {/* Animated Justice Scale — centered above title on desktop, hidden on mobile */}
+            {/* Animated Justice Scale — centered above title on desktop */}
             <motion.div
               variants={itemVariants}
-              className="hidden lg:flex justify-center mb-6"
+              className="hidden lg:flex justify-center mb-4"
             >
               <AnimatedJusticeScale />
             </motion.div>
 
             {/* Title */}
-            <motion.h1 variants={itemVariants} className="font-serif text-6xl sm:text-8xl md:text-[9rem] font-extrabold tracking-tight leading-[0.95] mb-6">
+            <motion.h1 variants={itemVariants} className="font-serif text-5xl sm:text-7xl lg:text-[7.5rem] xl:text-[8.5rem] font-extrabold tracking-tight leading-[0.92] mb-5">
               <span className="text-foreground">Nyay</span>
               <span
                 style={{
@@ -380,29 +351,30 @@ export default function Home() {
               </span>
             </motion.h1>
 
-            <motion.p variants={itemVariants} className="text-xl md:text-2xl text-foreground/60 mb-4 max-w-2xl mx-auto font-light leading-relaxed">
+            <motion.p variants={itemVariants} className="text-lg md:text-2xl text-foreground/60 mb-3 max-w-xl mx-auto font-light leading-relaxed">
               Justice is no longer{" "}
               <em className="font-serif text-accent not-italic font-normal" style={{ filter: "drop-shadow(0 0 12px rgba(212,175,55,0.4))" }}>
                 out of reach.
               </em>
             </motion.p>
-            <motion.p variants={itemVariants} className="text-base md:text-lg text-foreground/40 mb-14 max-w-xl mx-auto font-light">
+            <motion.p variants={itemVariants} className="text-sm md:text-base text-foreground/40 mb-10 max-w-md mx-auto font-light">
               Your world-class legal companion — AI-powered, always available, built for every Indian.
             </motion.p>
 
             {/* Tricolor bar */}
-            <motion.div variants={itemVariants} className="flex justify-center mb-10">
-              <TricolorBar className="w-24" />
+            <motion.div variants={itemVariants} className="flex justify-center mb-8">
+              <TricolorBar className="w-20" />
             </motion.div>
 
             {/* CTA Buttons */}
-            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full px-4 sm:px-0">
+            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full px-4 sm:px-0">
               <Link href="/dashboard" className="w-full sm:w-auto">
                 <motion.div whileHover={{ scale: 1.03, y: -3 }} whileTap={{ scale: 0.97 }}>
                   <Button
                     size="lg"
-                    className="w-full text-lg h-14 px-10 text-white rounded-2xl relative overflow-hidden group border-0"
+                    className="w-full text-base h-13 px-9 text-white rounded-2xl relative overflow-hidden group border-0"
                     style={{
+                      height: 52,
                       background: "linear-gradient(135deg, hsl(221 83% 55%) 0%, hsl(221 83% 42%) 100%)",
                       boxShadow: "0 0 40px rgba(43,108,235,0.5), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15)",
                     }}
@@ -417,7 +389,7 @@ export default function Home() {
                       />
                     </div>
                     <span className="relative z-10 flex items-center font-semibold gap-2">
-                      Enter Dashboard <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />
+                      Enter Dashboard <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
                     </span>
                   </Button>
                 </motion.div>
@@ -427,26 +399,26 @@ export default function Home() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="w-full text-lg h-14 px-10 rounded-2xl text-foreground/80 hover:text-white transition-all relative overflow-hidden group"
+                    className="w-full text-base h-13 px-9 rounded-2xl text-foreground/80 hover:text-white transition-all relative overflow-hidden group"
                     style={{
+                      height: 52,
                       background: "rgba(255,255,255,0.035)",
                       backdropFilter: "blur(20px)",
                       border: "1px solid rgba(255,255,255,0.1)",
                       boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07)",
                     }}
                   >
-                    {/* AI pulse indicator */}
                     <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
                       <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" style={{ boxShadow: "0 0 8px rgba(52,211,153,0.8)" }} />
                     </div>
-                    <Bot className="w-5 h-5 mr-2 text-secondary" /> Ask AI Assistant
+                    <Bot className="w-4 h-4 mr-2 text-secondary" /> Ask AI Assistant
                   </Button>
                 </motion.div>
               </Link>
             </motion.div>
 
-            {/* Trust badges row */}
-            <motion.div variants={itemVariants} className="flex items-center justify-center gap-2 mt-8 flex-wrap">
+            {/* Trust badges */}
+            <motion.div variants={itemVariants} className="flex items-center justify-center gap-2 mt-7 flex-wrap">
               {[
                 { icon: CheckCircle, text: "AI Powered", color: "text-blue-400", bg: "rgba(59,130,246,0.08)", border: "rgba(59,130,246,0.2)" },
                 { icon: Lock, text: "Encrypted", color: "text-emerald-400", bg: "rgba(52,211,153,0.08)", border: "rgba(52,211,153,0.2)" },
@@ -474,8 +446,8 @@ export default function Home() {
               })}
             </motion.div>
 
-            {/* Live status chips */}
-            <motion.div variants={itemVariants} className="flex items-center justify-center gap-4 mt-5 flex-wrap">
+            {/* Live status */}
+            <motion.div variants={itemVariants} className="flex items-center justify-center gap-4 mt-4 flex-wrap">
               {[
                 { dot: "bg-emerald-400", text: "AI Online", glow: "rgba(52,211,153,0.8)" },
                 { dot: "bg-secondary", text: "eCourts Live", glow: "rgba(43,108,235,0.8)" },
@@ -495,7 +467,7 @@ export default function Home() {
         </div>
 
         {/* Developer Credit - Mobile */}
-        <div className="absolute bottom-6 left-0 right-0 flex justify-center lg:hidden">
+        <div className="absolute bottom-4 left-0 right-0 flex justify-center lg:hidden">
           <div className="text-center">
             <p className="text-[9px] text-muted-foreground/40 uppercase tracking-widest mb-0.5">Developed by</p>
             <p className="text-[10px] font-bold tracking-[0.18em] text-accent/70">MD DANISH HUSSAIN</p>
@@ -504,7 +476,7 @@ export default function Home() {
       </section>
 
       {/* ── Stats Row ── */}
-      <section className="py-14 border-y relative overflow-hidden" style={{
+      <section className="py-12 border-y relative overflow-hidden" style={{
         background: "rgba(0,0,0,0.3)",
         borderColor: "rgba(255,255,255,0.05)",
       }}>
@@ -517,7 +489,7 @@ export default function Home() {
             }}
           />
         </div>
-        <div className="container mx-auto px-6">
+        <div className="mx-auto px-6 max-w-[1400px]">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {[
               { value: 50000, label: "Citizens Served", suffix: "+", color: "text-accent", glow: "rgba(212,175,55,0.35)" },
@@ -550,28 +522,28 @@ export default function Home() {
       </section>
 
       {/* ── Services Grid ── */}
-      <section className="py-24 lg:py-32 relative z-10">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+      <section className="py-16 lg:py-24 relative z-10">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-[1400px]">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="text-center max-w-3xl mx-auto mb-16"
+            className="text-center max-w-2xl mx-auto mb-12"
           >
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-accent mb-4">Platform Services</p>
-            <h2 className="font-serif text-3xl md:text-5xl font-bold text-foreground mb-5">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-accent mb-3">Platform Services</p>
+            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
               A unified legal infrastructure
             </h2>
-            <p className="text-muted-foreground text-lg leading-relaxed">
+            <p className="text-muted-foreground text-base leading-relaxed">
               Everything you need to navigate India's legal system with clarity and confidence.
             </p>
-            <div className="flex justify-center mt-6">
-              <TricolorBar className="w-32" />
+            <div className="flex justify-center mt-5">
+              <TricolorBar className="w-28" />
             </div>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
             {services.map((service, i) => {
               const Icon = service.icon;
               return (
@@ -579,13 +551,13 @@ export default function Home() {
                   key={i}
                   initial={{ opacity: 0, y: 40 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  whileHover={{ y: -10 }}
+                  whileHover={{ y: -8 }}
                   viewport={{ once: true, margin: "-40px" }}
                   transition={{ delay: i * 0.08, type: "spring", stiffness: 300, damping: 26 }}
                 >
                   <Link href={service.link} className="block h-full">
                     <div
-                      className="h-full cursor-pointer flex flex-col p-7 rounded-[22px] group relative overflow-hidden"
+                      className="h-full cursor-pointer flex flex-col p-6 rounded-[22px] group relative overflow-hidden"
                       style={{
                         background: "rgba(255,255,255,0.025)",
                         backdropFilter: "blur(24px)",
@@ -624,24 +596,23 @@ export default function Home() {
 
                       {/* Icon */}
                       <div
-                        className={`w-14 h-14 rounded-2xl ${service.bg} flex items-center justify-center mb-6 transition-all duration-300 group-hover:scale-110`}
+                        className={`w-12 h-12 rounded-2xl ${service.bg} flex items-center justify-center mb-5 transition-all duration-300 group-hover:scale-110`}
                         style={{
                           border: `1px solid ${service.border}`,
                           boxShadow: `0 0 24px ${service.glow}`,
-                          transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                         }}
                       >
-                        <Icon className={`w-7 h-7 ${service.accent}`} />
+                        <Icon className={`w-6 h-6 ${service.accent}`} />
                       </div>
 
                       {/* Content */}
-                      <h3 className="text-xl font-bold text-foreground mb-3 font-serif">{service.title}</h3>
-                      <p className="text-muted-foreground mb-6 leading-relaxed text-sm flex-1">{service.desc}</p>
+                      <h3 className="text-lg font-bold text-foreground mb-2 font-serif">{service.title}</h3>
+                      <p className="text-muted-foreground mb-5 leading-relaxed text-sm flex-1">{service.desc}</p>
 
                       {/* Footer */}
                       <div className={`flex items-center text-sm font-semibold ${service.accent} opacity-60 group-hover:opacity-100 transition-all`}>
                         <span>Explore</span>
-                        <ChevronRight className="ml-1 w-4 h-4 group-hover:translate-x-2 transition-transform" />
+                        <ChevronRight className="ml-1 w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
                       </div>
                     </div>
                   </Link>
@@ -653,26 +624,26 @@ export default function Home() {
       </section>
 
       {/* ── Why NyaySetu ── */}
-      <section className="py-24 border-t relative z-10" style={{
+      <section className="py-16 lg:py-20 border-t relative z-10" style={{
         background: "rgba(0,0,0,0.2)",
         borderColor: "rgba(255,255,255,0.05)",
       }}>
-        <div className="container mx-auto px-4 max-w-5xl">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-[1400px]">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="text-center mb-16"
+            className="text-center mb-12"
           >
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-accent mb-4">Our Promise</p>
-            <h2 className="font-serif text-3xl md:text-5xl font-bold text-foreground">Why NyaySetu?</h2>
-            <div className="flex justify-center mt-6">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-accent mb-3">Our Promise</p>
+            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">Why NyaySetu?</h2>
+            <div className="flex justify-center mt-5">
               <TricolorBar className="w-20" />
             </div>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {[
               { title: "Unwavering Trust", desc: "Bar Council verified advocates and end-to-end encrypted data sovereignty.", icon: Shield, color: "text-accent", bg: "bg-accent/10", glow: "rgba(212,175,55,0.18)", border: "rgba(212,175,55,0.25)" },
               { title: "Unmatched Speed", desc: "AI-driven responses and real-time eCourts integration for immediate clarity.", icon: Zap, color: "text-secondary", bg: "bg-secondary/10", glow: "rgba(43,108,235,0.18)", border: "rgba(43,108,235,0.25)" },
@@ -686,8 +657,8 @@ export default function Home() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.12, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                  whileHover={{ y: -8 }}
-                  className="flex flex-col items-center text-center group p-8 rounded-3xl cursor-default relative overflow-hidden"
+                  whileHover={{ y: -6 }}
+                  className="flex flex-col items-center text-center group p-7 rounded-3xl cursor-default relative overflow-hidden"
                   style={{
                     background: "rgba(255,255,255,0.025)",
                     border: `1px solid ${f.border}`,
@@ -703,12 +674,12 @@ export default function Home() {
                   }}
                 >
                   <div
-                    className={`w-16 h-16 rounded-3xl ${f.bg} flex items-center justify-center mb-5 transition-all duration-300 group-hover:scale-110`}
+                    className={`w-14 h-14 rounded-2xl ${f.bg} flex items-center justify-center mb-5 transition-all duration-300 group-hover:scale-110`}
                     style={{ border: `1px solid ${f.border}`, boxShadow: `0 0 28px ${f.glow}` }}
                   >
-                    <Icon className={`w-8 h-8 ${f.color}`} />
+                    <Icon className={`w-7 h-7 ${f.color}`} />
                   </div>
-                  <h3 className="text-xl font-bold mb-3 font-serif text-foreground">{f.title}</h3>
+                  <h3 className="text-lg font-bold mb-2 font-serif text-foreground">{f.title}</h3>
                   <p className="text-muted-foreground text-sm leading-relaxed max-w-xs">{f.desc}</p>
                 </motion.div>
               );
@@ -718,7 +689,7 @@ export default function Home() {
       </section>
 
       {/* ── Emergency CTA ── */}
-      <section className="py-12 border-t relative z-10 overflow-hidden" style={{
+      <section className="py-10 border-t relative z-10 overflow-hidden" style={{
         background: "rgba(220,38,38,0.05)",
         borderColor: "rgba(220,38,38,0.12)",
       }}>
@@ -728,16 +699,16 @@ export default function Home() {
           className="absolute inset-0 pointer-events-none"
           style={{ background: "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(220,38,38,0.15) 0%, transparent 70%)" }}
         />
-        <div className="container mx-auto px-4 relative z-10">
+        <div className="mx-auto px-4 max-w-[1400px] relative z-10">
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="flex flex-col md:flex-row items-center justify-center gap-5 text-center md:text-left"
+            className="flex flex-col sm:flex-row items-center justify-center gap-5 text-center sm:text-left"
           >
-            <div className="flex items-center gap-3 text-destructive font-bold text-xl font-serif">
+            <div className="flex items-center gap-3 text-destructive font-bold text-lg font-serif">
               <motion.div animate={{ scale: [1, 1.15, 1] }} transition={{ repeat: Infinity, duration: 1.8 }}>
-                <AlertTriangle className="w-6 h-6" />
+                <AlertTriangle className="w-5 h-5" />
               </motion.div>
               Need immediate legal help?
             </div>
