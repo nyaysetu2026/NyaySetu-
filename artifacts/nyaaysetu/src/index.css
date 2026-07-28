@@ -600,14 +600,26 @@
 
 /* ── AI breathe glow ── */
 @keyframes aiBreath {
-  0%,100% { box-shadow: 0 0 20px rgba(43,108,235,0.3), 0 0 60px rgba(43,108,235,0.1); transform: scale(1); }
-  50%      { box-shadow: 0 0 40px rgba(43,108,235,0.6), 0 0 100px rgba(43,108,235,0.2); transform: scale(1.04); }
+  0%,100% { box-shadow: 0 0 24px rgba(43,108,235,0.35), 0 0 70px rgba(43,108,235,0.12); transform: scale(1); opacity: 0.85; }
+  50%      { box-shadow: 0 0 55px rgba(43,108,235,0.75), 0 0 120px rgba(43,108,235,0.28), 0 0 200px rgba(99,102,241,0.12); transform: scale(1.06); opacity: 1; }
 }
 
 /* ── Mic pulse ── */
 @keyframes micPulse {
   0%,100% { box-shadow: 0 0 0 0 rgba(52,211,153,0); }
-  50%      { box-shadow: 0 0 0 6px rgba(52,211,153,0.15); }
+  50%      { box-shadow: 0 0 0 8px rgba(52,211,153,0.2), 0 0 20px rgba(52,211,153,0.15); }
+}
+
+/* ── Orb deep glow ── */
+@keyframes orbDeepGlow {
+  0%,100% { opacity: 0.5; transform: scale(1); }
+  50%      { opacity: 1; transform: scale(1.12); }
+}
+
+/* ── Input focus glow pulse ── */
+@keyframes inputFocusGlow {
+  0%,100% { box-shadow: 0 0 0 2px rgba(43,108,235,0.06), 0 0 24px rgba(43,108,235,0.12); }
+  50%      { box-shadow: 0 0 0 3px rgba(43,108,235,0.12), 0 0 40px rgba(43,108,235,0.22); }
 }
 
 /* ── Premium ripple effect ── */

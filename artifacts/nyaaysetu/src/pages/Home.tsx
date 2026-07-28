@@ -208,7 +208,7 @@ export default function Home() {
       </div>
 
       {/* ── Hero ── */}
-      <section className="relative flex flex-col justify-center min-h-[88vh] pt-10 pb-16 overflow-hidden bg-transparent px-4 sm:px-6">
+      <section className="relative flex flex-col justify-center min-h-[88vh] pt-10 pb-16 overflow-hidden bg-transparent">
 
         {/* India flag — right side, very subtle */}
         <div className="absolute right-0 top-[10%] pointer-events-none hidden lg:block" style={{ width: 180, height: 108, opacity: 0.05 }}>
@@ -225,16 +225,23 @@ export default function Home() {
 
         {/* Animated orbs */}
         <motion.div
-          animate={{ y: [0, -28, 0], scale: [1, 1.08, 1], opacity: [0.14, 0.20, 0.14] }}
+          animate={{ y: [0, -28, 0], scale: [1, 1.1, 1], opacity: [0.18, 0.26, 0.18] }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[-18%] left-[-10%] w-[65%] h-[65%] rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle, hsl(221 83% 58% / 0.5) 0%, transparent 65%)", filter: "blur(90px)" }}
+          className="absolute top-[-18%] left-[-10%] w-[70%] h-[70%] rounded-full pointer-events-none"
+          style={{ background: "radial-gradient(circle, hsl(221 83% 58% / 0.55) 0%, hsl(240 70% 50% / 0.2) 45%, transparent 70%)", filter: "blur(90px)" }}
         />
         <motion.div
-          animate={{ y: [0, 22, 0], scale: [1, 1.06, 1], opacity: [0.07, 0.13, 0.07] }}
+          animate={{ y: [0, 22, 0], scale: [1, 1.08, 1], opacity: [0.10, 0.18, 0.10] }}
           transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          className="absolute bottom-[-12%] right-[-10%] w-[55%] h-[55%] rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle, hsl(43 90% 55% / 0.4) 0%, transparent 65%)", filter: "blur(110px)" }}
+          className="absolute bottom-[-12%] right-[-10%] w-[60%] h-[60%] rounded-full pointer-events-none"
+          style={{ background: "radial-gradient(circle, hsl(43 90% 55% / 0.45) 0%, hsl(30 80% 55% / 0.15) 50%, transparent 70%)", filter: "blur(110px)" }}
+        />
+        {/* Center hero glow — beneath the content */}
+        <motion.div
+          animate={{ scale: [1, 1.04, 1], opacity: [0.06, 0.11, 0.06] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          className="absolute top-[15%] left-1/2 -translate-x-1/2 w-[80%] h-[55%] rounded-full pointer-events-none"
+          style={{ background: "radial-gradient(ellipse, rgba(43,108,235,0.35) 0%, rgba(99,102,241,0.12) 40%, transparent 70%)", filter: "blur(80px)" }}
         />
         <motion.div
           animate={{ y: [0, -14, 0], x: [0, 10, 0], opacity: [0.04, 0.08, 0.04] }}
@@ -273,7 +280,7 @@ export default function Home() {
           }}
         />
 
-        <div className="relative z-10 w-full max-w-[1400px] mx-auto flex flex-col items-center text-center px-4">
+        <div className="relative z-10 w-full max-w-[1400px] mx-auto flex flex-col items-center text-center px-6 sm:px-8 lg:px-12">
           <motion.div initial="hidden" animate="visible" variants={containerVariants} className="w-full">
 
             {/* Logo */}
@@ -375,8 +382,8 @@ export default function Home() {
                     className="w-full text-base h-13 px-9 text-white rounded-2xl relative overflow-hidden group border-0"
                     style={{
                       height: 52,
-                      background: "linear-gradient(135deg, hsl(221 83% 55%) 0%, hsl(221 83% 42%) 100%)",
-                      boxShadow: "0 0 40px rgba(43,108,235,0.5), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15)",
+                      background: "linear-gradient(135deg, hsl(221 83% 57%) 0%, hsl(228 78% 50%) 50%, hsl(240 65% 52%) 100%)",
+                      boxShadow: "0 0 50px rgba(43,108,235,0.60), 0 8px 40px rgba(0,0,0,0.45), 0 0 100px rgba(99,102,241,0.18), inset 0 1px 0 rgba(255,255,255,0.18)",
                     }}
                   >
                     <div className="absolute inset-0 overflow-hidden rounded-2xl">

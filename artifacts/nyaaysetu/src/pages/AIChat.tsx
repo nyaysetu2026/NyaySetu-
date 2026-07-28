@@ -54,45 +54,61 @@ function AIStatusBadge({ status }: { status: AIStatus }) {
 function AIOrb({ size = 80, active = false, className = "" }: { size?: number; active?: boolean; className?: string }) {
   return (
     <div className={`relative flex items-center justify-center shrink-0 ${className}`} style={{ width: size, height: size }}>
+      {/* Deep ambient glow halo — always present */}
+      <div className="absolute rounded-full pointer-events-none" style={{
+        width: size * 3.2, height: size * 3.2,
+        background: `radial-gradient(circle, rgba(43,108,235,${active ? 0.18 : 0.07}) 0%, rgba(99,102,241,${active ? 0.08 : 0.03}) 45%, transparent 70%)`,
+        filter: "blur(24px)",
+        animation: `orbDeepGlow ${active ? 1.8 : 4}s ease-in-out infinite`,
+      }} />
       {/* Outermost ring — only when active */}
       {active && (
         <div className="absolute rounded-full" style={{
-          width: size * 2.2, height: size * 2.2,
-          border: "1px solid rgba(43,108,235,0.08)",
+          width: size * 2.5, height: size * 2.5,
+          border: "1px solid rgba(43,108,235,0.1)",
           animation: "orbRing 3s ease-out infinite",
         }} />
       )}
       {/* Middle pulse ring */}
       <div className="absolute rounded-full" style={{
-        width: size * 1.7, height: size * 1.7,
-        border: `1px solid rgba(43,108,235,${active ? 0.18 : 0.08})`,
-        animation: `orbRing 2.5s ease-out infinite ${active ? "" : "3s"}`,
+        width: size * 1.78, height: size * 1.78,
+        border: `1px solid rgba(43,108,235,${active ? 0.25 : 0.09})`,
+        animation: `orbRing 2.4s ease-out infinite ${active ? "" : "2.5s"}`,
       }} />
       {/* Inner glow ring */}
       <div className="absolute rounded-full" style={{
-        width: size * 1.35, height: size * 1.35,
-        background: `radial-gradient(circle, rgba(43,108,235,${active ? 0.28 : 0.14}) 0%, transparent 70%)`,
-        filter: "blur(10px)",
-        animation: `aiBreath ${active ? 2 : 4}s ease-in-out infinite`,
+        width: size * 1.38, height: size * 1.38,
+        background: `radial-gradient(circle, rgba(43,108,235,${active ? 0.38 : 0.17}) 0%, rgba(99,102,241,${active ? 0.18 : 0.06}) 50%, transparent 70%)`,
+        filter: "blur(14px)",
+        animation: `aiBreath ${active ? 1.7 : 3.8}s ease-in-out infinite`,
       }} />
       {/* Core orb */}
       <div className="relative rounded-full flex items-center justify-center overflow-hidden" style={{
         width: size, height: size,
-        background: "linear-gradient(145deg, rgba(59,130,246,0.5) 0%, rgba(43,108,235,0.25) 40%, rgba(99,102,241,0.35) 100%)",
-        border: "1px solid rgba(99,102,241,0.4)",
+        background: active
+          ? "linear-gradient(145deg, rgba(59,130,246,0.65) 0%, rgba(43,108,235,0.38) 38%, rgba(99,102,241,0.55) 100%)"
+          : "linear-gradient(145deg, rgba(59,130,246,0.48) 0%, rgba(43,108,235,0.22) 38%, rgba(99,102,241,0.34) 100%)",
+        border: `1.5px solid rgba(99,102,241,${active ? 0.6 : 0.38})`,
         boxShadow: active
-          ? "0 0 60px rgba(43,108,235,0.55), 0 0 120px rgba(43,108,235,0.15), inset 0 1px 0 rgba(255,255,255,0.15)"
-          : "0 0 30px rgba(43,108,235,0.22), inset 0 1px 0 rgba(255,255,255,0.08)",
-        backdropFilter: "blur(12px)",
-        transition: "box-shadow 0.6s ease",
+          ? "0 0 70px rgba(43,108,235,0.70), 0 0 150px rgba(43,108,235,0.22), 0 0 30px rgba(99,102,241,0.35), inset 0 1px 0 rgba(255,255,255,0.22)"
+          : "0 0 34px rgba(43,108,235,0.28), 0 0 70px rgba(43,108,235,0.10), inset 0 1px 0 rgba(255,255,255,0.11)",
+        backdropFilter: "blur(16px)",
+        transition: "box-shadow 0.5s ease, background 0.5s ease, border-color 0.5s ease",
       }}>
         {/* Inner shimmer sweep */}
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 overflow-hidden">
           <div className="absolute inset-y-0 w-1/2" style={{
-            background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent)",
-            animation: `shimmerSweep ${active ? 1.8 : 3}s ease-in-out infinite`,
+            background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.17), transparent)",
+            animation: `shimmerSweep ${active ? 1.6 : 2.8}s ease-in-out infinite`,
           }} />
         </div>
+        {/* Specular highlight */}
+        <div className="absolute rounded-full pointer-events-none" style={{
+          width: "42%", height: "28%",
+          top: "10%", left: "14%",
+          background: "radial-gradient(ellipse, rgba(255,255,255,0.28) 0%, transparent 70%)",
+          filter: "blur(2px)",
+        }} />
         {/* Thinking dots when active */}
         {active ? (
           <div className="relative z-10 flex items-center gap-1">
@@ -100,12 +116,19 @@ function AIOrb({ size = 80, active = false, className = "" }: { size?: number; a
               <div key={i} className="w-1.5 h-1.5 rounded-full bg-white" style={{
                 animation: "typing-dot 1.2s ease-in-out infinite",
                 animationDelay: `${i * 0.2}s`,
-                opacity: 0.9,
+                opacity: 0.95,
+                boxShadow: "0 0 6px rgba(255,255,255,0.9)",
               }} />
             ))}
           </div>
         ) : (
-          <Bot className="relative z-10 text-white drop-shadow-lg" style={{ width: size * 0.44, height: size * 0.44 }} />
+          <Bot
+            className="relative z-10 text-white drop-shadow-lg"
+            style={{
+              width: size * 0.44, height: size * 0.44,
+              filter: "drop-shadow(0 0 8px rgba(255,255,255,0.45))",
+            }}
+          />
         )}
       </div>
     </div>
@@ -654,13 +677,13 @@ export default function AIChat() {
                               msg.role === "user" ? "rounded-tr-md text-white font-medium" : "rounded-tl-md text-foreground/90"
                             }`}
                             style={msg.role === "user" ? {
-                              background: "linear-gradient(145deg, hsl(221 83% 54%) 0%, hsl(237 60% 50%) 100%)",
-                              boxShadow: "0 4px 28px rgba(43,108,235,0.4), 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.12)",
+                              background: "linear-gradient(145deg, hsl(221 83% 56%) 0%, hsl(228 75% 52%) 50%, hsl(240 60% 50%) 100%)",
+                              boxShadow: "0 6px 32px rgba(43,108,235,0.50), 0 2px 10px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.18)",
                             } : {
-                              background: "rgba(255,255,255,0.045)",
-                              backdropFilter: "blur(20px)",
-                              border: "1px solid rgba(99,102,241,0.12)",
-                              boxShadow: "0 4px 20px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.04)",
+                              background: "rgba(255,255,255,0.05)",
+                              backdropFilter: "blur(24px)",
+                              border: "1px solid rgba(99,102,241,0.15)",
+                              boxShadow: "0 4px 24px rgba(0,0,0,0.20), 0 0 0 1px rgba(99,102,241,0.05), inset 0 1px 0 rgba(255,255,255,0.06)",
                             }}
                           >
                             {msg.content}
@@ -703,37 +726,50 @@ export default function AIChat() {
               <form onSubmit={handleSend} className="max-w-3xl mx-auto">
                 {/* Input wrapper with gradient border */}
                 <div
-                  className="relative rounded-3xl transition-all"
+                  className="relative rounded-3xl transition-all duration-300"
                   style={{
                     background: inputValue
-                      ? "linear-gradient(135deg, rgba(43,108,235,0.25) 0%, rgba(99,102,241,0.25) 100%)"
-                      : "rgba(255,255,255,0.04)",
-                    padding: "1px",
+                      ? "linear-gradient(135deg, rgba(43,108,235,0.40) 0%, rgba(99,102,241,0.38) 50%, rgba(139,92,246,0.30) 100%)"
+                      : "linear-gradient(135deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.04) 100%)",
+                    padding: "1.5px",
                     boxShadow: inputValue
-                      ? "0 0 0 3px rgba(99,102,241,0.1), 0 8px 32px rgba(43,108,235,0.2)"
-                      : "none",
+                      ? "0 0 0 3px rgba(99,102,241,0.12), 0 8px 40px rgba(43,108,235,0.28), 0 0 80px rgba(99,102,241,0.08)"
+                      : "0 2px 12px rgba(0,0,0,0.3)",
                   }}
                 >
-                  <div className="relative flex items-center rounded-3xl overflow-hidden" style={{
-                    background: "rgba(10,14,28,0.95)",
-                    backdropFilter: "blur(24px)",
+                  <div className="relative flex items-center rounded-[22px] overflow-hidden" style={{
+                    background: "rgba(8,11,24,0.97)",
+                    backdropFilter: "blur(28px)",
                   }}>
-                    {/* Mic button */}
-                    <motion.button
-                      type="button"
-                      whileTap={{ scale: 0.88 }}
-                      onClick={() => setMicActive(v => !v)}
-                      className="ml-3 w-9 h-9 rounded-2xl flex items-center justify-center transition-all shrink-0"
-                      style={{
-                        background: micActive ? "rgba(52,211,153,0.15)" : "rgba(255,255,255,0.04)",
-                        border: micActive ? "1px solid rgba(52,211,153,0.35)" : "1px solid rgba(255,255,255,0.06)",
-                        boxShadow: micActive ? "0 0 14px rgba(52,211,153,0.25)" : "none",
-                      }}
-                    >
-                      {micActive
-                        ? <MicOff className="h-3.5 w-3.5 text-emerald-400" />
-                        : <Mic className="h-3.5 w-3.5 text-white/35" />}
-                    </motion.button>
+                    {/* Mic button with animated rings */}
+                    <div className="relative ml-3 shrink-0 flex items-center justify-center">
+                      {/* Expanding sonar rings when active */}
+                      {micActive && [0, 1].map(i => (
+                        <div key={i} className="absolute rounded-full pointer-events-none" style={{
+                          inset: `-${9 + i * 9}px`,
+                          border: `1px solid rgba(52,211,153,${0.32 - i * 0.12})`,
+                          animation: `orbRing ${1.9 + i * 0.65}s ease-out infinite ${i * 0.45}s`,
+                        }} />
+                      ))}
+                      <motion.button
+                        type="button"
+                        whileTap={{ scale: 0.88 }}
+                        onClick={() => setMicActive(v => !v)}
+                        className="relative w-9 h-9 rounded-2xl flex items-center justify-center transition-all"
+                        style={{
+                          background: micActive ? "rgba(52,211,153,0.18)" : "rgba(255,255,255,0.04)",
+                          border: micActive ? "1px solid rgba(52,211,153,0.48)" : "1px solid rgba(255,255,255,0.06)",
+                          boxShadow: micActive
+                            ? "0 0 22px rgba(52,211,153,0.38), 0 0 50px rgba(52,211,153,0.12)"
+                            : "none",
+                          transition: "all 0.3s ease",
+                        }}
+                      >
+                        {micActive
+                          ? <MicOff className="h-3.5 w-3.5 text-emerald-400" style={{ filter: "drop-shadow(0 0 5px rgba(52,211,153,0.9))" }} />
+                          : <Mic className="h-3.5 w-3.5 text-white/35" />}
+                      </motion.button>
+                    </div>
 
                     {/* Text input */}
                     <Input

@@ -6,7 +6,7 @@ export function AnimatedBackground() {
       {/* ── Silk Indian Flag — translucent, right side, like silk protecting the platform ── */}
       <div
         className="absolute right-0 top-0 bottom-0 hidden lg:block"
-        style={{ width: "42vw", opacity: 0.028 }}
+        style={{ width: "42vw", opacity: 0.05 }}
       >
         <div
           style={{
@@ -28,7 +28,7 @@ export function AnimatedBackground() {
       {/* ── Medium flag on mobile — smaller, even subtler ── */}
       <div
         className="absolute right-0 top-[10%] lg:hidden"
-        style={{ width: "60vw", height: "40vw", opacity: 0.018 }}
+        style={{ width: "60vw", height: "40vw", opacity: 0.04 }}
       >
         <div style={{ position: "relative", width: "100%", height: "100%", animation: "silkFlagWave 9s ease-in-out infinite", transformOrigin: "left center" }}>
           <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "33.33%", background: "#FF9933" }} />

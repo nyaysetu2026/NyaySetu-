@@ -187,7 +187,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
       </aside>
 
       {/* ── Main Content ─────────────────────────────── */}
-      <main className="flex-1 lg:ml-[270px] flex flex-col min-h-[100dvh] pb-[84px] lg:pb-0 relative z-10">
+      <main className="flex-1 lg:ml-[270px] flex flex-col min-h-[100dvh] pb-[84px] lg:pb-0 relative z-10 min-w-0 overflow-x-hidden">
         {children}
       </main>
 
