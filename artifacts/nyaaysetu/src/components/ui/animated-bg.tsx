@@ -11,10 +11,10 @@ export function AnimatedBackground() {
         }}
       />
 
-      {/* ── Silk Indian Flag — translucent, right side, like silk protecting the platform ── */}
+      {/* ── Silk Indian Flag — cinematic global presence ── */}
       <div
         className="absolute right-0 top-0 bottom-0 hidden lg:block"
-        style={{ width: "42vw", opacity: 0.055 }}
+        style={{ width: "44vw", opacity: 0.065 }}
       >
         <div
           style={{

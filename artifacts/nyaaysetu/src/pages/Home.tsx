@@ -46,96 +46,273 @@ function useCountUp(target: string, duration = 2000, startCounting = false) {
 }
 
 /* ─────────────────────────────────────────────
-   Hero Illustration – scale + flag + columns
+   Hero Illustration — cinematic flag + scale
 ───────────────────────────────────────────── */
 function HeroIllustration() {
   return (
-    <div className="relative w-full h-full min-h-[420px] flex items-center justify-center overflow-hidden">
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{ opacity: 0.055, animation: "silkFlagWave 9s ease-in-out infinite" }}
-      >
-        <IndiaFlagBg />
-      </div>
+    <div className="relative w-full h-full min-h-[480px] flex items-center justify-center overflow-hidden">
+
+      {/* ── Deep dark backdrop ── */}
       <div className="absolute inset-0 pointer-events-none" style={{
-        background: "radial-gradient(ellipse 70% 70% at 50% 50%, rgba(43,108,235,0.18) 0%, rgba(99,102,241,0.06) 50%, transparent 75%)",
+        background: "radial-gradient(ellipse 100% 100% at 50% 50%, rgba(4,8,22,0.97) 0%, rgba(2,5,14,0.99) 100%)",
       }} />
-      <div className="absolute top-0 right-0 w-40 h-40 pointer-events-none" style={{
-        background: "radial-gradient(circle, rgba(255,153,51,0.18) 0%, transparent 70%)",
-        filter: "blur(30px)",
+
+      {/* ── Cinematic blue sweep from top-left ── */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        background: "radial-gradient(ellipse 75% 60% at 20% 15%, rgba(25,65,190,0.32) 0%, transparent 65%)",
       }} />
-      <div className="absolute inset-0 pointer-events-none opacity-[0.06]" style={{
+      <div className="absolute inset-0 pointer-events-none" style={{
+        background: "radial-gradient(ellipse 60% 55% at 65% 50%, rgba(15,45,150,0.22) 0%, transparent 60%)",
+      }} />
+
+      {/* ── India map gold glow (right side) ── */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        background: "radial-gradient(ellipse 70% 80% at 78% 55%, rgba(212,175,55,0.07) 0%, transparent 60%)",
+      }} />
+
+      {/* ── Blueprint grid ── */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.04]" style={{
         backgroundImage: "linear-gradient(rgba(43,108,235,0.9) 1px, transparent 1px), linear-gradient(90deg, rgba(43,108,235,0.9) 1px, transparent 1px)",
         backgroundSize: "36px 36px",
       }} />
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex items-end justify-center gap-2 pointer-events-none opacity-[0.22]">
-        {[44, 64, 80, 96, 112, 96, 80, 64, 44].map((h, i) => (
-          <div key={i} style={{ width: 14, height: h, background: "linear-gradient(to bottom, rgba(212,175,55,0.9), rgba(120,90,20,0.6))", borderRadius: "3px 3px 0 0" }} />
-        ))}
+
+      {/* ══════════════════════════════════════════
+          LARGE WAVING INDIAN FLAG — prominent
+      ══════════════════════════════════════════ */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          right: "-8%", top: "-5%",
+          width: "88%", height: "110%",
+          opacity: 0.30,
+        }}
+      >
+        {/* Waving flag body */}
+        <div style={{
+          position: "absolute", inset: 0,
+          animation: "premiumFlagWave 7s ease-in-out infinite",
+          transformOrigin: "left center",
+        }}>
+          {/* Saffron */}
+          <div style={{
+            height: "33.34%",
+            background: "linear-gradient(180deg, #FF9933 0%, #e8821a 100%)",
+            boxShadow: "inset 0 -3px 12px rgba(0,0,0,0.2)",
+          }} />
+          {/* White + Chakra */}
+          <div style={{
+            height: "33.32%",
+            background: "linear-gradient(180deg, #f8f8f8 0%, #eeeeee 100%)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            position: "relative",
+          }}>
+            <svg viewBox="0 0 48 48" width="38%" height="90%" fill="none" style={{ animation: "chakraSpin 12s linear infinite" }}>
+              <circle cx="24" cy="24" r="10" stroke="#000080" strokeWidth="2" />
+              <circle cx="24" cy="24" r="2" fill="#000080" />
+              {Array.from({ length: 24 }, (_, i) => {
+                const ang = (i * 360) / 24;
+                const rad = (ang * Math.PI) / 180;
+                return (
+                  <line key={i}
+                    x1={24 + 2 * Math.cos(rad)} y1={24 + 2 * Math.sin(rad)}
+                    x2={24 + 10 * Math.cos(rad)} y2={24 + 10 * Math.sin(rad)}
+                    stroke="#000080" strokeWidth="0.8"
+                  />
+                );
+              })}
+            </svg>
+          </div>
+          {/* Green */}
+          <div style={{
+            height: "33.34%",
+            background: "linear-gradient(180deg, #138808 0%, #0e6606 100%)",
+            boxShadow: "inset 0 3px 12px rgba(0,0,0,0.2)",
+          }} />
+        </div>
+
+        {/* Left edge fade — blend with hero content */}
+        <div style={{
+          position: "absolute", inset: 0,
+          background: "linear-gradient(90deg, rgba(4,8,22,0.98) 0%, rgba(4,8,22,0.65) 12%, rgba(4,8,22,0.25) 30%, transparent 55%)",
+          pointerEvents: "none",
+        }} />
+        {/* Right edge fade */}
+        <div style={{
+          position: "absolute", inset: 0,
+          background: "linear-gradient(90deg, transparent 65%, rgba(4,8,22,0.5) 85%, rgba(4,8,22,0.85) 100%)",
+          pointerEvents: "none",
+        }} />
+        {/* Top/bottom fade */}
+        <div style={{
+          position: "absolute", inset: 0,
+          background: "linear-gradient(to bottom, rgba(4,8,22,0.75) 0%, transparent 20%, transparent 80%, rgba(4,8,22,0.75) 100%)",
+          pointerEvents: "none",
+        }} />
+        {/* Cinematic blue overlay on flag */}
+        <div style={{
+          position: "absolute", inset: 0,
+          background: "linear-gradient(135deg, rgba(15,45,150,0.38) 0%, rgba(10,30,100,0.18) 40%, transparent 70%)",
+          pointerEvents: "none",
+        }} />
       </div>
+
+      {/* ══════════════════════════════════════════
+          SUPREME COURT COLUMNS — silhouette
+      ══════════════════════════════════════════ */}
+      <div className="absolute bottom-0 left-0 right-0 pointer-events-none flex items-end justify-center gap-[6px] opacity-[0.22]">
+        {[38,50,58,68,78,92,106,116,106,92,78,68,58,50,38].map((h, i) => {
+          const isCenter = i === 7;
+          return (
+            <div key={i} style={{
+              width: isCenter ? 18 : i === 6 || i === 8 ? 15 : 11,
+              height: h,
+              background: isCenter
+                ? "linear-gradient(to bottom, rgba(220,200,150,0.95), rgba(140,110,60,0.7))"
+                : "linear-gradient(to bottom, rgba(180,160,120,0.8), rgba(110,85,40,0.55))",
+              borderRadius: "4px 4px 0 0",
+              boxShadow: isCenter ? "0 0 16px rgba(212,175,55,0.22)" : "none",
+            }} />
+          );
+        })}
+      </div>
+      {/* Arch silhouette */}
+      <div className="absolute bottom-0 pointer-events-none opacity-[0.12]" style={{ left: "12%", right: "12%" }}>
+        <svg viewBox="0 0 500 60" preserveAspectRatio="none" width="100%" height="60" fill="none">
+          <path d="M0 60 Q250 0 500 60" stroke="rgba(180,160,110,0.6)" strokeWidth="2" fill="rgba(140,110,60,0.12)" />
+        </svg>
+      </div>
+
+      {/* ══════════════════════════════════════════
+          FLOATING PARTICLES
+      ══════════════════════════════════════════ */}
       {[
-        { x: "20%", y: "15%", s: 4, d: 0 },
-        { x: "75%", y: "20%", s: 3, d: 1.2 },
-        { x: "10%", y: "65%", s: 5, d: 2.1 },
-        { x: "82%", y: "70%", s: 3, d: 0.7 },
-        { x: "55%", y: "10%", s: 4, d: 1.8 },
-        { x: "30%", y: "80%", s: 3, d: 3 },
+        { x: "18%", y: "12%", s: 4, d: 0,   g: "rgba(212,175,55,0.75)" },
+        { x: "78%", y: "18%", s: 3, d: 1.2, g: "rgba(43,108,235,0.7)"  },
+        { x: "8%",  y: "62%", s: 5, d: 2.1, g: "rgba(212,175,55,0.6)"  },
+        { x: "86%", y: "68%", s: 3, d: 0.7, g: "rgba(43,108,235,0.65)" },
+        { x: "58%", y: "8%",  s: 4, d: 1.8, g: "rgba(255,153,51,0.6)"  },
+        { x: "32%", y: "82%", s: 3, d: 3,   g: "rgba(52,211,153,0.55)" },
       ].map((p, i) => (
         <div key={i} className="absolute rounded-full pointer-events-none" style={{
           left: p.x, top: p.y, width: p.s, height: p.s,
-          background: i % 2 === 0 ? "rgba(212,175,55,0.7)" : "rgba(43,108,235,0.7)",
-          animation: `particleFloat${(i % 4) + 1} ${10 + i * 1.5}s ease-in-out infinite ${p.d}s`,
-          boxShadow: `0 0 ${p.s * 3}px ${i % 2 === 0 ? "rgba(212,175,55,0.5)" : "rgba(43,108,235,0.5)"}`,
+          background: p.g,
+          animation: `particleFloat${(i % 4) + 1} ${11 + i * 1.5}s ease-in-out infinite ${p.d}s`,
+          boxShadow: `0 0 ${p.s * 4}px ${p.g}`,
         }} />
       ))}
-      <div className="relative z-10">
+
+      {/* ══════════════════════════════════════════
+          MAIN JUSTICE SCALE — premium gold
+      ══════════════════════════════════════════ */}
+      <div className="relative z-10" style={{
+        filter: "drop-shadow(0 0 40px rgba(212,175,55,0.45)) drop-shadow(0 2px 60px rgba(0,0,0,0.6))",
+        marginTop: "-20px",
+      }}>
+        {/* Radial glow orb */}
         <div className="absolute rounded-full pointer-events-none" style={{
           width: 380, height: 380, top: "50%", left: "50%",
           transform: "translate(-50%, -50%)",
-          background: "radial-gradient(circle, rgba(212,175,55,0.12) 0%, transparent 65%)",
-          filter: "blur(30px)",
+          background: "radial-gradient(circle, rgba(212,175,55,0.18) 0%, rgba(43,108,235,0.1) 45%, transparent 70%)",
+          filter: "blur(28px)",
           animation: "orbPulse 4s ease-in-out infinite",
         }} />
-        <svg viewBox="0 0 340 300" width="320" height="282" fill="none">
+        {/* Outer ring */}
+        <div className="absolute rounded-full pointer-events-none" style={{
+          width: 300, height: 300, top: "50%", left: "50%",
+          transform: "translate(-50%, -50%)",
+          border: "1px solid rgba(212,175,55,0.14)",
+          animation: "orbRing 4.5s ease-out infinite",
+        }} />
+
+        <svg viewBox="0 0 360 330" width="360" height="330" fill="none">
           <defs>
-            <linearGradient id="hg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#f5d06b" /><stop offset="100%" stopColor="#b8921e" /></linearGradient>
-            <linearGradient id="hg2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stopColor="#b8921e" /><stop offset="45%" stopColor="#f5d06b" /><stop offset="100%" stopColor="#b8921e" /></linearGradient>
-            <radialGradient id="hpan" cx="50%" cy="25%" r="60%"><stop offset="0%" stopColor="#fce08a" /><stop offset="100%" stopColor="#9a6e10" /></radialGradient>
-            <filter id="hglow"><feGaussianBlur stdDeviation="3.5" result="b" /><feComposite in="SourceGraphic" in2="b" operator="over" /></filter>
+            <linearGradient id="sg1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#fce08a" />
+              <stop offset="45%" stopColor="#d4af37" />
+              <stop offset="100%" stopColor="#7a5510" />
+            </linearGradient>
+            <linearGradient id="sg2" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#7a5510" />
+              <stop offset="25%" stopColor="#c9921a" />
+              <stop offset="50%" stopColor="#fce08a" />
+              <stop offset="75%" stopColor="#c9921a" />
+              <stop offset="100%" stopColor="#7a5510" />
+            </linearGradient>
+            <radialGradient id="span" cx="50%" cy="28%" r="60%">
+              <stop offset="0%" stopColor="#fce08a" />
+              <stop offset="100%" stopColor="#8b6108" />
+            </radialGradient>
+            <filter id="sglow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="5" result="b" />
+              <feComposite in="SourceGraphic" in2="b" operator="over" />
+            </filter>
+            <filter id="sglow2" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="10" result="b" />
+              <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
           </defs>
-          <rect x="100" y="274" width="140" height="14" rx="7" fill="url(#hg2)" opacity="0.95" />
-          <rect x="116" y="262" width="108" height="13" rx="6.5" fill="url(#hg2)" opacity="0.85" />
-          <rect x="167" y="72" width="6" height="192" rx="3" fill="url(#hg1)" opacity="0.95" />
-          <circle cx="170" cy="63" r="16" fill="url(#hg1)" opacity="0.95" filter="url(#hglow)" />
-          <circle cx="170" cy="63" r="7" fill="rgba(255,255,255,0.38)" />
-          <circle cx="170" cy="63" r="3.5" fill="url(#hg1)" />
-          <g style={{ transformOrigin: "170px 106px", animation: "scaleBalance 5s ease-in-out infinite" }}>
-            <rect x="42" y="103" width="256" height="7" rx="3.5" fill="url(#hg2)" opacity="0.97" />
-            <line x1="64" y1="110" x2="60" y2="148" stroke="url(#hg1)" strokeWidth="2.5" opacity="0.72" />
-            <line x1="60" y1="148" x2="56" y2="184" stroke="url(#hg1)" strokeWidth="2.5" opacity="0.72" />
-            <line x1="56" y1="184" x2="52" y2="210" stroke="url(#hg1)" strokeWidth="2.5" opacity="0.72" />
-            <line x1="276" y1="110" x2="280" y2="148" stroke="url(#hg1)" strokeWidth="2.5" opacity="0.72" />
-            <line x1="280" y1="148" x2="284" y2="184" stroke="url(#hg1)" strokeWidth="2.5" opacity="0.72" />
-            <line x1="284" y1="184" x2="288" y2="210" stroke="url(#hg1)" strokeWidth="2.5" opacity="0.72" />
-            <g style={{ transformOrigin: "56px 210px", animation: "panSwingLeft 5s ease-in-out infinite" }}>
-              <path d="M16 210 Q56 226 96 210" stroke="url(#hg2)" strokeWidth="3" fill="none" opacity="0.97" />
-              <path d="M18 213 Q56 232 94 213 L94 222 Q56 242 18 222 Z" fill="url(#hpan)" opacity="0.55" />
-              <ellipse cx="56" cy="226" rx="40" ry="6" fill="url(#hg2)" opacity="0.35" />
+
+          {/* Base platform */}
+          <rect x="95" y="302" width="170" height="18" rx="9" fill="url(#sg2)" opacity="0.97" />
+          <rect x="113" y="285" width="134" height="17" rx="8.5" fill="url(#sg2)" opacity="0.88" />
+          <ellipse cx="180" cy="302" rx="85" ry="6" fill="rgba(212,175,55,0.18)" />
+
+          {/* Pole */}
+          <rect x="176" y="66" width="8" height="220" rx="4" fill="url(#sg1)" opacity="0.97" />
+
+          {/* Top ornament */}
+          <circle cx="180" cy="56" r="21" fill="url(#sg1)" opacity="0.97" filter="url(#sglow)" />
+          <circle cx="180" cy="56" r="21" fill="url(#sg1)" opacity="0.5" filter="url(#sglow2)" />
+          <circle cx="180" cy="56" r="9" fill="rgba(255,255,255,0.42)" />
+          <circle cx="180" cy="56" r="4.5" fill="url(#sg1)" />
+          {/* Ornament ring */}
+          <circle cx="180" cy="56" r="25" stroke="rgba(212,175,55,0.3)" strokeWidth="1.5" fill="none" />
+
+          {/* Balance beam group */}
+          <g style={{ transformOrigin: "180px 112px", animation: "scaleBalance 6s ease-in-out infinite" }}>
+            {/* Beam */}
+            <rect x="34" y="108" width="292" height="9" rx="4.5" fill="url(#sg2)" opacity="0.97" />
+            {/* Beam glow */}
+            <rect x="34" y="108" width="292" height="9" rx="4.5" fill="url(#sg2)" opacity="0.4" filter="url(#sglow)" />
+
+            {/* Left chain segments */}
+            <line x1="58" y1="117" x2="54" y2="158" stroke="url(#sg1)" strokeWidth="3" opacity="0.78" />
+            <line x1="54" y1="158" x2="50" y2="198" stroke="url(#sg1)" strokeWidth="2.5" opacity="0.72" />
+            <line x1="50" y1="198" x2="46" y2="228" stroke="url(#sg1)" strokeWidth="2.5" opacity="0.66" />
+
+            {/* Right chain segments */}
+            <line x1="302" y1="117" x2="306" y2="158" stroke="url(#sg1)" strokeWidth="3" opacity="0.78" />
+            <line x1="306" y1="158" x2="310" y2="198" stroke="url(#sg1)" strokeWidth="2.5" opacity="0.72" />
+            <line x1="310" y1="198" x2="314" y2="228" stroke="url(#sg1)" strokeWidth="2.5" opacity="0.66" />
+
+            {/* Left pan */}
+            <g style={{ transformOrigin: "46px 228px", animation: "panSwingLeft 6s ease-in-out infinite" }}>
+              <path d="M8 228 Q46 246 84 228" stroke="url(#sg2)" strokeWidth="4" fill="none" opacity="0.97" />
+              <path d="M10 232 Q46 252 82 232 L82 244 Q46 264 10 244 Z" fill="url(#span)" opacity="0.65" />
+              <ellipse cx="46" cy="246" rx="38" ry="7.5" fill="url(#sg2)" opacity="0.42" />
+              <ellipse cx="46" cy="246" rx="38" ry="7.5" fill="url(#sg2)" opacity="0.2" filter="url(#sglow)" />
             </g>
-            <g style={{ transformOrigin: "284px 210px", animation: "panSwingRight 5s ease-in-out infinite" }}>
-              <path d="M244 210 Q284 226 324 210" stroke="url(#hg2)" strokeWidth="3" fill="none" opacity="0.97" />
-              <path d="M246 213 Q284 232 322 213 L322 222 Q284 242 246 222 Z" fill="url(#hpan)" opacity="0.55" />
-              <ellipse cx="284" cy="226" rx="40" ry="6" fill="url(#hg2)" opacity="0.35" />
+
+            {/* Right pan */}
+            <g style={{ transformOrigin: "314px 228px", animation: "panSwingRight 6s ease-in-out infinite" }}>
+              <path d="M276 228 Q314 246 352 228" stroke="url(#sg2)" strokeWidth="4" fill="none" opacity="0.97" />
+              <path d="M278 232 Q314 252 350 232 L350 244 Q314 264 278 244 Z" fill="url(#span)" opacity="0.65" />
+              <ellipse cx="314" cy="246" rx="38" ry="7.5" fill="url(#sg2)" opacity="0.42" />
+              <ellipse cx="314" cy="246" rx="38" ry="7.5" fill="url(#sg2)" opacity="0.2" filter="url(#sglow)" />
             </g>
           </g>
-          <ellipse cx="170" cy="106" rx="128" ry="10" fill="rgba(212,175,55,0.14)" filter="url(#hglow)" />
+
+          {/* Beam shadow glow */}
+          <ellipse cx="180" cy="112" rx="146" ry="11" fill="rgba(212,175,55,0.16)" filter="url(#sglow)" />
         </svg>
       </div>
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10 pointer-events-none">
-        <div className="w-5 h-8 rounded-full flex items-start justify-center pt-1.5" style={{ border: "1.5px solid rgba(255,255,255,0.2)" }}>
-          <div className="w-1 h-2 rounded-full bg-white/50" style={{ animation: "float 1.6s ease-in-out infinite" }} />
+
+      {/* ── Scroll indicator ── */}
+      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 z-10 pointer-events-none">
+        <div className="w-5 h-8 rounded-full flex items-start justify-center pt-1.5" style={{ border: "1.5px solid rgba(255,255,255,0.18)" }}>
+          <div className="w-1 h-2 rounded-full bg-white/45" style={{ animation: "float 1.6s ease-in-out infinite" }} />
         </div>
-        <p className="text-[9px] text-white/28 tracking-[0.22em] uppercase">Scroll to explore</p>
+        <p className="text-[9px] text-white/26 tracking-[0.22em] uppercase">Scroll to explore</p>
       </div>
     </div>
   );
@@ -179,7 +356,17 @@ const STATS = [
 ───────────────────────────────────────────── */
 function PanelCard({ children, style = {} }: { children: React.ReactNode; style?: React.CSSProperties }) {
   return (
-    <div className="rounded-2xl p-4" style={{ background: "rgba(255,255,255,0.032)", border: "1px solid rgba(255,255,255,0.08)", ...style }}>
+    <div
+      className="rounded-2xl p-4"
+      style={{
+        background: "rgba(255,255,255,0.032)",
+        border: "1px solid rgba(255,255,255,0.08)",
+        backdropFilter: "blur(24px)",
+        WebkitBackdropFilter: "blur(24px)",
+        boxShadow: "0 4px 20px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04)",
+        ...style,
+      }}
+    >
       {children}
     </div>
   );
@@ -263,8 +450,8 @@ export default function Home() {
           <div className="min-w-0 xl:pr-5">
 
             {/* ── Hero ── */}
-            <section className="py-8">
-              <div className="grid lg:grid-cols-[1fr_1.15fr] gap-6 items-center min-h-[450px]">
+            <section className="py-6">
+              <div className="grid lg:grid-cols-[1fr_1.2fr] gap-6 items-center min-h-[520px]">
                 <motion.div
                   initial="hidden"
                   animate="visible"
@@ -366,75 +553,151 @@ export default function Home() {
                 </span>
               </motion.div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                {ALL_FEATURES.map((f, i) => {
+              {/* ── First 6 core features — prominent row ── */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-3">
+                {ALL_FEATURES.slice(0, 6).map((f, i) => {
                   const Icon = f.icon;
                   return (
                     <motion.div
                       key={i}
-                      initial={{ opacity: 0, y: 24, scale: 0.95 }}
+                      initial={{ opacity: 0, y: 28, scale: 0.93 }}
                       whileInView={{ opacity: 1, y: 0, scale: 1 }}
                       viewport={{ once: true, margin: "-20px" }}
-                      transition={{ delay: i * 0.04, duration: 0.45, ease: [0.22,1,0.36,1] }}
-                      whileHover={{ y: -6, scale: 1.02 }}
+                      transition={{ delay: i * 0.06, duration: 0.5, ease: [0.22,1,0.36,1] }}
+                      whileHover={{ y: -8, scale: 1.03 }}
                       className="relative group"
                     >
                       <Link href={f.link} className="block h-full">
                         <div
-                          className="p-4 rounded-[18px] h-full flex flex-col cursor-pointer transition-all duration-300 relative overflow-hidden"
+                          className="p-4 rounded-[20px] h-full flex flex-col cursor-pointer transition-all duration-350 relative overflow-hidden"
                           style={{
-                            background: "rgba(255,255,255,0.028)",
-                            border: "1px solid rgba(255,255,255,0.07)",
-                            backdropFilter: "blur(20px)",
-                            WebkitBackdropFilter: "blur(20px)",
+                            background: "rgba(255,255,255,0.03)",
+                            border: "1px solid rgba(255,255,255,0.08)",
+                            backdropFilter: "blur(24px)",
+                            WebkitBackdropFilter: "blur(24px)",
+                            boxShadow: "0 4px 24px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04)",
+                          }}
+                          onMouseEnter={(e) => {
+                            const el = e.currentTarget as HTMLElement;
+                            el.style.borderColor = `${f.ic}55`;
+                            el.style.background = f.ib;
+                            el.style.boxShadow = `0 12px 40px rgba(0,0,0,0.35), 0 0 28px ${f.ic}20, inset 0 1px 0 rgba(255,255,255,0.06)`;
+                          }}
+                          onMouseLeave={(e) => {
+                            const el = e.currentTarget as HTMLElement;
+                            el.style.borderColor = "rgba(255,255,255,0.08)";
+                            el.style.background = "rgba(255,255,255,0.03)";
+                            el.style.boxShadow = "0 4px 24px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.04)";
+                          }}
+                        >
+                          {/* Shimmer sweep */}
+                          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{
+                            background: `linear-gradient(135deg, transparent 25%, ${f.ic}09 50%, transparent 75%)`,
+                          }} />
+
+                          {/* Circular orb icon */}
+                          <div className="relative mb-3 z-10">
+                            <div
+                              className="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110"
+                              style={{
+                                background: `radial-gradient(circle at 35% 35%, ${f.ic}28, ${f.ic}10)`,
+                                border: `1px solid ${f.ic}40`,
+                                boxShadow: `0 0 20px ${f.ic}22, 0 4px 12px rgba(0,0,0,0.2)`,
+                              }}
+                            >
+                              <Icon className="w-5 h-5 transition-all duration-300" style={{ color: f.ic }} />
+                            </div>
+                            {/* Glow dot behind icon */}
+                            <div className="absolute inset-0 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-400" style={{
+                              background: `radial-gradient(circle, ${f.ic}22 0%, transparent 70%)`,
+                              filter: "blur(8px)",
+                              transform: "scale(1.4)",
+                            }} />
+                          </div>
+
+                          <h3 className="text-[12px] font-bold text-white mb-1 leading-tight relative z-10">{f.title}</h3>
+                          <p className="text-[10px] text-white/40 leading-relaxed flex-1 relative z-10">{f.desc}</p>
+
+                          <div className="mt-3 flex items-center justify-between relative z-10">
+                            <span className="text-[9px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1" style={{ background: "rgba(52,211,153,0.1)", color: "#34d399", border: "1px solid rgba(52,211,153,0.22)" }}>
+                              <span className="w-1 h-1 rounded-full bg-emerald-400 inline-block" />
+                              Available
+                            </span>
+                            <div className="w-6 h-6 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:translate-x-1" style={{ background: `${f.ic}14` }}>
+                              <ArrowRight className="w-3 h-3" style={{ color: f.ic }} />
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    </motion.div>
+                  );
+                })}
+              </div>
+
+              {/* ── Remaining 14 features ── */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-2.5">
+                {ALL_FEATURES.slice(6).map((f, i) => {
+                  const Icon = f.icon;
+                  return (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                      viewport={{ once: true, margin: "-20px" }}
+                      transition={{ delay: i * 0.035, duration: 0.42, ease: [0.22,1,0.36,1] }}
+                      whileHover={{ y: -5, scale: 1.02 }}
+                      className="relative group"
+                    >
+                      <Link href={f.link} className="block h-full">
+                        <div
+                          className="p-3.5 rounded-[16px] h-full flex flex-col cursor-pointer transition-all duration-300 relative overflow-hidden"
+                          style={{
+                            background: "rgba(255,255,255,0.025)",
+                            border: "1px solid rgba(255,255,255,0.065)",
+                            backdropFilter: "blur(18px)",
+                            WebkitBackdropFilter: "blur(18px)",
                           }}
                           onMouseEnter={(e) => {
                             const el = e.currentTarget as HTMLElement;
                             el.style.borderColor = f.ibr;
                             el.style.background = f.ib;
-                            el.style.boxShadow = `0 8px 32px rgba(0,0,0,0.3), 0 0 20px ${f.ic}18`;
+                            el.style.boxShadow = `0 8px 28px rgba(0,0,0,0.28), 0 0 16px ${f.ic}14`;
                           }}
                           onMouseLeave={(e) => {
                             const el = e.currentTarget as HTMLElement;
-                            el.style.borderColor = "rgba(255,255,255,0.07)";
-                            el.style.background = "rgba(255,255,255,0.028)";
+                            el.style.borderColor = "rgba(255,255,255,0.065)";
+                            el.style.background = "rgba(255,255,255,0.025)";
                             el.style.boxShadow = "none";
                           }}
                         >
-                          {/* Shimmer sweep on hover */}
-                          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{
-                            background: `linear-gradient(135deg, transparent 30%, ${f.ic}0a 50%, transparent 70%)`,
+                          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none" style={{
+                            background: `linear-gradient(135deg, transparent 30%, ${f.ic}08 50%, transparent 70%)`,
                           }} />
 
-                          {/* Icon */}
-                          <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 relative z-10 transition-all duration-300 group-hover:scale-110" style={{ background: f.ib, border: `1px solid ${f.ibr}` }}>
-                            <Icon className="w-5 h-5 transition-all duration-300" style={{ color: f.ic }} />
+                          <div className="w-9 h-9 rounded-full flex items-center justify-center mb-2.5 relative z-10 transition-all duration-300 group-hover:scale-110" style={{
+                            background: `radial-gradient(circle at 35% 35%, ${f.ic}22, ${f.ic}0c)`,
+                            border: `1px solid ${f.ic}35`,
+                            boxShadow: `0 0 14px ${f.ic}18`,
+                          }}>
+                            <Icon className="w-4 h-4" style={{ color: f.ic }} />
                           </div>
 
-                          {/* Title */}
-                          <h3 className="text-[12.5px] font-bold text-white mb-1 leading-tight relative z-10">{f.title}</h3>
+                          <h3 className="text-[11px] font-bold text-white mb-1 leading-tight relative z-10">{f.title}</h3>
+                          <p className="text-[9.5px] text-white/38 leading-relaxed flex-1 relative z-10">{f.desc}</p>
 
-                          {/* Description */}
-                          <p className="text-[10.5px] text-white/42 leading-relaxed flex-1 relative z-10">{f.desc}</p>
-
-                          {/* Bottom row */}
-                          <div className="mt-3 flex items-center justify-between relative z-10">
+                          <div className="mt-2.5 flex items-center justify-between relative z-10">
                             {f.coming ? (
                               <div className="tooltip-container">
-                                <span className="coming-soon-badge">
-                                  Coming Soon
-                                </span>
+                                <span className="coming-soon-badge">Coming Soon</span>
                                 <span className="tooltip-text">Available in future updates</span>
                               </div>
                             ) : (
-                              <span className="text-[9px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1" style={{ background: "rgba(52,211,153,0.12)", color: "#34d399", border: "1px solid rgba(52,211,153,0.25)" }}>
+                              <span className="text-[8.5px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-1" style={{ background: "rgba(52,211,153,0.1)", color: "#34d399", border: "1px solid rgba(52,211,153,0.2)" }}>
                                 <span className="w-1 h-1 rounded-full bg-emerald-400 inline-block" />
-                                Available
+                                Live
                               </span>
                             )}
-                            <div className="w-6 h-6 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:translate-x-1 group-hover:scale-110" style={{ background: `${f.ic}15` }}>
-                              <ArrowRight className="w-3 h-3" style={{ color: f.ic }} />
-                            </div>
+                            <ArrowRight className="w-2.5 h-2.5 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-0.5" style={{ color: f.ic }} />
                           </div>
                         </div>
                       </Link>
@@ -451,22 +714,30 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.55 }}
-                className="grid grid-cols-2 sm:grid-cols-4 gap-6 p-6 rounded-2xl relative overflow-hidden"
+                className="grid grid-cols-2 sm:grid-cols-4 gap-6 px-8 py-6 rounded-2xl relative overflow-hidden"
                 style={{
-                  background: "rgba(255,255,255,0.022)",
-                  border: "1px solid rgba(255,255,255,0.07)",
-                  backdropFilter: "blur(24px)",
-                  boxShadow: "0 8px 40px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.04)",
+                  background: "rgba(255,255,255,0.025)",
+                  border: "1px solid rgba(255,255,255,0.075)",
+                  backdropFilter: "blur(28px)",
+                  WebkitBackdropFilter: "blur(28px)",
+                  boxShadow: "0 8px 48px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.05)",
                 }}
               >
-                {/* Subtle gold glow */}
+                {/* Gold radial glow */}
                 <div className="absolute inset-0 pointer-events-none" style={{
-                  background: "radial-gradient(ellipse 70% 100% at 50% 50%, rgba(212,175,55,0.05) 0%, transparent 70%)",
+                  background: "radial-gradient(ellipse 80% 120% at 50% 50%, rgba(212,175,55,0.06) 0%, transparent 70%)",
                 }} />
-                {/* Tricolor accent top */}
-                <div className="absolute top-0 left-6 right-6 h-px pointer-events-none" style={{
-                  background: "linear-gradient(90deg, transparent, rgba(255,153,51,0.4), rgba(212,175,55,0.5), rgba(19,136,8,0.3), transparent)",
+                {/* Tricolor top accent */}
+                <div className="absolute top-0 left-8 right-8 h-[1.5px] pointer-events-none" style={{
+                  background: "linear-gradient(90deg, transparent, rgba(255,153,51,0.55), rgba(212,175,55,0.65), rgba(19,136,8,0.4), transparent)",
                 }} />
+                {/* Dividers between stats */}
+                {[1,2,3].map(i => (
+                  <div key={i} className="absolute hidden sm:block top-4 bottom-4 w-px pointer-events-none" style={{
+                    left: `${i * 25}%`,
+                    background: "linear-gradient(to bottom, transparent, rgba(255,255,255,0.06), transparent)",
+                  }} />
+                ))}
                 {STATS.map((s, i) => (
                   <StatItem key={i} stat={s} index={i} />
                 ))}
@@ -625,27 +896,33 @@ export default function Home() {
                 </div>
               </PanelCard>
 
-              {/* Justice Journey (panel) */}
+              {/* Justice Journey (panel) — compact sidebar version */}
               <PanelCard>
                 <PanelHeader title="Justice Journey" action="View Details" />
-                <div className="flex items-start gap-1">
+                <div className="flex items-start gap-0.5">
                   {[
                     { num: 1, label: "Complaint\nSubmitted",  c: "#34d399", bg: "rgba(52,211,153,0.14)",  icon: CheckCircle, active: true  },
-                    { num: 2, label: "Under\nReview",         c: "#60a5fa", bg: "rgba(59,130,246,0.14)",  icon: Clock,       active: true  },
-                    { num: 3, label: "In\nProgress",          c: "#fbbf24", bg: "rgba(251,191,36,0.12)",  icon: AlertCircle, active: false },
-                    { num: 4, label: "Escalated",             c: "#f97316", bg: "rgba(249,115,22,0.12)",  icon: Bell,        active: false },
-                    { num: 5, label: "Resolved",              c: "#34d399", bg: "rgba(52,211,153,0.08)",  icon: CheckCircle, active: false },
+                    { num: 2, label: "Under\nReview\nBy Dept", c: "#60a5fa", bg: "rgba(59,130,246,0.14)",  icon: Clock,       active: true  },
+                    { num: 3, label: "In\nProgress\nAction",   c: "#fbbf24", bg: "rgba(251,191,36,0.12)",  icon: AlertCircle, active: false },
+                    { num: 4, label: "Escalated\nIf No\nAction", c: "#f97316", bg: "rgba(249,115,22,0.12)", icon: Bell,       active: false },
+                    { num: 5, label: "Resolved\nJustice\nDelivered", c: "#a78bfa", bg: "rgba(167,139,250,0.12)", icon: Award, active: false },
                   ].map((step, i, arr) => {
                     const Icon = step.icon;
                     return (
                       <div key={i} className="flex-1 flex flex-col items-center gap-1 relative">
                         {i < arr.length - 1 && (
-                          <div className="absolute top-[15px] left-1/2 w-full h-px pointer-events-none" style={{ background: step.active ? `${step.c}45` : "rgba(255,255,255,0.06)" }} />
+                          <div className="absolute top-[14px] left-1/2 w-full h-px pointer-events-none" style={{ background: step.active ? `${step.c}45` : "rgba(255,255,255,0.06)" }} />
                         )}
-                        <div className="w-[30px] h-[30px] rounded-full flex items-center justify-center relative z-10" style={{ background: step.active ? step.bg : "rgba(255,255,255,0.04)", border: `1.5px solid ${step.active ? step.c + "55" : "rgba(255,255,255,0.07)"}` }}>
+                        <div className="w-[28px] h-[28px] rounded-full flex items-center justify-center relative z-10 transition-all duration-300"
+                          style={{
+                            background: step.active ? step.bg : "rgba(255,255,255,0.04)",
+                            border: `1.5px solid ${step.active ? step.c + "55" : "rgba(255,255,255,0.07)"}`,
+                            boxShadow: step.active ? `0 0 12px ${step.c}30` : "none",
+                          }}
+                        >
                           <Icon className="w-3 h-3" style={{ color: step.active ? step.c : "rgba(255,255,255,0.2)" }} />
                         </div>
-                        <p className="text-center leading-tight text-white/38 mt-0.5" style={{ fontSize: 7.5, whiteSpace: "pre-line" }}>
+                        <p className="text-center leading-tight text-white/35 mt-0.5" style={{ fontSize: 7, whiteSpace: "pre-line" }}>
                           {step.num} {step.label}
                         </p>
                       </div>
@@ -657,7 +934,7 @@ export default function Home() {
               {/* Live Updates (panel) */}
               <PanelCard>
                 <PanelHeader title="Live Updates" action="View All" />
-                <div className="space-y-3">
+                <div className="space-y-2.5">
                   {[
                     { icon: AlertCircle, c: "#f87171", text: "Complaint #23456 has been escalated to District Officer", time: "2 min ago"   },
                     { icon: Landmark,    c: "#60a5fa", text: "New response from Municipal Corporation",                  time: "10 min ago" },
@@ -665,13 +942,13 @@ export default function Home() {
                   ].map((u, i) => {
                     const Icon = u.icon;
                     return (
-                      <div key={i} className="flex gap-2.5">
-                        <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5" style={{ background: `${u.c}18` }}>
+                      <div key={i} className="flex gap-2">
+                        <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5" style={{ background: `${u.c}18`, border: `1px solid ${u.c}28` }}>
                           <Icon className="w-3 h-3" style={{ color: u.c }} />
                         </div>
-                        <div>
-                          <p className="text-[11px] text-white/62 leading-relaxed">{u.text}</p>
-                          <p className="text-[9.5px] text-white/28 mt-0.5">{u.time}</p>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[10.5px] text-white/60 leading-relaxed">{u.text}</p>
+                          <p className="text-[9px] text-white/25 mt-0.5">{u.time}</p>
                         </div>
                       </div>
                     );
@@ -680,20 +957,23 @@ export default function Home() {
               </PanelCard>
 
               {/* Safety First */}
-              <PanelCard style={{ background: "linear-gradient(135deg, rgba(239,68,68,0.13) 0%, rgba(220,38,38,0.05) 100%)", border: "1px solid rgba(239,68,68,0.22)" }}>
+              <PanelCard style={{ background: "linear-gradient(135deg, rgba(239,68,68,0.14) 0%, rgba(220,38,38,0.06) 100%)", border: "1px solid rgba(239,68,68,0.24)" }}>
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-sm font-bold text-red-400">Safety First</p>
-                  <Phone className="w-4 h-4 text-red-400" />
+                  <div className="w-7 h-7 rounded-xl flex items-center justify-center" style={{ background: "rgba(239,68,68,0.15)", border: "1px solid rgba(239,68,68,0.3)" }}>
+                    <Phone className="w-3.5 h-3.5 text-red-400" />
+                  </div>
                 </div>
-                <p className="text-[11px] text-white/48 mb-3 leading-relaxed">In case of emergency or urgent legal help</p>
+                <p className="text-[10.5px] text-white/45 mb-3 leading-relaxed">In case of emergency or urgent legal help</p>
                 <Link href="/emergency" className="block">
-                  <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                    className="w-full py-2.5 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-1.5"
-                    style={{ background: "linear-gradient(135deg, #dc2626, #b91c1c)", boxShadow: "0 4px 18px rgba(220,38,38,0.38)" }}>
+                  <motion.button whileHover={{ scale: 1.03, boxShadow: "0 6px 22px rgba(220,38,38,0.5)" }} whileTap={{ scale: 0.97 }}
+                    className="w-full py-2.5 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-1.5 relative overflow-hidden"
+                    style={{ background: "linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)", boxShadow: "0 4px 18px rgba(220,38,38,0.38)" }}>
+                    <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)" }} />
                     🆘 Emergency Help
                   </motion.button>
                 </Link>
-                <p className="text-[9.5px] text-white/32 text-center mt-2">📞 Available 24/7</p>
+                <p className="text-[9px] text-white/28 text-center mt-2">📞 Available 24/7</p>
               </PanelCard>
 
             </div>
