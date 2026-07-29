@@ -3,10 +3,18 @@ export function AnimatedBackground() {
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
 
+      {/* ── Deep base aurora gradient ── */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: "radial-gradient(ellipse 110% 80% at 20% 20%, rgba(20,40,90,0.45) 0%, transparent 55%), radial-gradient(ellipse 80% 60% at 80% 80%, rgba(30,20,60,0.35) 0%, transparent 55%), hsl(222, 47%, 7%)",
+        }}
+      />
+
       {/* ── Silk Indian Flag — translucent, right side, like silk protecting the platform ── */}
       <div
         className="absolute right-0 top-0 bottom-0 hidden lg:block"
-        style={{ width: "42vw", opacity: 0.05 }}
+        style={{ width: "42vw", opacity: 0.055 }}
       >
         <div
           style={{
@@ -28,7 +36,7 @@ export function AnimatedBackground() {
       {/* ── Medium flag on mobile — smaller, even subtler ── */}
       <div
         className="absolute right-0 top-[10%] lg:hidden"
-        style={{ width: "60vw", height: "40vw", opacity: 0.04 }}
+        style={{ width: "60vw", height: "40vw", opacity: 0.045 }}
       >
         <div style={{ position: "relative", width: "100%", height: "100%", animation: "silkFlagWave 9s ease-in-out infinite", transformOrigin: "left center" }}>
           <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "33.33%", background: "#FF9933" }} />

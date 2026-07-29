@@ -432,6 +432,114 @@
     stroke-dashoffset: 0;
     transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
+
+  /* ── Premium Coming Soon badge ──────────────── */
+  .coming-soon-badge {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 99px;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: rgba(251, 191, 36, 0.1);
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, 0.28);
+    animation: comingSoonPulse 2.4s ease-in-out infinite;
+    cursor: default;
+  }
+  .coming-soon-badge::before {
+    content: '';
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: #fbbf24;
+    box-shadow: 0 0 6px rgba(251,191,36,0.9);
+    animation: comingDot 2.4s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+
+  /* ── Voice button ───────────────────────────── */
+  .voice-btn-active {
+    animation: voicePulse 1.4s ease-in-out infinite;
+  }
+  .voice-btn-active::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(52,211,153,0.4);
+    animation: orbRing 1.4s ease-out infinite;
+  }
+
+  /* ── AI orb premium ─────────────────────────── */
+  .ai-orb-premium {
+    animation: aiBreath 3s ease-in-out infinite;
+  }
+  .ai-orb-outer-ring {
+    animation: orbRing 3s ease-out infinite;
+  }
+  .ai-orb-outer-ring-2 {
+    animation: orbRing 3s ease-out infinite 1.5s;
+  }
+
+  /* ── Tooltip ────────────────────────────────── */
+  .tooltip-container {
+    position: relative;
+  }
+  .tooltip-container .tooltip-text {
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(8,12,28,0.95);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 5px 10px;
+    font-size: 10px;
+    color: rgba(255,255,255,0.7);
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+  .tooltip-container:hover .tooltip-text {
+    opacity: 1;
+  }
+
+  /* ── Gold shimmer button ────────────────────── */
+  .btn-gold {
+    background: linear-gradient(135deg, rgba(212,175,55,0.14) 0%, rgba(212,175,55,0.08) 100%);
+    border: 1px solid rgba(212,175,55,0.38);
+    color: #f5d06b;
+    transition: all 0.25s ease;
+    box-shadow: 0 0 18px rgba(212,175,55,0.12), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+  .btn-gold:hover {
+    background: linear-gradient(135deg, rgba(212,175,55,0.22) 0%, rgba(212,175,55,0.14) 100%);
+    border-color: rgba(212,175,55,0.55);
+    box-shadow: 0 0 30px rgba(212,175,55,0.22), inset 0 1px 0 rgba(255,255,255,0.08);
+  }
+
+  /* ── Pulse dot for live indicators ─────────── */
+  .pulse-dot-green {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #34d399;
+    box-shadow: 0 0 8px rgba(52,211,153,0.9);
+    animation: livePulse 2s ease-in-out infinite;
+  }
+  .pulse-dot-red {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #f87171;
+    box-shadow: 0 0 8px rgba(248,113,113,0.9);
+    animation: livePulse 2s ease-in-out infinite;
+  }
 }
 
 /* ── Keyframes ──────────────────────────────────── */
@@ -626,4 +734,38 @@
 @keyframes navRipple {
   0%   { transform: scale(0); opacity: 0.6; }
   100% { transform: scale(3); opacity: 0; }
+}
+
+/* ── Coming soon pulse ── */
+@keyframes comingSoonPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(251,191,36,0); border-color: rgba(251,191,36,0.28); }
+  50%       { box-shadow: 0 0 8px rgba(251,191,36,0.25); border-color: rgba(251,191,36,0.55); }
+}
+@keyframes comingDot {
+  0%, 100% { box-shadow: 0 0 4px rgba(251,191,36,0.7), 0 0 0 0 rgba(251,191,36,0); }
+  50%       { box-shadow: 0 0 8px rgba(251,191,36,1), 0 0 8px rgba(251,191,36,0.35); }
+}
+
+/* ── Voice pulse ── */
+@keyframes voicePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(52,211,153,0), 0 0 16px rgba(52,211,153,0.28); }
+  50%       { box-shadow: 0 0 0 6px rgba(52,211,153,0), 0 0 28px rgba(52,211,153,0.55); }
+}
+
+/* ── Live dot pulse ── */
+@keyframes livePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.6; transform: scale(0.85); }
+}
+
+/* ── Waveform bar ── */
+@keyframes waveBar {
+  0%, 100% { transform: scaleY(0.4); opacity: 0.5; }
+  50%       { transform: scaleY(1); opacity: 1; }
+}
+
+/* ── Founder badge shimmer ── */
+@keyframes founderShimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
 }

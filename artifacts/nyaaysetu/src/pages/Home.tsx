@@ -7,9 +7,9 @@ import {
   Star, MapPin, Percent, User, MessageSquare, Lock,
   ChevronRight, Phone, BarChart2, Building2, FileSearch,
   Gavel, Brain, ScanLine, GraduationCap, ArrowUpCircle,
-  LayoutDashboard, HeartHandshake, UserCheck, Globe, Wifi,
+  LayoutDashboard, HeartHandshake, UserCheck, Wifi,
   Zap, Eye, Award, IndianRupee, Facebook, Twitter, Instagram, Youtube,
-  TrendingUp, Scale, Verified,
+  TrendingUp, Scale, Mic, Sparkles, Code2, Heart,
 } from "lucide-react";
 import { IndiaFlagBg } from "@/components/ui/india-flag-bg";
 import logoSrc from "@assets/nyaaysetu-logo.png";
@@ -243,12 +243,14 @@ export default function Home() {
   return (
     <div className="w-full min-h-screen">
 
-      {/* Blueprint grid overlay */}
+      {/* Blueprint grid overlay - blueprint style with slightly more visible lines */}
       <div
-        className="fixed inset-0 pointer-events-none z-0 opacity-[0.016]"
+        className="fixed inset-0 pointer-events-none z-0"
         style={{
-          backgroundImage: "linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px)",
+          backgroundImage: "linear-gradient(rgba(43,108,235,0.35) 1px, transparent 1px), linear-gradient(90deg, rgba(43,108,235,0.35) 1px, transparent 1px)",
           backgroundSize: "48px 48px",
+          opacity: 0.022,
+          animation: "gridPulse 8s ease-in-out infinite",
         }}
       />
 
@@ -351,12 +353,17 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
-                className="flex items-center gap-2.5 mb-6"
+                className="flex items-center justify-between mb-6"
               >
-                <div className="w-7 h-7 rounded-xl flex items-center justify-center" style={{ background: "rgba(212,175,55,0.12)", border: "1px solid rgba(212,175,55,0.25)" }}>
-                  <Scale className="w-3.5 h-3.5 text-accent" />
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-xl flex items-center justify-center" style={{ background: "rgba(212,175,55,0.12)", border: "1px solid rgba(212,175,55,0.25)" }}>
+                    <Scale className="w-3.5 h-3.5 text-accent" />
+                  </div>
+                  <h2 className="text-lg font-bold text-white">Everything You Need, In One Platform</h2>
                 </div>
-                <h2 className="text-lg font-bold text-white">Everything You Need, In One Platform</h2>
+                <span className="hidden sm:inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-1 rounded-full" style={{ background: "rgba(212,175,55,0.08)", border: "1px solid rgba(212,175,55,0.18)", color: "#d4af37" }}>
+                  ✦ 20 Features
+                </span>
               </motion.div>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -413,15 +420,19 @@ export default function Home() {
                           {/* Bottom row */}
                           <div className="mt-3 flex items-center justify-between relative z-10">
                             {f.coming ? (
-                              <span className="text-[9px] font-bold px-2 py-0.5 rounded-full" style={{ background: `${f.ic}18`, color: f.ic, border: `1px solid ${f.ic}30` }}>
-                                Coming Soon
-                              </span>
+                              <div className="tooltip-container">
+                                <span className="coming-soon-badge">
+                                  Coming Soon
+                                </span>
+                                <span className="tooltip-text">Available in future updates</span>
+                              </div>
                             ) : (
-                              <span className="text-[9px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(52,211,153,0.12)", color: "#34d399", border: "1px solid rgba(52,211,153,0.25)" }}>
+                              <span className="text-[9px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1" style={{ background: "rgba(52,211,153,0.12)", color: "#34d399", border: "1px solid rgba(52,211,153,0.25)" }}>
+                                <span className="w-1 h-1 rounded-full bg-emerald-400 inline-block" />
                                 Available
                               </span>
                             )}
-                            <div className="w-6 h-6 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:translate-x-1" style={{ background: `${f.ic}15` }}>
+                            <div className="w-6 h-6 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:translate-x-1 group-hover:scale-110" style={{ background: `${f.ic}15` }}>
                               <ArrowRight className="w-3 h-3" style={{ color: f.ic }} />
                             </div>
                           </div>
@@ -435,22 +446,31 @@ export default function Home() {
 
             {/* ── Animated Stats ── */}
             <section className="py-6">
-              <div
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.55 }}
                 className="grid grid-cols-2 sm:grid-cols-4 gap-6 p-6 rounded-2xl relative overflow-hidden"
                 style={{
                   background: "rgba(255,255,255,0.022)",
                   border: "1px solid rgba(255,255,255,0.07)",
                   backdropFilter: "blur(24px)",
+                  boxShadow: "0 8px 40px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.04)",
                 }}
               >
                 {/* Subtle gold glow */}
                 <div className="absolute inset-0 pointer-events-none" style={{
-                  background: "radial-gradient(ellipse 60% 80% at 50% 50%, rgba(212,175,55,0.04) 0%, transparent 70%)",
+                  background: "radial-gradient(ellipse 70% 100% at 50% 50%, rgba(212,175,55,0.05) 0%, transparent 70%)",
+                }} />
+                {/* Tricolor accent top */}
+                <div className="absolute top-0 left-6 right-6 h-px pointer-events-none" style={{
+                  background: "linear-gradient(90deg, transparent, rgba(255,153,51,0.4), rgba(212,175,55,0.5), rgba(19,136,8,0.3), transparent)",
                 }} />
                 {STATS.map((s, i) => (
                   <StatItem key={i} stat={s} index={i} />
                 ))}
-              </div>
+              </motion.div>
             </section>
 
           </div>
@@ -464,32 +484,104 @@ export default function Home() {
               style={{ borderLeft: "1px solid rgba(255,255,255,0.06)" }}
             >
 
-              {/* AI Legal Assistant */}
-              <PanelCard>
-                <div className="flex items-center justify-between mb-3">
+              {/* AI Legal Assistant — premium panel */}
+              <PanelCard style={{ background: "rgba(59,130,246,0.04)", border: "1px solid rgba(139,92,246,0.18)" }}>
+                {/* Header */}
+                <div className="flex items-center justify-between mb-4">
                   <p className="text-sm font-bold text-white">AI Legal Assistant</p>
-                  <span className="flex items-center gap-1.5 text-[10px] font-semibold text-emerald-400">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" style={{ boxShadow: "0 0 6px rgba(52,211,153,0.9)" }} />
+                  <motion.span
+                    animate={{ opacity: [0.7, 1, 0.7] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="flex items-center gap-1.5 text-[10px] font-bold text-emerald-400"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" style={{ boxShadow: "0 0 8px rgba(52,211,153,1)", animation: "livePulse 2s ease-in-out infinite" }} />
                     Online
-                  </span>
+                  </motion.span>
                 </div>
-                <div className="flex gap-3 mb-3 items-start">
-                  <div className="w-12 h-12 rounded-full flex items-center justify-center shrink-0" style={{ background: "linear-gradient(135deg, rgba(59,130,246,0.28), rgba(139,92,246,0.28))", border: "1px solid rgba(139,92,246,0.3)", animation: "aiBreath 3s ease-in-out infinite" }}>
-                    <Bot className="w-6 h-6 text-blue-400" />
+
+                {/* Premium AI Orb */}
+                <div className="flex justify-center mb-4">
+                  <div className="relative">
+                    {/* Outer pulsing rings */}
+                    <div className="absolute inset-0 rounded-full" style={{ transform: "scale(1.6)", background: "transparent", border: "1px solid rgba(99,102,241,0.18)", animation: "orbRing 3s ease-out infinite" }} />
+                    <div className="absolute inset-0 rounded-full" style={{ transform: "scale(1.3)", background: "transparent", border: "1px solid rgba(99,102,241,0.12)", animation: "orbRing 3s ease-out infinite 1.5s" }} />
+                    {/* Deep glow behind */}
+                    <div className="absolute rounded-full pointer-events-none" style={{ inset: "-20px", background: "radial-gradient(circle, rgba(99,102,241,0.2) 0%, transparent 70%)", animation: "orbDeepGlow 3s ease-in-out infinite", filter: "blur(16px)" }} />
+                    {/* Main orb */}
+                    <div
+                      className="relative w-16 h-16 rounded-full flex items-center justify-center"
+                      style={{
+                        background: "linear-gradient(135deg, rgba(59,130,246,0.35), rgba(139,92,246,0.35))",
+                        border: "1.5px solid rgba(139,92,246,0.45)",
+                        animation: "aiBreath 3s ease-in-out infinite",
+                      }}
+                    >
+                      <Bot className="w-7 h-7 text-blue-300" />
+                    </div>
                   </div>
-                  <p className="text-[11px] text-white/48 leading-relaxed pt-0.5">Ask any legal question in natural language and get instant clarity.</p>
                 </div>
-                <div className="flex items-center gap-[2px] mb-3 justify-center h-5">
-                  {[2,4,6,8,6,10,7,5,9,6,4,8,5,3,6,8,4].map((h, i) => (
-                    <div key={i} className="rounded-full" style={{ width: 2, height: h * 2, background: `hsl(${210 + i * 5}, 80%, 65%)`, opacity: 0.65, animation: `typing-dot ${0.55 + i * 0.07}s ease-in-out infinite alternate` }} />
+
+                <p className="text-[11px] text-white/48 leading-relaxed text-center mb-3 px-1">Ask any legal question in natural language and get instant clarity.</p>
+
+                {/* AI waveform / thinking */}
+                <div className="flex items-center gap-[3px] mb-4 justify-center h-6">
+                  {[3,5,8,12,9,15,11,7,13,10,6,9,5,3,7,11,8].map((h, i) => (
+                    <div
+                      key={i}
+                      className="rounded-full"
+                      style={{
+                        width: 2.5,
+                        height: h,
+                        background: `hsl(${215 + i * 6}, 85%, 62%)`,
+                        animation: `waveBar ${0.6 + i * 0.06}s ease-in-out infinite`,
+                        animationDelay: `${i * 0.05}s`,
+                      }}
+                    />
                   ))}
                 </div>
-                <Link href="/ai-chat" className="block">
-                  <button className="w-full py-2.5 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-1.5 transition-all hover:opacity-90" style={{ background: "linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)", boxShadow: "0 4px 18px rgba(124,58,237,0.38)" }}>
-                    <MessageSquare className="w-3.5 h-3.5" />
-                    Start Conversation
-                  </button>
-                </Link>
+
+                {/* Typing indicator */}
+                <div className="flex items-center gap-2 justify-center mb-4">
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                    <div className="flex gap-[3px] items-center">
+                      {[0, 0.2, 0.4].map((delay, i) => (
+                        <div key={i} className="w-1.5 h-1.5 rounded-full bg-blue-400/70 animate-typing-dot" style={{ animationDelay: `${delay}s` }} />
+                      ))}
+                    </div>
+                    <span className="text-[10px] text-white/38 ml-1">AI thinking…</span>
+                  </div>
+                </div>
+
+                {/* Action buttons */}
+                <div className="flex gap-2">
+                  <Link href="/ai-chat" className="flex-1">
+                    <motion.button
+                      whileHover={{ scale: 1.03, boxShadow: "0 6px 28px rgba(124,58,237,0.5)" }}
+                      whileTap={{ scale: 0.97 }}
+                      className="w-full py-2.5 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-1.5 relative overflow-hidden"
+                      style={{ background: "linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)", boxShadow: "0 4px 18px rgba(124,58,237,0.38)" }}
+                    >
+                      <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)" }} />
+                      <MessageSquare className="w-3.5 h-3.5" />
+                      Start Conversation
+                    </motion.button>
+                  </Link>
+                  {/* Voice button */}
+                  <motion.button
+                    whileHover={{ scale: 1.08 }}
+                    whileTap={{ scale: 0.92 }}
+                    className="relative w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                    style={{
+                      background: "rgba(52,211,153,0.1)",
+                      border: "1px solid rgba(52,211,153,0.3)",
+                      boxShadow: "0 0 16px rgba(52,211,153,0.15)",
+                    }}
+                    title="Voice Input"
+                  >
+                    <Mic className="w-4 h-4 text-emerald-400" />
+                    <span className="absolute inset-0 rounded-xl" style={{ border: "1px solid rgba(52,211,153,0.2)", animation: "micPulse 2s ease-in-out infinite" }} />
+                  </motion.button>
+                </div>
               </PanelCard>
 
               {/* Quick Actions */}
@@ -975,9 +1067,9 @@ export default function Home() {
       </section>
 
       {/* ── Premium Footer ── */}
-      <footer className="relative z-10 mt-8" style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+      <footer className="relative z-10 mt-8">
         {/* Top gradient */}
-        <div className="h-px w-full" style={{ background: "linear-gradient(90deg, transparent, rgba(212,175,55,0.4), rgba(43,108,235,0.3), rgba(212,175,55,0.2), transparent)" }} />
+        <div className="h-px w-full" style={{ background: "linear-gradient(90deg, transparent, rgba(212,175,55,0.5), rgba(43,108,235,0.4), rgba(19,136,8,0.3), rgba(212,175,55,0.25), transparent)" }} />
 
         <div
           style={{
@@ -1108,35 +1200,86 @@ export default function Home() {
             {/* Divider */}
             <div className="h-px w-full mb-6" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent)" }} />
 
+            {/* Divider */}
+            <div className="h-px w-full mb-4" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)" }} />
+
+            {/* Developer & Founder credit */}
+            <div className="flex justify-center mb-5">
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="flex items-center gap-2.5 px-5 py-2.5 rounded-2xl"
+                style={{
+                  background: "linear-gradient(135deg, rgba(212,175,55,0.06) 0%, rgba(43,108,235,0.06) 50%, rgba(212,175,55,0.04) 100%)",
+                  border: "1px solid rgba(212,175,55,0.18)",
+                  boxShadow: "0 0 24px rgba(212,175,55,0.06), inset 0 1px 0 rgba(255,255,255,0.04)",
+                }}
+              >
+                <div className="flex items-center gap-1.5">
+                  <Code2 className="w-3 h-3" style={{ color: "rgba(212,175,55,0.6)" }} />
+                  <span className="text-[10.5px] text-white/35">Developer &amp; Founder</span>
+                </div>
+                <div className="w-px h-4" style={{ background: "rgba(255,255,255,0.1)" }} />
+                <div className="flex items-center gap-1.5">
+                  <Sparkles className="w-3 h-3 text-accent" />
+                  <span
+                    className="text-[11px] font-bold tracking-wider"
+                    style={{
+                      background: "linear-gradient(90deg, #d4af37 0%, #f5d06b 40%, #FF9933 70%, #d4af37 100%)",
+                      backgroundSize: "200% auto",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                      animation: "founderShimmer 4s linear infinite",
+                    }}
+                  >
+                    MD DANISH HUSSAIN
+                  </span>
+                </div>
+                <div className="w-px h-4" style={{ background: "rgba(255,255,255,0.1)" }} />
+                <div className="flex items-center gap-1">
+                  <Heart className="w-3 h-3 text-red-400" style={{ animation: "livePulse 2s ease-in-out infinite" }} />
+                  <span className="text-[10px] text-white/28">Made in India 🇮🇳</span>
+                </div>
+              </motion.div>
+            </div>
+
             {/* Bottom row */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 flex-wrap">
 
               {/* Copyright */}
               <p className="text-[10.5px] text-white/28 order-3 sm:order-1">
-                © 2025 NyaySetu. All rights reserved.
+                © 2025 NyaySetu. All rights reserved. Designed &amp; Built by <span className="text-white/45 font-semibold">MD Danish Hussain</span>.
               </p>
 
               {/* Trust badges */}
-              <div className="flex items-center gap-4 flex-wrap justify-center order-1 sm:order-2">
+              <div className="flex items-center gap-3 flex-wrap justify-center order-1 sm:order-2">
                 {[
-                  { icon: Lock,         label: "End-to-End Encrypted", c: "#60a5fa", emoji: null },
-                  { icon: Bot,          label: "AI Powered Platform",  c: "#a78bfa", emoji: null },
-                  { icon: null,         label: "Made in India",        c: "#fb923c", emoji: "🇮🇳" },
+                  { icon: Lock, label: "End-to-End Encrypted", c: "#60a5fa", emoji: null },
+                  { icon: Bot,  label: "AI Powered Platform",  c: "#a78bfa", emoji: null },
+                  { icon: null, label: "Made in India",         c: "#fb923c", emoji: "🇮🇳" },
+                  { icon: null, label: "Secure",                c: "#34d399", emoji: "🔒" },
                 ].map((b, i) => {
                   const Icon = (b as any).icon;
                   return (
-                    <div key={i} className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-semibold" style={{ color: b.c, background: `${b.c}10`, border: `1px solid ${b.c}20` }}>
+                    <motion.div
+                      key={i}
+                      whileHover={{ scale: 1.05 }}
+                      className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-semibold cursor-default"
+                      style={{ color: b.c, background: `${b.c}10`, border: `1px solid ${b.c}22` }}
+                    >
                       {b.emoji ? <span>{b.emoji}</span> : <Icon className="w-2.5 h-2.5" />}
-                      <span className="hidden xs:inline sm:inline">{b.label}</span>
-                    </div>
+                      <span>{b.label}</span>
+                    </motion.div>
                   );
                 })}
               </div>
 
               {/* Links */}
               <div className="flex items-center gap-4 order-2 sm:order-3">
-                {["Privacy Policy", "Terms", "Contact Us"].map((l) => (
-                  <span key={l} className="text-[10.5px] text-white/28 hover:text-white/55 cursor-pointer transition-colors">{l}</span>
+                {["Privacy Policy", "Terms", "Contact Us", "Support"].map((l) => (
+                  <span key={l} className="text-[10.5px] text-white/28 hover:text-white/60 cursor-pointer transition-colors duration-200">{l}</span>
                 ))}
               </div>
             </div>
